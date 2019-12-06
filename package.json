@@ -1,25 +1,28 @@
 {
   "name": "dego",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.23",
+    "@grammarly/focal": "^0.8.1",
     "@types/node": "^12.12.14",
     "@types/react": "^16.9.15",
+    "@types/react-beautiful-dnd": "^11.0.3",
     "@types/react-dom": "^16.9.4",
+    "csx": "^10.0.0",
+    "immer": "^5.0.0",
+    "nanoid": "^2.1.7",
     "react": "^16.12.0",
+    "react-dnd": "^9.5.1",
+    "react-dnd-html5-backend": "^9.5.1",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
-    "typescript": "^3.7.3"
+    "rxjs": "^6.5.3",
+    "typescript": "^3.7.3",
+    "typestyle": "^2.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
