@@ -1,7 +1,16 @@
 import { important, px, rem } from 'csx'
 import { media, types } from 'typestyle'
 
-import { graduations, TGraduationName } from '../theme'
+import { graduations, TGraduationName, TThemeVariable } from '../tokens'
+
+export const tv = (key: TThemeVariable) => `var(--${key})`
+
+export const applyVariables = (variables: { [key: string]: string }): any => {
+	return Object.entries(variables).reduce<any>((acc, [name, val]) => {
+		acc[`--${name}`] = val
+		return acc
+	}, {})
+}
 
 export const mediaGrad = (gradName: TGraduationName, style: types.NestedCSSProperties) => {
 	const o: types.MediaQuery = {}

@@ -1,7 +1,8 @@
 import React from 'react'
 import { classes, style } from 'typestyle'
 
-import { tv, unitFont } from '../theme'
+import { tv } from '../supply/style-helpers'
+import { fontUnit } from '../theme'
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	isInvalid?: boolean
@@ -20,15 +21,15 @@ export const Input = React.forwardRef<HTMLInputElement, IProps>(
 	}
 )
 
-const $container = style(unitFont, {
+const $container = style(fontUnit, {
 	width: '100%',
 	minWidth: '5rem',
-	height: '26px',
+	height: '3rem',
 	border: `1px solid ${tv('base500')}`,
 	backgroundColor: tv('base'),
 	color: tv('base500'),
 	outline: 'none',
-	padding: '0 6px',
+	padding: '0 .5rem',
 	$nest: {
 		'&:focus': {
 			color: tv('select500'),

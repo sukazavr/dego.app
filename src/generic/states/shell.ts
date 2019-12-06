@@ -1,4 +1,4 @@
-import { graduations, TGraduationName } from '../theme'
+import { graduations, TGraduationName } from '../tokens'
 
 export type TStateGraduations = Record<TGraduationName, boolean>
 

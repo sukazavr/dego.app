@@ -2,7 +2,8 @@ import React from 'react'
 import { style } from 'typestyle'
 
 import { useObservable } from '../../generic/supply/react-helpers'
-import { scroll, tv } from '../../generic/theme'
+import { tv } from '../../generic/supply/style-helpers'
+import { scroll } from '../../generic/theme'
 import { usePreviewEpic } from './epic'
 
 export const Preview = React.memo(() => {
@@ -39,7 +40,7 @@ const $center = style({
 const $canvas = style({
 	margin: '6em',
 	backgroundColor: tv('base'),
-	backgroundImage: `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>')`,
-	backgroundSize: '20px 20px',
+	backgroundImage: `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".06"/></svg>')`,
+	backgroundSize: '20px',
 	border: `1px solid ${tv('base900')}`,
 })

@@ -6,7 +6,7 @@ import { NestedCSSProperties } from 'typestyle/lib/types'
 
 import { Atom } from '@grammarly/focal'
 
-import { tv } from '../../generic/theme'
+import { tv } from '../../generic/supply/style-helpers'
 
 const MIN = 100
 const move$ = fromEvent<MouseEvent>(document, 'mousemove')
