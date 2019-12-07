@@ -6,7 +6,6 @@
     "@grammarly/focal": "^0.8.1",
     "@types/node": "^12.12.14",
     "@types/react": "^16.9.15",
-    "@types/react-beautiful-dnd": "^11.0.3",
     "@types/react-dom": "^16.9.4",
     "csx": "^10.0.0",
     "immer": "^5.0.0",

@@ -4,6 +4,7 @@ import { NestedCSSProperties } from 'typestyle/lib/types'
 
 import { stateLayout$ } from '../../generic/states/state-app'
 import { useObservable } from '../../generic/supply/react-helpers'
+import { ElementsTree } from '../elements-tree/ElementsTree'
 import { Preview } from '../preview/Preview'
 import { Divider } from './Divider'
 import { useLayoutEpic } from './epic'
@@ -17,7 +18,9 @@ export const Layout = React.memo(() => {
 	const style = useObservable(style$)
 	return (
 		<div className={$container} style={style}>
-			<div className={$tree}>dd</div>
+			<div className={$tree}>
+				<ElementsTree />
+			</div>
 			<div className={$child}>d</div>
 			<div className={$preview}>
 				<Preview />
