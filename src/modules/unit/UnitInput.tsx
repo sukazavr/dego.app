@@ -8,7 +8,6 @@ import { Input } from '../../generic/components/Input'
 import { Stack } from '../../generic/components/Stack'
 import { IUnit } from '../../generic/states/unit'
 import { useObservable } from '../../generic/supply/react-helpers'
-import { MenuContainer } from '../context-menu/ContextMenu'
 import { useContextMenu } from '../context-menu/hook'
 import { MenuItem } from '../context-menu/MenuItem'
 import { MenuButton } from './MenuButton'
@@ -68,8 +67,8 @@ export const Text = React.memo<TProps>(({ options, unit$, onOp }) => {
 
 export const UnitInput = React.memo<TProps>(({ options, unit$ }) => {
 	const ctxMenu = useContextMenu<{ options: TUnitOptionsKeys[]; unit$: Atom<IUnit> }>(
-		({ position, payload: { options, unit$ } }) => (
-			<MenuContainer position={position}>
+		({ payload: { options, unit$ } }) => (
+			<>
 				{options.map((optionName) => {
 					const option = unitOptions[optionName]
 					const unit = unit$.get()
@@ -77,12 +76,12 @@ export const UnitInput = React.memo<TProps>(({ options, unit$ }) => {
 						<MenuItem
 							key={optionName}
 							children={optionName}
-							active={option.is(unit)}
+							isActive={option.is(unit)}
 							onClick={() => unit$.set(option.convert(unit))}
 						/>
 					)
 				})}
-			</MenuContainer>
+			</>
 		)
 	)
 	const menu =

@@ -1,19 +1,17 @@
 import React from 'react'
-import { DndProvider } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
 import { cssRule } from 'typestyle'
 
-import { ContextMenuPlaceholder } from '../context-menu/ContextMenuPlaceholder'
+import { ContextMenuProvider } from '../context-menu/ContextMenuProvider'
 import { Layout } from '../layout/Layout'
-import { useShellEpic } from './epic'
+import { useShellWatcher } from './watcher'
 
 const Shell: React.FC = () => {
-	useShellEpic()
+	useShellWatcher()
 	return (
-		<DndProvider backend={HTML5Backend}>
+		<>
 			<Layout />
-			<ContextMenuPlaceholder />
-		</DndProvider>
+			<ContextMenuProvider />
+		</>
 	)
 }
 

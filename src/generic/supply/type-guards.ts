@@ -20,7 +20,23 @@ export function isFunction(value: unknown): value is Function {
 }
 
 export function isUndefined(value: unknown): value is undefined {
-	return typeof value === 'undefined'
+	return value === undefined
+}
+
+export function isDefined<T>(value: T): value is Exclude<T, undefined> {
+	return value !== undefined
+}
+
+export function isNull(value: unknown): value is null {
+	return value === null
+}
+
+export function isNotNull<T>(value: unknown): value is Exclude<T, null> {
+	return value !== null
+}
+
+export function isPresent<T>(value: T): value is Exclude<T, undefined | null> {
+	return value !== undefined && value !== null
 }
 
 export function isError(value: unknown): value is Error {

@@ -4,22 +4,22 @@ import { NestedCSSProperties } from 'typestyle/lib/types'
 
 import { stateLayout$ } from '../../generic/states/state-app'
 import { useObservable } from '../../generic/supply/react-helpers'
-import { ElementsTree } from '../elements-tree/ElementsTree'
 import { Preview } from '../preview/Preview'
+import { Tree } from '../tree/Tree'
 import { Divider } from './Divider'
-import { useLayoutEpic } from './epic'
+import { useLayoutWatcher } from './watcher'
 
 const TREE_AREA = '1 / 1 / 2 / 2'
 const CHILD_AREA = '1 / 2 / 2 / 3'
 const PREVIEW_AREA = '1 / 3 / 2 / 4'
 
 export const Layout = React.memo(() => {
-	const style$ = useLayoutEpic()
+	const style$ = useLayoutWatcher()
 	const style = useObservable(style$)
 	return (
 		<div className={$container} style={style}>
 			<div className={$tree}>
-				<ElementsTree />
+				<Tree />
 			</div>
 			<div className={$child}>d</div>
 			<div className={$preview}>

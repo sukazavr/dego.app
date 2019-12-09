@@ -2,9 +2,10 @@ import React from 'react'
 
 import { ca } from '../../generic/supply/action-helpers'
 
-export const contextMenuNode = document.createElement('div')
+export const closeContextMenu = ca()
+export const sendToContextMenuProvider = ca<IContextMenuPayload>()
 
-export const sendToContextPlaceholder = ca<React.ReactNode>()
-
-// Init
-document.body.appendChild(contextMenuNode)
+export interface IContextMenuPayload {
+	node: React.ReactNode
+	position: { left: number; top: number }
+}

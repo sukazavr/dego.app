@@ -31,7 +31,7 @@ export const fontUnit: NestedCSSProperties = {
 	fontFamily: monoFontFamily,
 }
 
-export const scroll: NestedCSSProperties = {
+export const scrollRegular: NestedCSSProperties = {
 	$nest: {
 		'&::-webkit-scrollbar': {
 			width: '.5rem',

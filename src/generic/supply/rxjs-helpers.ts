@@ -1,5 +1,5 @@
 import { fromEvent, throwError, timer } from 'rxjs'
-import { filter, mergeMap, retryWhen, share } from 'rxjs/operators'
+import { filter, mergeMap, retryWhen, share, tap } from 'rxjs/operators'
 
 // 60 attempts its ~1h and 1m
 export const retryStrategy = <T>(maxAttempts = 60) => {
@@ -18,3 +18,6 @@ export const escPressed$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
 	filter((e) => e.keyCode === 27),
 	share()
 )
+
+export const debug = (...args: any[]) => <T>(stream: T): T =>
+	(stream as any).pipe(tap(console.log.bind(console, ...args)))

@@ -1,15 +1,19 @@
 import React from 'react'
 import { classes, style } from 'typestyle'
 
-type TMenuItemProps = React.HTMLProps<HTMLDivElement> & {
-	active?: boolean
+import { fontRegular } from '../../generic/theme'
+
+interface IMenuItemProps extends React.HTMLProps<HTMLDivElement> {
+	isActive?: boolean
 }
-export const MenuItem: React.FC<TMenuItemProps> = ({ children, active, ...props }) => (
-	<div className={classes($item, active && $itemActive)} data-close-ctx {...props}>
+
+export const MenuItem = React.memo<IMenuItemProps>(({ children, isActive, ...rest }) => (
+	<div className={classes($item, isActive && $itemActive)} data-close-ctx {...rest}>
 		{children}
 	</div>
-)
-const $item = style({
+))
+
+const $item = style(fontRegular, {
 	color: '#e2e2e2',
 	borderRadius: '0.2em',
 	padding: '0.2em 0.4em',
@@ -22,6 +26,7 @@ const $item = style({
 		},
 	},
 })
+
 const $itemActive = style({
 	backgroundColor: 'rgba(0, 255, 90, 0.4)',
 })

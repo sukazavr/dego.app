@@ -3,12 +3,12 @@ import { style } from 'typestyle'
 
 import { useObservable } from '../../generic/supply/react-helpers'
 import { tv } from '../../generic/supply/style-helpers'
-import { scroll } from '../../generic/theme'
-import { usePreviewEpic } from './epic'
+import { scrollRegular } from '../../generic/theme'
+import { usePreviewWatcher } from './watcher'
 
 export const Preview = React.memo(() => {
 	const ref = React.useRef<HTMLDivElement>(null)
-	const canvasStyle$ = usePreviewEpic([ref])
+	const canvasStyle$ = usePreviewWatcher([ref])
 	const canvasStyle = useObservable(canvasStyle$)
 	return (
 		<div ref={ref} className={$container}>
@@ -19,7 +19,7 @@ export const Preview = React.memo(() => {
 	)
 })
 
-const $container = style(scroll, {
+const $container = style(scrollRegular, {
 	flexGrow: 1,
 	display: 'flex',
 	overflow: 'scroll',
