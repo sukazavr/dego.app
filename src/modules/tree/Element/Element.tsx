@@ -109,7 +109,7 @@ const $scoped = style({
 	boxShadow: `inset 0 0 0 2px ${tv('select500')}`,
 })
 
-const FLASH_DURATION = 600
+export const FLASH_DURATION = 600
 const $flashed = style({
 	animationName: keyframes({
 		'0%': { opacity: 0, transform: 'rotateX(90deg) scale3d(1.2, 1.2, 1.2)' },
