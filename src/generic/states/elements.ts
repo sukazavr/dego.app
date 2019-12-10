@@ -1,5 +1,6 @@
 import { Lens } from '@grammarly/focal'
 
+import { TFlexDirection } from '../style-helpers/flex'
 import { EUnitType, IUnit } from './unit'
 
 export const CANVAS_ID = 'canvas'
@@ -36,7 +37,12 @@ export const defaultElements: IElements = {
 		name: '',
 		children: [],
 		type: EElementType.Flex,
-		props: {},
+		props: {
+			Flex: {
+				flexDirection: 'column',
+			},
+			Grid: {},
+		},
 		isExpanded: true,
 	},
 }
@@ -53,8 +59,8 @@ export interface IElementBody {
 	children: string[]
 	type: EElementType.Flex | EElementType.Grid
 	props: {
-		[EElementType.Flex]?: IElementFlex
-		[EElementType.Grid]?: IElementGrid
+		[EElementType.Flex]: Partial<IElementFlex>
+		[EElementType.Grid]: Partial<IElementGrid>
 	}
 	isExpanded: boolean
 }
@@ -66,9 +72,9 @@ export interface IElement {
 	children: string[]
 	type: EElementType
 	props: {
-		[EElementType.Flex]?: IElementFlex
-		[EElementType.Grid]?: IElementGrid
-		[EElementType.Component]?: IElementComponent
+		[EElementType.Flex]: Partial<IElementFlex>
+		[EElementType.Grid]: Partial<IElementGrid>
+		[EElementType.Component]: Partial<IElementComponent>
 	}
 	isExpanded: boolean
 }
@@ -76,6 +82,7 @@ export interface IElement {
 export interface IElementFlex {
 	width: IUnit
 	height: IUnit
+	flexDirection: TFlexDirection
 }
 
 export interface IElementGrid {

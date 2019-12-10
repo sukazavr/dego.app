@@ -15,9 +15,15 @@ interface IProps {
 
 export const ElementContentExpander = React.memo<IProps>(
 	({ hasChildren, isExpanded, element$ }) => {
-		const toggle = React.useCallback(() => {
-			element$.modify((_) => (isNotElementCanvas(_) ? { ..._, isExpanded: !_.isExpanded } : _))
-		}, [element$])
+		const toggle = React.useCallback(
+			(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+				e.stopPropagation()
+				element$.modify((_) =>
+					isNotElementCanvas(_) ? { ..._, isExpanded: !_.isExpanded } : _
+				)
+			},
+			[element$]
+		)
 		return (
 			<div className={$container} onClick={hasChildren ? toggle : undefined}>
 				{hasChildren && <div className={classes($triangle, isExpanded && $expanded)} />}
@@ -31,8 +37,8 @@ const $container = style({
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
-	width: '1.6em',
-	height: '1.6em',
+	width: '2rem',
+	height: '3rem',
 	fontSize: '1.5rem',
 })
 

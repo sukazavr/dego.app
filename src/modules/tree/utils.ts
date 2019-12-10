@@ -13,7 +13,11 @@ export const createTreeElement = (): IElement => ({
 	parent: BODY_ID,
 	children: [],
 	type: EElementType.Flex,
-	props: {},
+	props: {
+		Component: {},
+		Flex: {},
+		Grid: {},
+	},
 	isExpanded: true,
 })
 
