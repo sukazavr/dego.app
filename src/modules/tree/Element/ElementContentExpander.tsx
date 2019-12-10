@@ -1,0 +1,47 @@
+import React from 'react'
+import { classes, style } from 'typestyle'
+
+import { Atom } from '@grammarly/focal'
+
+import { IElement } from '../../../generic/states/elements'
+import { tv } from '../../../generic/supply/style-helpers'
+
+interface IProps {
+	element$: Atom<IElement>
+	element: IElement
+}
+
+export const ElementContentExpander = React.memo<IProps>(({ element, element$ }) => {
+	const toggle = React.useCallback(() => {
+		element$.modify((_) => ({ ..._, isExpanded: !_.isExpanded }))
+	}, [element$])
+	const hasChildren = Boolean(element.children.length)
+	return (
+		<div className={$container} onClick={hasChildren ? toggle : undefined}>
+			{hasChildren && <div className={classes($triangle, element.isExpanded && $expanded)} />}
+		</div>
+	)
+})
+
+const $container = style({
+	flex: 'none',
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	width: '1.6em',
+	height: '1.6em',
+	fontSize: '1.5rem',
+})
+
+const $triangle = style({
+	borderWidth: '0.3076923076923077em 0.3076923076923077em 0',
+	borderStyle: 'solid',
+	borderColor: `${tv('base300')} transparent transparent`,
+	transform: 'rotate(-90deg)',
+	transitionDuration: '120ms',
+	transitionProperty: 'border, transform',
+})
+
+const $expanded = style({
+	transform: 'rotate(0)',
+})

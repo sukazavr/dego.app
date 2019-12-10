@@ -7,12 +7,12 @@ import { stateTree$ } from '../../../generic/states/state-app'
 import { useEnhancedEffect, useObservableFabric } from '../../../generic/supply/react-helpers'
 import { tv } from '../../../generic/supply/style-helpers'
 import { isPresent } from '../../../generic/supply/type-guards'
-import { fontRegular } from '../../../generic/theme'
 import { useContextMenu } from '../../context-menu/hook'
 import {
 	elStore, treeElementEndDragging, treeElementOnDrag, treeElementSetTarget,
 	treeElementStartDragging,
 } from '../common'
+import { ElementContent } from './ElementContent'
 import { ElementContextMenu } from './ElementContextMenu'
 
 interface IProps {
@@ -79,13 +79,13 @@ export const Element = React.memo<IProps>(({ id, path }) => {
 		onDragEnd: treeElementEndDragging,
 		...constantProps,
 		...stateTreeProps,
-		children: id,
+		children: <ElementContent id={id} />,
 		onContextMenu: ctxMenu.open({ id }),
 	})
 })
 
-const $container = style(fontRegular, {
-	height: '3rem',
+const $container = style({
+	backgroundColor: tv('base'),
 })
 
 const $parented = style({
@@ -93,7 +93,7 @@ const $parented = style({
 })
 
 const $dragging = style({
-	backgroundColor: 'rgba(102, 170, 255, 0.17)',
+	backgroundColor: tv('select100'),
 })
 
 const $hovered = style({

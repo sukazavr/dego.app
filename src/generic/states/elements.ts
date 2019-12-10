@@ -1,3 +1,5 @@
+import { Lens } from '@grammarly/focal'
+
 export const ROOT_ID = 'root'
 
 export interface IElements {
@@ -22,4 +24,13 @@ export interface IElement {
 	children: string[]
 	props: Record<string, any>
 	isExpanded: boolean
+}
+
+export const lensElement = (id: string) => {
+	return Lens.create<IElements, IElement>(
+		(state) => state[id],
+		(newValue, state) => {
+			return { ...state, [id]: newValue }
+		}
+	)
 }

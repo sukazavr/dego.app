@@ -26,20 +26,7 @@ export const Tree = React.memo(() => {
 		</>
 	))
 	return (
-		<div
-			ref={ref}
-			className={$container}
-			onContextMenu={ctxMenu.open({})}
-			/* onDragOver={(e) => {
-				if (true) {
-					e.preventDefault()
-					dndHoverTarget(ROOT_ID)
-				}
-			}}
-			onDrop={() => {
-				dndEndDragging()
-			}} */
-		>
+		<div ref={ref} className={$container} onContextMenu={ctxMenu.open({})}>
 			{treeIndex.map((id) => (
 				<Element key={id} id={id} path={treePaths[id]} />
 			))}
