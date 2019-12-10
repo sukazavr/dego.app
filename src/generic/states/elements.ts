@@ -90,7 +90,7 @@ export interface IElementComponent {
 
 export const lensElementAny = (id: string) => {
 	return Lens.create<IElements, TElementAny>(
-		(state) => state[id],
+		(state) => state[id] || defaultElements[BODY_ID],
 		(newValue, state) => {
 			return { ...state, [id]: newValue }
 		}
