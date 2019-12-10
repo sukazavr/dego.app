@@ -32,6 +32,7 @@ export const Element = React.memo<IProps>(({ id, path }) => {
 		}
 	}, [id, ref])
 	const constantProps = React.useMemo(() => {
+		const draggingID$ = stateTree$.lens('draggingID')
 		return {
 			onMouseEnter: () => stateTree$.lens('hoveredID').set(id),
 			onMouseLeave: () => stateTree$.lens('hoveredID').set(null),
@@ -39,11 +40,18 @@ export const Element = React.memo<IProps>(({ id, path }) => {
 				id === CANVAS_ID || id === BODY_ID
 					? (e: React.DragEvent<HTMLDivElement>) => e.preventDefault()
 					: treeElementStartDragging._(id),
+			onDragOver: (e: React.DragEvent) => {
+				const draggingID = draggingID$.get()
+				if (draggingID && !path.includes(draggingID)) {
+					e.preventDefault()
+					treeElementSetTarget(id)
+				}
+			},
 			onClick: actionsTree.focus._({ id }),
 			style: { paddingLeft: `${(path.length - 1) * 0.8}em` },
 		}
 	}, [id, path])
-	const stateTreeProps = useObservableFabric(
+	const className = useObservableFabric(
 		() =>
 			stateTree$.view(({ draggingID, parentID, hoveredID, focusedID, scopedID, flashedID }) => {
 				const classNames: (string | boolean)[] = [$container]
@@ -57,15 +65,7 @@ export const Element = React.memo<IProps>(({ id, path }) => {
 						flashedID === id && $flashed
 					)
 				}
-				return {
-					className: classNames.filter(Boolean).join(' '),
-					onDragOver: (e: React.DragEvent) => {
-						if (draggingID && !path.includes(draggingID)) {
-							e.preventDefault()
-							treeElementSetTarget(id)
-						}
-					},
-				}
+				return classNames.filter(Boolean).join(' ')
 			}),
 		[id, path]
 	)
@@ -74,11 +74,11 @@ export const Element = React.memo<IProps>(({ id, path }) => {
 	})
 	return React.createElement('div', {
 		ref,
+		className,
 		draggable: true,
 		onDrag: treeElementOnDrag,
 		onDragEnd: treeElementEndDragging,
 		...constantProps,
-		...stateTreeProps,
 		children: <ElementContent id={id} />,
 		onContextMenu: ctxMenu.open({ id }),
 	})
