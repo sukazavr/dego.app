@@ -1,21 +1,26 @@
 import nanoid from 'nanoid'
 
-import { IElement, IElements } from '../../generic/states/elements'
+import {
+	BODY_ID, CANVAS_ID, EElementType, IElement, IElements,
+} from '../../generic/states/elements'
 import { defaultTree } from '../../generic/states/tree'
+import { isNotElementCanvas, isTreeElement } from '../../generic/supply/type-guards'
 import { elStore } from './common'
 
-let index = 0
 export const createTreeElement = (): IElement => ({
 	id: nanoid(10),
-	name: `_${++index}`,
+	name: '',
+	parent: BODY_ID,
 	children: [],
+	type: EElementType.Flex,
 	props: {},
 	isExpanded: true,
 })
 
 export const mutateAddInside = (draft: IElements, element: IElement, parentID: string) => {
+	parentID = parentID === CANVAS_ID ? BODY_ID : parentID
 	const parent = draft[parentID]
-	if (parent) {
+	if (isNotElementCanvas(parent)) {
 		element.parent = parentID
 		const id = element.id
 		parent.children.push(id)
@@ -30,10 +35,11 @@ export const mutateAddNeighbor = (
 	neighborID: string,
 	below: boolean
 ) => {
-	const parentID = draft[neighborID].parent
-	if (parentID) {
+	const neighbor = draft[neighborID]
+	if (isTreeElement(neighbor)) {
+		const parentID = neighbor.parent
 		const parent = draft[parentID]
-		if (parent) {
+		if (isNotElementCanvas(parent)) {
 			element.parent = parentID
 			const id = element.id
 			const neighborIndex = parent.children.indexOf(neighborID)
@@ -44,8 +50,9 @@ export const mutateAddNeighbor = (
 }
 
 export const mutateRemoveFromParent = (draft: IElements, element: IElement) => {
-	if (element.parent) {
-		const children = draft[element.parent].children
+	const parent = draft[element.parent]
+	if (isNotElementCanvas(parent)) {
+		const children = parent.children
 		const index = children.indexOf(element.id)
 		if (index > -1) {
 			children.splice(index, 1)
@@ -56,7 +63,7 @@ export const mutateRemoveFromParent = (draft: IElements, element: IElement) => {
 export const mutateRemoveFromTree = (draft: IElements, element: IElement) => {
 	element.children.forEach((childID) => {
 		const child = draft[childID]
-		if (child) {
+		if (isTreeElement(child)) {
 			mutateRemoveFromTree(draft, child)
 		}
 	})

@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs'
 
 import { Atom, ReadOnlyAtom } from '@grammarly/focal'
+import { TElementAny, IElementCanvas, CANVAS_ID, IElement, BODY_ID } from '../states/elements'
 
 export function isAnyAtom<T>(value: unknown): value is Atom<T> | ReadOnlyAtom<T> {
 	return value instanceof Observable && isFunction((value as any).view)
@@ -51,4 +52,12 @@ export function isError(value: unknown): value is Error {
 		default:
 			return value instanceof Error
 	}
+}
+
+export function isNotElementCanvas(value: TElementAny): value is Exclude<TElementAny, IElementCanvas> {
+	return value.id !== CANVAS_ID
+}
+
+export function isTreeElement(value: TElementAny): value is IElement {
+	return value.id !== CANVAS_ID && value.id !== BODY_ID
 }

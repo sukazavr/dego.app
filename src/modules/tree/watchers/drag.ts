@@ -5,10 +5,11 @@ import {
 
 import { ReadOnlyAtom } from '@grammarly/focal'
 
-import { ROOT_ID } from '../../../generic/states/elements'
+import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements'
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app'
 import { defaultTree, ITree } from '../../../generic/states/tree'
 import { createUseWatcher } from '../../../generic/supply/react-helpers'
+import { isNotElementCanvas, isTreeElement } from '../../../generic/supply/type-guards'
 import { isArrayEqual } from '../../../generic/supply/utils'
 import {
 	treeElementEndDragging, treeElementOnDrag, treeElementSetTarget, treeElementStartDragging,
@@ -33,7 +34,6 @@ export const useTreeDragWatcher = createUseWatcher<
 		const nextIndex: string[] = []
 		const nextMaxDeep: { [id: string]: string } = {}
 		const grab = (id: string, parentPath: string[], putIndex: boolean) => {
-			const { children, isExpanded } = elements[id]
 			const prevPath = prevPaths[id]
 			const nextPath = [...parentPath, id]
 			const path = prevPath && isArrayEqual(prevPath, nextPath) ? prevPath : nextPath
@@ -41,9 +41,14 @@ export const useTreeDragWatcher = createUseWatcher<
 				nextPaths[id] = path
 				nextIndex.push(id)
 			}
-			children.forEach((childID) => grab(childID, path, putIndex && isExpanded))
+			const element = elements[id]
+			if (isNotElementCanvas(element)) {
+				const isExpanded = element.isExpanded
+				element.children.forEach((childID) => grab(childID, path, putIndex && isExpanded))
+			}
 		}
-		grab(ROOT_ID, [], true)
+		grab(CANVAS_ID, [], true)
+		grab(BODY_ID, [], true)
 		nextIndex.forEach((id) => {
 			const path = nextPaths[id]
 			const maxDeep = path[path.length - 1]
@@ -76,7 +81,9 @@ export const useTreeDragWatcher = createUseWatcher<
 								const canDrop = !treePaths[targetID].includes(draggingID)
 								const targetMeta = getElMeta(targetID)
 								const landingZone =
-									targetID === ROOT_ID ? treeEl.getBoundingClientRect() : targetMeta.rect
+									targetID === CANVAS_ID || targetID === BODY_ID
+										? treeEl.getBoundingClientRect()
+										: targetMeta.rect
 								return treeElementOnDrag.$.pipe(
 									distinct(({ pageX, pageY }) => `${pageX}:${pageY}`),
 									map((onDragEvent) => {
@@ -175,15 +182,17 @@ export const useTreeDragWatcher = createUseWatcher<
 				elements: produce(stateApp.elements, (draft) => {
 					if (draggingID && targetID) {
 						const element = draft[draggingID]
-						if (add.above) {
-							mutateRemoveFromParent(draft, element)
-							mutateAddNeighbor(draft, element, targetID, false)
-						} else if (add.below) {
-							mutateRemoveFromParent(draft, element)
-							mutateAddNeighbor(draft, element, targetID, true)
-						} else if (add.inside) {
-							mutateRemoveFromParent(draft, element)
-							mutateAddInside(draft, element, targetID)
+						if (isTreeElement(element)) {
+							if (add.above) {
+								mutateRemoveFromParent(draft, element)
+								mutateAddNeighbor(draft, element, targetID, false)
+							} else if (add.below) {
+								mutateRemoveFromParent(draft, element)
+								mutateAddNeighbor(draft, element, targetID, true)
+							} else if (add.inside) {
+								mutateRemoveFromParent(draft, element)
+								mutateAddInside(draft, element, targetID)
+							}
 						}
 					}
 				}),

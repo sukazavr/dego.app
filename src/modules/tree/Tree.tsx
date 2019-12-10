@@ -2,7 +2,7 @@ import React from 'react'
 import { style } from 'typestyle'
 
 import { actionsTree } from '../../generic/actions'
-import { ROOT_ID } from '../../generic/states/elements'
+import { BODY_ID } from '../../generic/states/elements'
 import { useObservable } from '../../generic/supply/react-helpers'
 import { scrollRegular } from '../../generic/theme'
 import { useContextMenu } from '../context-menu/hook'
@@ -21,7 +21,7 @@ export const Tree = React.memo(() => {
 		<>
 			<MenuItem
 				children="Create Element"
-				onClick={actionsTree.addInside._({ parentID: ROOT_ID })}
+				onClick={actionsTree.addInside._({ parentID: BODY_ID })}
 			/>
 		</>
 	))

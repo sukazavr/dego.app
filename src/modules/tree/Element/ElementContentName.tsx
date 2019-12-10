@@ -4,23 +4,36 @@ import { style } from 'typestyle'
 import { Atom } from '@grammarly/focal'
 
 import { actionsTree } from '../../../generic/actions'
-import { IElement } from '../../../generic/states/elements'
+import { BODY_ID, TElementAny } from '../../../generic/states/elements'
+import { useObservableFabric } from '../../../generic/supply/react-helpers'
+import { isNotElementCanvas } from '../../../generic/supply/type-guards'
 import { fontRegular } from '../../../generic/theme'
 
 interface IProps {
-	element$: Atom<IElement>
-	element: IElement
+	element$: Atom<TElementAny>
+	id: string
 }
 
-export const ElementContentName = React.memo<IProps>(({ element, element$ }) => {
+export const ElementContentName = React.memo<IProps>(({ id, element$ }) => {
 	const ref = React.useRef<HTMLInputElement>(null)
+	const name = useObservableFabric(
+		() =>
+			element$.view((element) => {
+				if (isNotElementCanvas(element)) {
+					return element.name || element.id === BODY_ID ? 'Body' : element.type
+				} else {
+					return 'Canvas'
+				}
+			}),
+		[]
+	)
 	return (
-		<div className={$container} onDoubleClick={actionsTree.editName._({ id: element.id })}>
+		<div className={$container} onDoubleClick={actionsTree.editName._({ id })}>
 			<input
 				type="text"
 				ref={ref}
 				className={$nameInput}
-				value={element.name}
+				value={name}
 				disabled={true}
 				/* onKeyDown={this.keyDown}
 				onChange={this.change}

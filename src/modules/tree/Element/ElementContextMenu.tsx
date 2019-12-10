@@ -2,7 +2,7 @@ import React from 'react'
 import { switchMapTo, takeUntil } from 'rxjs/operators'
 
 import { actionsTree } from '../../../generic/actions'
-import { ROOT_ID } from '../../../generic/states/elements'
+import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements'
 import { stateTree$ } from '../../../generic/states/state-app'
 import { createUseWatcher } from '../../../generic/supply/react-helpers'
 import { MenuDivider } from '../../context-menu/MenuDivider'
@@ -14,13 +14,14 @@ interface IProps {
 
 export const ElementContextMenu = React.memo<IProps>(({ id }) => {
 	useWatcher([id])
+	const isElement = id !== CANVAS_ID && id !== BODY_ID
 	return (
 		<>
 			<MenuItem
 				children="Add Element Inside"
 				onClick={actionsTree.addInside._({ parentID: id })}
 			/>
-			{id !== ROOT_ID && (
+			{isElement && (
 				<>
 					<MenuItem
 						children="Add Element Above"

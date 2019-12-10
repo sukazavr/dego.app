@@ -1,33 +1,95 @@
 import { Lens } from '@grammarly/focal'
 
-export const ROOT_ID = 'root'
+import { EUnitType, IUnit } from './unit'
+
+export const CANVAS_ID = 'canvas'
+export const BODY_ID = 'body'
+
+export enum EElementType {
+	Flex = 'Flex',
+	Grid = 'Grid',
+	Component = 'Component',
+}
+
+export type TElementAny = IElementCanvas | IElementBody | IElement
 
 export interface IElements {
-	[ROOT_ID]: IElement
-	[ID: string]: IElement
+	[ID: string]: TElementAny
 }
 
 export const defaultElements: IElements = {
-	[ROOT_ID]: {
-		id: ROOT_ID,
-		name: 'Root Container',
+	[CANVAS_ID]: {
+		id: CANVAS_ID,
+		width: {
+			t: EUnitType.IntegerString,
+			n: 800,
+			s: 'px',
+		},
+		height: {
+			t: EUnitType.IntegerString,
+			n: 1000,
+			s: 'px',
+		},
+	},
+	[BODY_ID]: {
+		id: BODY_ID,
+		name: '',
 		children: [],
+		type: EElementType.Flex,
 		props: {},
 		isExpanded: true,
 	},
 }
 
-export interface IElement {
-	id: string
+export interface IElementCanvas {
+	id: typeof CANVAS_ID
+	width: IUnit
+	height: IUnit
+}
+
+export interface IElementBody {
+	id: typeof BODY_ID
 	name: string
-	parent?: string
 	children: string[]
-	props: Record<string, any>
+	type: EElementType.Flex | EElementType.Grid
+	props: {
+		[EElementType.Flex]?: IElementFlex
+		[EElementType.Grid]?: IElementGrid
+	}
 	isExpanded: boolean
 }
 
+export interface IElement {
+	id: string
+	name: string
+	parent: string
+	children: string[]
+	type: EElementType
+	props: {
+		[EElementType.Flex]?: IElementFlex
+		[EElementType.Grid]?: IElementGrid
+		[EElementType.Component]?: IElementComponent
+	}
+	isExpanded: boolean
+}
+
+export interface IElementFlex {
+	width: IUnit
+	height: IUnit
+}
+
+export interface IElementGrid {
+	width: IUnit
+	height: IUnit
+}
+
+export interface IElementComponent {
+	width: IUnit
+	height: IUnit
+}
+
 export const lensElement = (id: string) => {
-	return Lens.create<IElements, IElement>(
+	return Lens.create<IElements, IElementCanvas | IElementBody | IElement>(
 		(state) => state[id],
 		(newValue, state) => {
 			return { ...state, [id]: newValue }

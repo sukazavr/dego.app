@@ -2,7 +2,7 @@ import React from 'react'
 import { keyframes, style } from 'typestyle'
 
 import { actionsTree } from '../../../generic/actions'
-import { ROOT_ID } from '../../../generic/states/elements'
+import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements'
 import { stateTree$ } from '../../../generic/states/state-app'
 import { useEnhancedEffect, useObservableFabric } from '../../../generic/supply/react-helpers'
 import { tv } from '../../../generic/supply/style-helpers'
@@ -36,7 +36,7 @@ export const Element = React.memo<IProps>(({ id, path }) => {
 			onMouseEnter: () => stateTree$.lens('hoveredID').set(id),
 			onMouseLeave: () => stateTree$.lens('hoveredID').set(null),
 			onDragStart:
-				id === ROOT_ID
+				id === CANVAS_ID || id === BODY_ID
 					? (e: React.DragEvent<HTMLDivElement>) => e.preventDefault()
 					: treeElementStartDragging._(id),
 			onClick: actionsTree.focus._({ id }),
