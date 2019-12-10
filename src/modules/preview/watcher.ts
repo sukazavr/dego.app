@@ -2,9 +2,10 @@ import React from 'react'
 import { fromEvent } from 'rxjs'
 import { switchMap, switchMapTo, takeUntil, tap } from 'rxjs/operators'
 
-import { Atom, ReadOnlyAtom } from '@grammarly/focal'
+import { ReadOnlyAtom } from '@grammarly/focal'
 
-import { stateLayout$ } from '../../generic/states/state-app'
+import { lensElementCanvas } from '../../generic/states/elements'
+import { stateElements$ } from '../../generic/states/state-app'
 import { createUseWatcher } from '../../generic/supply/react-helpers'
 
 export const usePreviewWatcher = createUseWatcher<
@@ -17,14 +18,9 @@ export const usePreviewWatcher = createUseWatcher<
 	const move$ = fromEvent<MouseEvent>(document, 'mousemove')
 	const up$ = fromEvent<MouseEvent>(document, 'mouseup')
 
-	const canvasStyle$ = Atom.combine(
-		stateLayout$.view('canvasWidth'),
-		stateLayout$.view('canvasHeight'),
-		(w, h) => ({
-			width: w.n,
-			height: h.n,
-		})
-	)
+	const canvasStyle$ = stateElements$
+		.view(lensElementCanvas)
+		.view((_) => ({ height: _.height.n, width: _.width.n }))
 
 	didMount$
 		.pipe(

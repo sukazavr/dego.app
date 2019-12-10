@@ -1,7 +1,7 @@
 import React from 'react'
 import { style } from 'typestyle'
 
-import { lensElement } from '../../../generic/states/elements'
+import { lensElementAny } from '../../../generic/states/elements'
 import { stateElements$ } from '../../../generic/states/state-app'
 import { useObservable } from '../../../generic/supply/react-helpers'
 import { isNotElementCanvas } from '../../../generic/supply/type-guards'
@@ -13,7 +13,7 @@ interface IProps {
 }
 
 export const ElementContent: React.FC<IProps> = React.memo(({ id }) => {
-	const element$ = React.useMemo(() => stateElements$.lens(lensElement(id)), [id])
+	const element$ = React.useMemo(() => stateElements$.lens(lensElementAny(id)), [id])
 	const element = useObservable(element$)
 	let hasChildren = false
 	let isExpanded = false

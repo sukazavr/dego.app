@@ -88,11 +88,18 @@ export interface IElementComponent {
 	height: IUnit
 }
 
-export const lensElement = (id: string) => {
-	return Lens.create<IElements, IElementCanvas | IElementBody | IElement>(
+export const lensElementAny = (id: string) => {
+	return Lens.create<IElements, TElementAny>(
 		(state) => state[id],
 		(newValue, state) => {
 			return { ...state, [id]: newValue }
 		}
 	)
 }
+
+export const lensElementCanvas = Lens.create<IElements, IElementCanvas>(
+	(state) => state[CANVAS_ID] as IElementCanvas,
+	(newValue, state) => {
+		return { ...state, [CANVAS_ID]: newValue }
+	}
+)
