@@ -164,28 +164,31 @@ export const useTreeDragWatcher = createUseWatcher<
 		})
 
 	treeElementEndDragging.$.pipe(takeUntil(didUnmount$)).subscribe(() => {
-		stateApp$.modify((stateApp) => ({
-			...stateApp,
-			tree: {
-				...defaultTree,
-			},
-			elements: produce(stateApp.elements, (draft) => {
-				const { draggingID, targetID, add } = stateApp.tree
-				if (draggingID && targetID) {
-					const element = draft[draggingID]
-					if (add.above) {
-						mutateRemoveFromParent(draft, element)
-						mutateAddNeighbor(draft, element, targetID, false)
-					} else if (add.below) {
-						mutateRemoveFromParent(draft, element)
-						mutateAddNeighbor(draft, element, targetID, true)
-					} else if (add.inside) {
-						mutateRemoveFromParent(draft, element)
-						mutateAddInside(draft, element, targetID)
+		stateApp$.modify((stateApp) => {
+			const { draggingID, targetID, add } = stateApp.tree
+			return {
+				...stateApp,
+				tree: {
+					...defaultTree,
+					flashedID: draggingID,
+				},
+				elements: produce(stateApp.elements, (draft) => {
+					if (draggingID && targetID) {
+						const element = draft[draggingID]
+						if (add.above) {
+							mutateRemoveFromParent(draft, element)
+							mutateAddNeighbor(draft, element, targetID, false)
+						} else if (add.below) {
+							mutateRemoveFromParent(draft, element)
+							mutateAddNeighbor(draft, element, targetID, true)
+						} else if (add.inside) {
+							mutateRemoveFromParent(draft, element)
+							mutateAddInside(draft, element, targetID)
+						}
 					}
-				}
-			}),
-		}))
+				}),
+			}
+		})
 	})
 
 	return {
