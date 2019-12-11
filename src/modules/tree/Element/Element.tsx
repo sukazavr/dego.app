@@ -85,6 +85,7 @@ export const Element = React.memo<IProps>(({ id, path }) => {
 })
 
 const $container = style({
+	color: tv('base900'),
 	backgroundColor: tv('base'),
 })
 

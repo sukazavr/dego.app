@@ -2,9 +2,15 @@ import { Observable, Subject } from 'rxjs'
 
 let actionCounter: number = 0
 
-// Create Action
+/* Create Action
+ ** A -- Function Arguments (payload it)
+ ** P -- Stream Output (payload out)
+ ** C -- Function Return (what to return after "ca" call)
+ */
 export function ca(): TDummyAction
 export function ca<A>(): TAction<A>
+export function ca<A>(modifier: TModifier<A, A, void>): TAction<A>
+export function ca<A, C>(modifier: TModifier<A, A, C>): TAction<A, A, C>
 export function ca<A, P, C>(modifier: TModifier<A, P, C>): TAction<A, P, C>
 export function ca<A, P, C>(modifier?: TModifier<A, P, C>): TAction<A, P, C> {
 	const $ = new Subject<P>()

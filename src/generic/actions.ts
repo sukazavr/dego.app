@@ -1,3 +1,4 @@
+import { CANVAS_ID } from './states/elements'
 import { ca, ga } from './supply/action-helpers'
 
 export const actionsTree = ga('tree', {
@@ -6,5 +7,9 @@ export const actionsTree = ga('tree', {
 	addBelow: ca<{ neighborID: string }>(),
 	delete: ca<{ id: string }>(),
 	focus: ca<{ id: string }>(),
-	editName: ca<{ id: string }>(),
+	editName: ca<{ id: string }>((R, payload) => {
+		if (payload.id !== CANVAS_ID) {
+			R(payload)
+		}
+	}),
 })

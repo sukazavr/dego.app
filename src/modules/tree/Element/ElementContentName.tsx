@@ -1,13 +1,15 @@
 import React from 'react'
+import { filter } from 'rxjs/operators'
 import { style } from 'typestyle'
 
 import { Atom } from '@grammarly/focal'
 
 import { actionsTree } from '../../../generic/actions'
 import { BODY_ID, TElementAny } from '../../../generic/states/elements'
-import { useObservableFabric } from '../../../generic/supply/react-helpers'
+import { useEnhancedEffect, useObservableFabric } from '../../../generic/supply/react-helpers'
 import { isNotElementCanvas } from '../../../generic/supply/type-guards'
 import { fontRegular } from '../../../generic/theme'
+import { ElementContentNameInput } from './ElementContentNameInput'
 
 interface IProps {
 	element$: Atom<TElementAny>
@@ -15,30 +17,44 @@ interface IProps {
 }
 
 export const ElementContentName = React.memo<IProps>(({ id, element$ }) => {
-	const ref = React.useRef<HTMLInputElement>(null)
+	const [isEditing, setIsEditing] = React.useState(false)
 	const name = useObservableFabric(
 		() =>
 			element$.view((element) => {
 				if (isNotElementCanvas(element)) {
-					return element.name || element.id === BODY_ID ? 'Body' : element.type
+					return element.name || (element.id === BODY_ID ? 'Body' : element.type)
 				} else {
 					return 'Canvas'
 				}
 			}),
-		[]
+		[element$]
 	)
+	const onCommit = React.useCallback(
+		(nextName: string) => {
+			element$.modify((_) => {
+				if (isNotElementCanvas(_)) {
+					return { ..._, name: nextName }
+				} else {
+					return _
+				}
+			})
+			setIsEditing(false)
+		},
+		[element$]
+	)
+	useEnhancedEffect(() => {
+		const sub = actionsTree.editName.$.pipe(filter((_) => _.id === id)).subscribe(() => {
+			setIsEditing(true)
+		})
+		return () => sub.unsubscribe()
+	}, [id])
 	return (
 		<div className={$container} onDoubleClick={actionsTree.editName._({ id })}>
-			<input
-				type="text"
-				ref={ref}
-				className={$nameInput}
-				value={name}
-				disabled={true}
-				/* onKeyDown={this.keyDown}
-				onChange={this.change}
-				onBlur={this.commit} */
-			/>
+			{isEditing ? (
+				<ElementContentNameInput defaultValue={name} onCommit={onCommit} />
+			) : (
+				<div className={$name}>{name}</div>
+			)}
 		</div>
 	)
 })
@@ -46,21 +62,10 @@ export const ElementContentName = React.memo<IProps>(({ id, element$ }) => {
 const $container = style({
 	flexGrow: 1,
 	display: 'flex',
+	height: '3rem',
+	alignItems: 'center',
 })
 
-const $nameInput = style(fontRegular, {
-	flex: '1 1 0',
-	width: 0,
-	border: 0,
-	lineHeight: 1.4,
-	borderRadius: '.2em',
-	backgroundColor: '#fff',
-	color: '#000',
-	outline: 'none',
-	$nest: {
-		'&[disabled]': {
-			backgroundColor: 'transparent',
-			color: 'inherit',
-		},
-	},
+const $name = style(fontRegular, {
+	padding: '0 .2em',
 })
