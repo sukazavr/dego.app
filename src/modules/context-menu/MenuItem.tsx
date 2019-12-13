@@ -1,7 +1,8 @@
 import React from 'react'
 import { classes, style } from 'typestyle'
 
-import { fontRegular } from '../../generic/theme'
+import { tv } from '../../generic/supply/style-helpers'
+import { fontRegularBig } from '../../generic/theme'
 
 interface IMenuItemProps extends React.HTMLProps<HTMLDivElement> {
 	isActive?: boolean
@@ -13,20 +14,20 @@ export const MenuItem = React.memo<IMenuItemProps>(({ children, isActive, ...res
 	</div>
 ))
 
-const $item = style(fontRegular, {
-	color: '#e2e2e2',
-	borderRadius: '0.2em',
-	padding: '0.2em 0.4em',
+const $item = style(fontRegularBig, {
+	padding: '.5rem 1rem',
+	color: tv('base500'),
 	cursor: 'default',
 	userSelect: 'none',
 	$nest: {
 		'&:hover': {
-			color: '#fff',
-			backgroundColor: '#0063ff',
+			color: tv('base900'),
+			backgroundColor: tv('select100'),
 		},
 	},
 })
 
 const $itemActive = style({
-	backgroundColor: 'rgba(0, 255, 90, 0.4)',
+	color: tv('base'),
+	backgroundColor: tv('select500'),
 })

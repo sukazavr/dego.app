@@ -7,6 +7,7 @@ import { classes, style } from 'typestyle'
 
 import { createUseWatcher, useObservable } from '../../generic/supply/react-helpers'
 import { documentClicked$, escPressed$ } from '../../generic/supply/rxjs-helpers'
+import { tv } from '../../generic/supply/style-helpers'
 import { isNotNull } from '../../generic/supply/type-guards'
 import { closeContextMenu, IContextMenuPayload, sendToContextMenuProvider } from './state'
 
@@ -35,11 +36,10 @@ const $container = style({
 
 const $visible = style({
 	zIndex: 100,
-	borderRadius: '0.4em',
-	border: '1px solid #000',
-	background: '#111317',
-	padding: '0.2em',
-	boxShadow: '0 1em 3em rgba(0,0,0,.8)',
+	border: `1px solid ${tv('base900')}`,
+	background: tv('base'),
+	padding: '.5rem 0',
+	boxShadow: '1rem 1rem 0 rgba(0,0,0,.15)',
 })
 
 const useWatcher = createUseWatcher<

@@ -1,10 +1,11 @@
 import React from 'react'
 import { style } from 'typestyle'
 
+import { tv } from '../../generic/supply/style-helpers'
+
 export const MenuDivider: React.FC = () => <div className={$divider} />
 
 const $divider = style({
-	borderBottom: '1px solid #2f2f2f',
-	borderTop: '1px solid #000',
-	margin: '0.4em 0',
+	borderTop: `1px solid ${tv('base900')}`,
+	margin: '.5rem 0',
 })
