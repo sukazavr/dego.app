@@ -3,7 +3,9 @@ import { style } from 'typestyle'
 
 import { actionsTree } from '../../generic/actions'
 import { BODY_ID } from '../../generic/states/elements'
-import { useObservable } from '../../generic/supply/react-helpers'
+import { stateTree$ } from '../../generic/states/state-app'
+import { useObservableFabric } from '../../generic/supply/react-helpers'
+import { isNull } from '../../generic/supply/type-guards'
 import { scrollRegular } from '../../generic/theme'
 import { useContextMenu } from '../context-menu/hook'
 import { MenuItem } from '../context-menu/MenuItem'
@@ -16,7 +18,13 @@ export const Tree = React.memo(() => {
 	useTreeEasyWatcher()
 	const ref = React.useRef<HTMLDivElement>(null)
 	const { tree$ } = useTreeDragWatcher([ref])
-	const { treeIndex, treePaths } = useObservable(tree$)
+	const list = useObservableFabric(
+		() =>
+			tree$.view(({ treeIndex, treePaths }) =>
+				treeIndex.map((id) => <Element key={id} id={id} path={treePaths[id]} />)
+			),
+		[]
+	)
 	const ctxMenu = useContextMenu(() => (
 		<>
 			<MenuItem
@@ -25,19 +33,34 @@ export const Tree = React.memo(() => {
 			/>
 		</>
 	))
+	const style = useObservableFabric(
+		() =>
+			stateTree$
+				.view('flashedID')
+				.view((v) =>
+					isNull(v) ? undefined : ({ overflowX: 'hidden' } as React.CSSProperties)
+				),
+		[]
+	)
 	return (
-		<div ref={ref} className={$container} onContextMenu={ctxMenu.open({})}>
-			{treeIndex.map((id) => (
-				<Element key={id} id={id} path={treePaths[id]} />
-			))}
-			<Highlighter />
+		<div ref={ref} className={$container} style={style} onContextMenu={ctxMenu.open({})}>
+			<div className={$wrapper}>
+				{list}
+				<Highlighter />
+			</div>
 		</div>
 	)
 })
 
 const $container = style(scrollRegular, {
 	flexGrow: 1,
+	display: 'flex',
 	position: 'relative',
-	overflow: 'hidden auto',
+	overflow: 'auto',
+})
+
+const $wrapper = style({
+	flexGrow: 1,
+	height: 'fit-content',
 	paddingBottom: PLACEHOLDER_HEIGHT,
 })

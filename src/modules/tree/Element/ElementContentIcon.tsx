@@ -17,6 +17,7 @@ export const ElementContentIcon = React.memo<IProps>(({ icon }) => {
 })
 
 const $container = style({
+	flex: 'none',
 	fontSize: '3rem',
 	height: '1em',
 })

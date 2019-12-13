@@ -66,7 +66,7 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
 				const el = elStore.get(id)
 				if (el) {
 					stateTree$.lens('focusedID').set(id)
-					const treeEl = el.parentElement as HTMLElement
+					const treeEl = el.parentElement?.parentElement as HTMLElement
 					const parentScrollTop = treeEl.scrollTop
 					const offsetDiff = el.offsetTop
 					const overTop = offsetDiff < parentScrollTop

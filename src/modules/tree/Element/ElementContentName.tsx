@@ -68,4 +68,5 @@ const $container = style({
 
 const $name = style(fontRegular, {
 	padding: '0 .2em',
+	whiteSpace: 'nowrap',
 })
