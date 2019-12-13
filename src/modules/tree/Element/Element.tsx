@@ -87,6 +87,7 @@ export const Element = React.memo<IProps>(({ id, path }) => {
 const $container = style({
 	color: tv('base900'),
 	backgroundColor: tv('base'),
+	userSelect: 'none',
 })
 
 const $parented = style({
@@ -104,6 +105,7 @@ const $hovered = style({
 const $focused = style({
 	color: tv('base'),
 	backgroundColor: tv('select500'),
+	userSelect: 'auto',
 })
 
 const $scoped = style({

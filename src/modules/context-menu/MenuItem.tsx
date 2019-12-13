@@ -9,7 +9,7 @@ interface IMenuItemProps extends React.HTMLProps<HTMLDivElement> {
 }
 
 export const MenuItem = React.memo<IMenuItemProps>(({ children, isActive, ...rest }) => (
-	<div className={classes($item, isActive && $itemActive)} data-close-ctx {...rest}>
+	<div className={classes($item, isActive && $active)} data-close-ctx {...rest}>
 		{children}
 	</div>
 ))
@@ -27,7 +27,7 @@ const $item = style(fontRegularBig, {
 	},
 })
 
-const $itemActive = style({
+const $active = style({
 	color: tv('base'),
 	backgroundColor: tv('select500'),
 })
