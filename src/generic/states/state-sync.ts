@@ -1,8 +1,8 @@
 import { fromEvent, merge } from 'rxjs'
-import { auditTime, distinctUntilChanged, map, mapTo } from 'rxjs/operators'
+import { auditTime, debounceTime, distinctUntilChanged, map, mapTo, skip } from 'rxjs/operators'
 
 import { vwToGraduations } from './shell'
-import { stateShell$ } from './state-app'
+import { stateElements$, stateShell$ } from './state-app'
 
 fromEvent(window, 'resize')
 	.pipe(
@@ -18,3 +18,17 @@ merge(
 )
 	.pipe(distinctUntilChanged())
 	.subscribe((isOnline) => stateShell$.modify((s) => ({ ...s, isOnline })))
+
+// Elements persistance
+const LS_ELEMENTS = '_!ELEMENTS!_'
+try {
+	const LSElements = localStorage.getItem(LS_ELEMENTS)
+	const ParsedElements = LSElements && JSON.parse(LSElements)
+
+	if (ParsedElements) {
+		stateElements$.set(ParsedElements)
+	}
+} catch (error) {}
+stateElements$.pipe(skip(1), debounceTime(500)).subscribe((stateElements) => {
+	localStorage.setItem(LS_ELEMENTS, JSON.stringify(stateElements))
+})

@@ -1,4 +1,4 @@
-import { debounceTime, switchMapTo, takeUntil } from 'rxjs/operators'
+import { debounceTime, skip, switchMapTo, takeUntil } from 'rxjs/operators'
 
 import { stateLayout$ } from '../../generic/states/state-app'
 import { createUseWatcher } from '../../generic/supply/react-helpers'
@@ -16,7 +16,7 @@ export const useLayoutWatcher = createUseWatcher(({ didMount$, didUnmount$ }) =>
 	} catch (error) {}
 
 	didMount$
-		.pipe(switchMapTo(stateLayout$.pipe(debounceTime(500))), takeUntil(didUnmount$))
+		.pipe(switchMapTo(stateLayout$.pipe(skip(1), debounceTime(500))), takeUntil(didUnmount$))
 		.subscribe((stateLayout) => {
 			localStorage.setItem(LS_LAYOUT, JSON.stringify(stateLayout))
 		})
