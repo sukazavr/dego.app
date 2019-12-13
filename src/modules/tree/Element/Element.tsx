@@ -21,8 +21,6 @@ interface IProps {
 }
 
 export const Element = React.memo<IProps>(({ id, path }) => {
-	// TODO: REMOVE
-	console.log('Ren Element', id, path)
 	const ref = React.useRef<HTMLDivElement>(null)
 	useEnhancedEffect(() => {
 		const el = ref.current as HTMLDivElement
