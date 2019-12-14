@@ -12,6 +12,14 @@ export const icons = {
 			</>
 		),
 	},
+	div: {
+		viewBox: '0 0 24 24',
+		path: React.createElement('path', {
+			fillRule: 'evenodd',
+			clipRule: 'evenodd',
+			d: 'M20 8H3v8h17V8zM2 7v10h19V7H2z',
+		}),
+	},
 	flexHorizontal: {
 		viewBox: '0 0 24 24',
 		path: React.createElement('path', {

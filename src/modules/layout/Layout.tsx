@@ -6,27 +6,30 @@ import { stateLayout$ } from '../../generic/states/state-app'
 import { useObservable } from '../../generic/supply/react-helpers'
 import { Preview } from '../preview/Preview'
 import { Tree } from '../tree/Tree'
+import { AreaSecond } from './AreaSecond'
 import { Divider } from './Divider'
 import { useLayoutWatcher } from './watcher'
 
-const TREE_AREA = '1 / 1 / 2 / 2'
-const CHILD_AREA = '1 / 2 / 2 / 3'
-const PREVIEW_AREA = '1 / 3 / 2 / 4'
+const FIRST_AREA = '1 / 1 / 2 / 2'
+const SECOND_AREA = '1 / 2 / 2 / 3'
+const THIRD_AREA = '1 / 3 / 2 / 4'
 
 export const Layout = React.memo(() => {
 	const style$ = useLayoutWatcher()
 	const style = useObservable(style$)
 	return (
 		<div className={$container} style={style}>
-			<div className={$tree}>
+			<div className={$first}>
 				<Tree />
 			</div>
-			<div className={$child}>d</div>
-			<div className={$preview}>
+			<div className={$second}>
+				<AreaSecond />
+			</div>
+			<div className={$third}>
 				<Preview />
 			</div>
-			<Divider ward={stateLayout$.lens('treePanelWidth')} area={CHILD_AREA} />
-			<Divider ward={stateLayout$.lens('nodePanelWidth')} area={PREVIEW_AREA} />
+			<Divider ward={stateLayout$.lens('treePanelWidth')} area={SECOND_AREA} />
+			<Divider ward={stateLayout$.lens('nodePanelWidth')} area={THIRD_AREA} />
 		</div>
 	)
 })
@@ -39,25 +42,17 @@ const $container = style({
 
 const common: NestedCSSProperties = {
 	display: 'flex',
-	$nest: {
-		'&>*': {
-			flexGrow: 1,
-			minWidth: 0,
-		},
-	},
+	flexDirection: 'column',
 }
 
-const $tree = style(common, {
-	gridArea: TREE_AREA,
-	backgroundColor: 'rgba(255, 255, 255, 0.12)',
+const $first = style(common, {
+	gridArea: FIRST_AREA,
 })
 
-const $child = style(common, {
-	gridArea: CHILD_AREA,
-	backgroundColor: 'rgba(255, 255, 255, 0.12)',
+const $second = style(common, {
+	gridArea: SECOND_AREA,
 })
 
-const $preview = style(common, {
-	gridArea: PREVIEW_AREA,
-	backgroundColor: 'rgba(255, 255, 255, 0.06)',
+const $third = style(common, {
+	gridArea: THIRD_AREA,
 })

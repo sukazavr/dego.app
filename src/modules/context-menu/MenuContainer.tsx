@@ -37,6 +37,7 @@ const $container = style({
 const $visible = style({
 	zIndex: 100,
 	border: `1px solid ${tv('base900')}`,
+	outline: `1px solid ${tv('base')}`,
 	background: tv('base'),
 	padding: '.5rem 0',
 	boxShadow: '1rem 1rem 0 rgba(0,0,0,.15)',
