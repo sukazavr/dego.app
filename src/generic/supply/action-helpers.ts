@@ -49,7 +49,7 @@ export const generalActionsLog$ = generalActionLog.$
 
 type TModifier<A, P, C> = (R: (payload: P) => void, a: A) => C
 
-type TAction<A, P = A, C = void> = {
+export type TAction<A, P = A, C = void> = {
 	(args: A): C
 	id: string
 	_: (args: A) => () => C

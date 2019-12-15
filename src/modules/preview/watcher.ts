@@ -1,12 +1,13 @@
 import React from 'react'
 import { fromEvent } from 'rxjs'
-import { switchMap, switchMapTo, takeUntil, tap } from 'rxjs/operators'
+import { distinctUntilChanged, switchMap, takeUntil, tap } from 'rxjs/operators'
 
 import { ReadOnlyAtom } from '@grammarly/focal'
 
 import { lensElementCanvas } from '../../generic/states/elements'
 import { stateElements$ } from '../../generic/states/state-app'
 import { createUseWatcher } from '../../generic/supply/react-helpers'
+import { continueAfter, selectInTuple } from '../../generic/supply/rxjs-helpers'
 
 export const usePreviewWatcher = createUseWatcher<
 	[React.RefObject<HTMLDivElement>],
@@ -14,7 +15,7 @@ export const usePreviewWatcher = createUseWatcher<
 		width: number
 		height: number
 	}>
->(({ didMount$, didUnmount$, deps$ }) => {
+>(({ currentDeps$, didMount$, didUnmount$ }) => {
 	const move$ = fromEvent<MouseEvent>(document, 'mousemove')
 	const up$ = fromEvent<MouseEvent>(document, 'mouseup')
 
@@ -22,10 +23,12 @@ export const usePreviewWatcher = createUseWatcher<
 		.view(lensElementCanvas)
 		.view((_) => ({ height: _.height.n, width: _.width.n }))
 
-	didMount$
+	currentDeps$
 		.pipe(
-			switchMapTo(deps$),
-			switchMap(([ref]) => {
+			selectInTuple(0),
+			distinctUntilChanged(),
+			continueAfter(didMount$),
+			switchMap((ref) => {
 				const el = ref.current as HTMLDivElement
 				return fromEvent<MouseEvent>(el, 'mousedown').pipe(
 					switchMap((downE) => {

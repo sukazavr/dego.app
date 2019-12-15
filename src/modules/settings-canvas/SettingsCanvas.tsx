@@ -5,16 +5,25 @@ import { Atom } from '@grammarly/focal'
 
 import { Button } from '../../generic/components/Button'
 import { ButtonGroup } from '../../generic/components/ButtonGroup'
-import { Input } from '../../generic/components/Input'
 import { Label } from '../../generic/components/Label'
 import { Panel } from '../../generic/components/Panel'
 import { Stack } from '../../generic/components/Stack'
 import { Switcher } from '../../generic/components/Switcher'
 import { Tandem } from '../../generic/components/Tandem'
 import { TandemGroup } from '../../generic/components/TandemGroup'
+import { lensElementCanvas } from '../../generic/states/elements'
+import { stateElements$ } from '../../generic/states/state-app'
 import { scrollRegular } from '../../generic/theme'
+import { UnitInput } from '../unit-input/UnitInput'
 
 export const SettingsCanvas = React.memo(() => {
+	const props = React.useMemo(() => {
+		const canvas$ = stateElements$.lens(lensElementCanvas)
+		return {
+			width$: canvas$.lens('width'),
+			height$: canvas$.lens('height'),
+		}
+	}, [])
 	return (
 		<div className={$container}>
 			<div className={$wrapper}>
@@ -36,13 +45,13 @@ export const SettingsCanvas = React.memo(() => {
 						left={
 							<Stack spacing={1} isInline>
 								<Label children="W" />
-								<Input maxWidth="s" />
+								<UnitInput options={['px', 'em']} unit$={props.width$} />
 							</Stack>
 						}
 						right={
 							<Stack spacing={1} isInline>
 								<Label children="H" />
-								<Input maxWidth="s" />
+								<UnitInput options={['px', 'em']} unit$={props.height$} />
 							</Stack>
 						}
 					/>

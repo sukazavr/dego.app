@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { BehaviorSubject, Observable } from 'rxjs'
-import { distinctUntilChanged, skip } from 'rxjs/operators'
+import { BehaviorSubject, Observable, Subject } from 'rxjs'
+import {
+	distinctUntilChanged, map, pairwise, shareReplay, skip, startWith, takeUntil,
+} from 'rxjs/operators'
 
 import { Atom, ReadOnlyAtom } from '@grammarly/focal'
 
@@ -36,38 +38,77 @@ export function createUseWatcher<
 	TCreate extends (context: {
 		didMount$: Observable<void>
 		didUnmount$: Observable<void>
-		deps$: ReadOnlyAtom<undefined>
+		deps$: Observable<{ previous: undefined; current: undefined }>
+		currentDeps$: Observable<undefined>
 	}) => any
 >(create: TCreate): () => ReturnType<TCreate>
 export function createUseWatcher<TDeps extends unknown[], TReturn>(
 	create: (context: {
 		didMount$: Observable<void>
 		didUnmount$: Observable<void>
-		deps$: ReadOnlyAtom<TDeps>
+		deps$: Observable<{ previous?: TDeps; current: TDeps }>
+		currentDeps$: Observable<TDeps>
 	}) => TReturn
 ): (deps: TDeps) => TReturn
 export function createUseWatcher<TDeps extends unknown[], TReturn>(
 	create: (context: {
 		didMount$: Observable<void>
 		didUnmount$: Observable<void>
-		deps$: ReadOnlyAtom<TDeps | undefined>
+		deps$: Observable<{ previous?: TDeps; current: TDeps }>
+		currentDeps$: Observable<TDeps | undefined>
 	}) => TReturn
 ): (deps?: TDeps) => TReturn {
 	return (deps) => {
-		const [didMount, didUnmount, deps$, res] = useMemo(() => {
+		const [didMount, didUnmount, sendDeps, res] = useMemo(() => {
 			const didMount = ca()
-			const didUnmount = ca()
-			const deps$ = Atom.create<TDeps | undefined>(deps)
+			const didUnmount$ = new Subject<void>()
+			const didUnmount = () => {
+				didUnmount$.next()
+				didUnmount$.complete()
+			}
+			const sendDeps = ca<TDeps | undefined>()
+			const didMount$ = didMount.$.pipe(
+				shareReplay({
+					bufferSize: 1,
+					refCount: true,
+				}),
+				takeUntil(didUnmount$)
+			)
+			const currentDeps$ = sendDeps.$.pipe(
+				shareReplay({
+					bufferSize: 1,
+					refCount: true,
+				}),
+				takeUntil(didUnmount$)
+			)
+			const deps$ = sendDeps.$.pipe(
+				startWith(undefined),
+				pairwise(),
+				map(
+					([previous, current]) =>
+						({ previous, current } as { previous?: TDeps; current: TDeps })
+				),
+				shareReplay({
+					bufferSize: 1,
+					refCount: true,
+				}),
+				takeUntil(didUnmount$)
+			)
 			const res = create({
-				didMount$: didMount.$,
-				didUnmount$: didUnmount.$,
-				deps$: deps$.view(),
+				didMount$,
+				didUnmount$,
+				deps$,
+				currentDeps$,
 			})
-			return [didMount, didUnmount, deps$, res]
+			// Init
+			didMount$.subscribe()
+			deps$.subscribe()
+			currentDeps$.subscribe()
+			return [didMount, didUnmount, sendDeps, res]
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [])
 		useMemo(() => {
-			deps$.set(deps)
+			sendDeps(deps)
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, deps || [])
 		useEnhancedEffect(() => {

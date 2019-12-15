@@ -1,6 +1,6 @@
 import produce from 'immer'
 import {
-	distinct, distinctUntilChanged, map, switchMap, switchMapTo, takeUntil, tap, withLatestFrom,
+	distinct, distinctUntilChanged, map, switchMap, takeUntil, tap, withLatestFrom,
 } from 'rxjs/operators'
 
 import { ReadOnlyAtom } from '@grammarly/focal'
@@ -9,6 +9,7 @@ import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements'
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app'
 import { defaultTree, ITree } from '../../../generic/states/tree'
 import { createUseWatcher } from '../../../generic/supply/react-helpers'
+import { continueAfter, selectInTuple } from '../../../generic/supply/rxjs-helpers'
 import { isNotElementCanvas, isTreeElement } from '../../../generic/supply/type-guards'
 import { isArrayEqual } from '../../../generic/supply/utils'
 import {
@@ -27,7 +28,7 @@ interface ITreeContext {
 export const useTreeDragWatcher = createUseWatcher<
 	[React.RefObject<HTMLDivElement>],
 	{ tree$: ReadOnlyAtom<ITreeContext> }
->(({ didMount$, didUnmount$, deps$ }) => {
+>(({ currentDeps$, didMount$, didUnmount$ }) => {
 	let prevPaths: Record<string, string[]> = {}
 	const tree$ = stateElements$.view<ITreeContext>((elements) => {
 		const nextPaths: { [id: string]: string[] } = {}
@@ -66,10 +67,12 @@ export const useTreeDragWatcher = createUseWatcher<
 
 	const draggingID$ = stateTree$.lens('draggingID')
 
-	didMount$
+	currentDeps$
 		.pipe(
-			switchMapTo(deps$),
-			switchMap(([ref]) => {
+			selectInTuple(0),
+			distinctUntilChanged(),
+			continueAfter(didMount$),
+			switchMap((ref) => {
 				const treeEl = ref.current as HTMLDivElement
 				return treeElementStartDragging.$.pipe(
 					tap((draggingID) => draggingID$.set(draggingID)),

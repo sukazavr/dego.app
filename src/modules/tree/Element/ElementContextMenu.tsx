@@ -1,5 +1,4 @@
 import React from 'react'
-import { switchMapTo, takeUntil } from 'rxjs/operators'
 
 import { actionsTree } from '../../../generic/actions'
 import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements'
@@ -39,9 +38,9 @@ export const ElementContextMenu = React.memo<IProps>(({ id }) => {
 	)
 })
 
-const useWatcher = createUseWatcher<[string], void>(({ didMount$, didUnmount$, deps$ }) => {
-	didMount$.pipe(switchMapTo(deps$), takeUntil(didUnmount$)).subscribe({
-		next: ([id]) => {
+const useWatcher = createUseWatcher<[string], void>(({ deps$ }) => {
+	deps$.subscribe({
+		next: ({ current: [id] }) => {
 			stateTree$.lens('scopedID').set(id)
 		},
 		complete: () => {

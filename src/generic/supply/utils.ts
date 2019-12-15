@@ -1,4 +1,4 @@
-export const isArrayEqual = (a: any[], b: any[]) => {
+export const isArrayEqual = <T1 extends any[]>(a: T1, b: T1): boolean => {
 	if (a === b) {
 		return true
 	}

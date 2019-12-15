@@ -1,3 +1,5 @@
+import { CANVAS_ID } from './elements'
+
 export interface ITree {
 	draggingID: string | null
 	hoveredID: string | null
@@ -24,7 +26,7 @@ export interface ITree {
 export const defaultTree: ITree = {
 	draggingID: null,
 	hoveredID: null,
-	focusedID: null,
+	focusedID: CANVAS_ID,
 	flashedID: null,
 	scopedID: null,
 	targetID: null,

@@ -62,23 +62,30 @@ const useWatcher = createUseWatcher<
 			}),
 			withLatestFrom(deps$),
 			observeOn(animationFrameScheduler),
-			map(([position, [ref]]) => {
-				const el = ref.current as HTMLDivElement
-				const { width, height } = el.getBoundingClientRect()
-				const pWidth = window.innerWidth - PADDING
-				const pHeight = window.innerHeight - PADDING
+			map(
+				([
+					position,
+					{
+						current: [ref],
+					},
+				]) => {
+					const el = ref.current as HTMLDivElement
+					const { width, height } = el.getBoundingClientRect()
+					const pWidth = window.innerWidth - PADDING
+					const pHeight = window.innerHeight - PADDING
 
-				let nTop = Math.max(PADDING, position.top)
-				nTop = nTop + height > pHeight ? pHeight - height : nTop
+					let nTop = Math.max(PADDING, position.top)
+					nTop = nTop + height > pHeight ? pHeight - height : nTop
 
-				let nLeft = Math.max(PADDING, position.left)
-				nLeft = nLeft + width > pWidth ? pWidth - width : nLeft
+					let nLeft = Math.max(PADDING, position.left)
+					nLeft = nLeft + width > pWidth ? pWidth - width : nLeft
 
-				return {
-					top: nTop,
-					left: nLeft,
+					return {
+						top: nTop,
+						left: nLeft,
+					}
 				}
-			}),
+			),
 			takeUntil(didUnmount$)
 		)
 		.subscribe(style$)
@@ -92,15 +99,22 @@ const useWatcher = createUseWatcher<
 					escPressed$,
 					documentClicked$.pipe(
 						withLatestFrom(deps$),
-						filter(([e, [ref]]) => {
-							const el = ref.current as HTMLDivElement
-							const target = e.target as Element
-							if (el.contains(target)) {
-								return target.hasAttribute('data-close-ctx')
-							} else {
-								return e.button === 0
+						filter(
+							([
+								e,
+								{
+									current: [ref],
+								},
+							]) => {
+								const el = ref.current as HTMLDivElement
+								const target = e.target as Element
+								if (el.contains(target)) {
+									return target.hasAttribute('data-close-ctx')
+								} else {
+									return e.button === 0
+								}
 							}
-						})
+						)
 					)
 				)
 			),
