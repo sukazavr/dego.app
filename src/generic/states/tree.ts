@@ -2,10 +2,10 @@ export interface ITree {
 	draggingID: string | null
 	hoveredID: string | null
 	focusedID: string | null
-	flashedID: string | null
+	flashedID: string | null // What to animate after drop
 	scopedID: string | null // Used in context menu
-	targetID: string | null
-	parentID: string | null
+	targetID: string | null // Where to drop
+	parentID: string | null // Parent of target
 	highlighter: {
 		isVisible: boolean
 		style: {

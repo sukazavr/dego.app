@@ -38,9 +38,9 @@ export const ElementContextMenu = React.memo<IProps>(({ id }) => {
 	)
 })
 
-const useWatcher = createUseWatcher<[string], void>(({ deps$ }) => {
-	deps$.subscribe({
-		next: ({ current: [id] }) => {
+const useWatcher = createUseWatcher<[string], void>(({ currentDeps$ }) => {
+	currentDeps$.subscribe({
+		next: ([id]) => {
 			stateTree$.lens('scopedID').set(id)
 		},
 		complete: () => {
