@@ -12,6 +12,12 @@ export enum EElementType {
 	Component = 'Component',
 }
 
+export enum ECanvasType {
+	Div,
+	FlexRow,
+	FlexColumn,
+}
+
 export type TElementAny = IElementCanvas | IElementBody | IElement
 
 export interface IElements {
@@ -31,6 +37,8 @@ export const defaultElements: IElements = {
 			n: 1000,
 			s: 'px',
 		},
+		isTransparent: true,
+		type: ECanvasType.Div,
 	},
 	[BODY_ID]: {
 		id: BODY_ID,
@@ -51,6 +59,8 @@ export interface IElementCanvas {
 	id: typeof CANVAS_ID
 	width: IUnit
 	height: IUnit
+	type: ECanvasType
+	isTransparent: boolean
 }
 
 export interface IElementBody {

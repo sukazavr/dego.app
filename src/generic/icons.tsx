@@ -20,7 +20,7 @@ export const icons = {
 			d: 'M20 8H3v8h17V8zM2 7v10h19V7H2z',
 		}),
 	},
-	flexHorizontal: {
+	flexRow: {
 		viewBox: '0 0 24 24',
 		path: React.createElement('path', {
 			fillRule: 'evenodd',
@@ -28,7 +28,7 @@ export const icons = {
 			d: 'M8 16V8H3v8h5zm-6 1V7h19v10H2zm12-1H9V8h5v8zm1 0h5V8h-5v8z',
 		}),
 	},
-	flexVertical: {
+	flexColumn: {
 		viewBox: '0 0 24 24',
 		path: React.createElement('path', {
 			fillRule: 'evenodd',

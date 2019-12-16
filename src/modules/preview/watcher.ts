@@ -19,9 +19,11 @@ export const usePreviewWatcher = createUseWatcher<
 	const move$ = fromEvent<MouseEvent>(document, 'mousemove')
 	const up$ = fromEvent<MouseEvent>(document, 'mouseup')
 
-	const canvasStyle$ = stateElements$
-		.view(lensElementCanvas)
-		.view((_) => ({ height: _.height.n, width: _.width.n }))
+	const canvasStyle$ = stateElements$.view(lensElementCanvas).view((_) => ({
+		height: _.height.n,
+		width: _.width.n,
+		backgroundImage: _.isTransparent ? undefined : 'none',
+	}))
 
 	currentDeps$
 		.pipe(
