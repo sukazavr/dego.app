@@ -1,9 +1,9 @@
 export interface ILayout {
-	treePanelWidth: number
-	nodePanelWidth: number
+  treePanelWidth: number;
+  nodePanelWidth: number;
 }
 
 export const defaultLayout: ILayout = {
-	treePanelWidth: 260,
-	nodePanelWidth: 310,
-}
+  treePanelWidth: 260,
+  nodePanelWidth: 310,
+};

@@ -1,63 +1,100 @@
-import { Observable } from 'rxjs'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Observable } from 'rxjs';
 
-import { Atom, ReadOnlyAtom } from '@grammarly/focal'
-import { TElementAny, IElementCanvas, CANVAS_ID, IElement, BODY_ID } from '../states/elements'
+import { Atom, ReadOnlyAtom } from '@grammarly/focal';
+
+import { BODY_ID, CANVAS_ID, IElement, IElementCanvas, TElementAny } from '../states/elements';
+
+type Maybe<T> = T | null | undefined | unknown;
+
+type ObjectCheck<T> = T extends object ? T : Record<any, unknown>;
+
+type ExtractPlus<T, U, K> = any extends T ? K : T extends U ? T : K;
 
 export function isAnyAtom<T>(value: unknown): value is Atom<T> | ReadOnlyAtom<T> {
-	return value instanceof Observable && isFunction((value as any).view)
+  return value instanceof Observable && isFunction((value as any).view);
 }
 
 export function isAtom<T>(value: unknown): value is Atom<T> {
-	return isAnyAtom(value) && isFunction((value as any).set)
+  return isAnyAtom(value) && isFunction((value as any).set);
 }
 
 export function isReadOnlyAtom<T>(value: unknown): value is ReadOnlyAtom<T> {
-	return isAnyAtom(value) && isUndefined((value as any).set)
+  return isAnyAtom(value) && isUndefined((value as any).set);
 }
 
 // tslint:disable-next-line: ban-types
 export function isFunction(value: unknown): value is Function {
-	return typeof value === 'function'
+  return typeof value === 'function';
 }
 
 export function isUndefined(value: unknown): value is undefined {
-	return value === undefined
+  return value === undefined;
 }
 
 export function isDefined<T>(value: T): value is Exclude<T, undefined> {
-	return value !== undefined
+  return value !== undefined;
 }
 
 export function isNull(value: unknown): value is null {
-	return value === null
+  return value === null;
 }
 
-export function isNotNull<T>(value: unknown): value is Exclude<T, null> {
-	return value !== null
+export function isNotNull<T>(value: T): value is Exclude<T, null> {
+  return value !== null;
 }
 
-export function isPresent<T>(value: T): value is Exclude<T, undefined | null> {
-	return value !== undefined && value !== null
+export function isPresent<T>(value: T): value is NonNullable<T> {
+  return value !== undefined && value !== null;
 }
 
 export function isError(value: unknown): value is Error {
-	const tag = toString.call(value)
-	switch (tag) {
-		case '[object Error]':
-			return true
-		case '[object Exception]':
-			return true
-		case '[object DOMException]':
-			return true
-		default:
-			return value instanceof Error
-	}
+  const tag = toString.call(value);
+  switch (tag) {
+    case '[object Error]':
+      return true;
+    case '[object Exception]':
+      return true;
+    case '[object DOMException]':
+      return true;
+    default:
+      return value instanceof Error;
+  }
 }
 
-export function isNotElementCanvas(value: TElementAny): value is Exclude<TElementAny, IElementCanvas> {
-	return value.id !== CANVAS_ID
+export function isArray<T>(
+  value: T | unknown[]
+): value is ExtractPlus<T, any[] | ReadonlyArray<any>, unknown[]> {
+  return Array.isArray(value);
+}
+
+// http://jsperf.com/isobject4
+export function isObject<T extends Maybe<{}>>(value: T): value is ObjectCheck<NonNullable<T>> {
+  return value !== null && typeof value === 'object';
+}
+
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number';
+}
+
+export function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+export function isText(value: unknown): value is string {
+  return isString(value) && value !== '';
+}
+
+export function isNotText<T>(value: T): value is Exclude<T, string> {
+  return !isText(value);
+}
+
+export function isNotElementCanvas(
+  value: TElementAny
+): value is Exclude<TElementAny, IElementCanvas> {
+  return value.id !== CANVAS_ID;
 }
 
 export function isTreeElement(value: TElementAny): value is IElement {
-	return value.id !== CANVAS_ID && value.id !== BODY_ID
+  return value.id !== CANVAS_ID && value.id !== BODY_ID;
 }

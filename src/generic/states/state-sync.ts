@@ -1,34 +1,34 @@
-import { fromEvent, merge } from 'rxjs'
-import { auditTime, debounceTime, distinctUntilChanged, map, mapTo, skip } from 'rxjs/operators'
+import { fromEvent, merge } from 'rxjs';
+import { auditTime, debounceTime, distinctUntilChanged, map, mapTo, skip } from 'rxjs/operators';
 
-import { vwToGraduations } from './shell'
-import { stateElements$, stateShell$ } from './state-app'
+import { vwToGraduations } from './shell';
+import { stateElements$, stateShell$ } from './state-app';
 
 fromEvent(window, 'resize')
-	.pipe(
-		auditTime(100),
-		map(() => window.innerWidth),
-		distinctUntilChanged()
-	)
-	.subscribe((vw) => stateShell$.modify((s) => ({ ...s, vw, graduations: vwToGraduations(vw) })))
+  .pipe(
+    auditTime(100),
+    map(() => window.innerWidth),
+    distinctUntilChanged()
+  )
+  .subscribe((vw) => stateShell$.modify((s) => ({ ...s, vw, graduations: vwToGraduations(vw) })));
 
 merge(
-	fromEvent(window, 'online').pipe(mapTo(true)),
-	fromEvent(window, 'offline').pipe(mapTo(false))
+  fromEvent(window, 'online').pipe(mapTo(true)),
+  fromEvent(window, 'offline').pipe(mapTo(false))
 )
-	.pipe(distinctUntilChanged())
-	.subscribe((isOnline) => stateShell$.modify((s) => ({ ...s, isOnline })))
+  .pipe(distinctUntilChanged())
+  .subscribe((isOnline) => stateShell$.modify((s) => ({ ...s, isOnline })));
 
 // Elements persistance
-const LS_ELEMENTS = '_!ELEMENTS!_'
+const LS_ELEMENTS = '_!ELEMENTS!_';
 try {
-	const LSElements = localStorage.getItem(LS_ELEMENTS)
-	const ParsedElements = LSElements && JSON.parse(LSElements)
+  const LSElements = localStorage.getItem(LS_ELEMENTS);
+  const ParsedElements = LSElements && JSON.parse(LSElements);
 
-	if (ParsedElements) {
-		stateElements$.set(ParsedElements)
-	}
+  if (ParsedElements) {
+    stateElements$.set(ParsedElements);
+  }
 } catch (error) {}
 stateElements$.pipe(skip(1), debounceTime(500)).subscribe((stateElements) => {
-	localStorage.setItem(LS_ELEMENTS, JSON.stringify(stateElements))
-})
+  localStorage.setItem(LS_ELEMENTS, JSON.stringify(stateElements));
+});

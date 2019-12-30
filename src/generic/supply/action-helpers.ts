@@ -1,73 +1,74 @@
-import { Observable, Subject } from 'rxjs'
+import { Observable, Subject } from 'rxjs';
 
-let actionCounter: number = 0
+let actionCounter: number = 0;
 
 /* Create Action
  ** A -- Function Arguments (payload it)
  ** P -- Stream Output (payload out)
  ** C -- Function Return (what to return after "ca" call)
  */
-export function ca(): TDummyAction
-export function ca<A>(): TAction<A>
-export function ca<A>(modifier: TModifier<A, A, void>): TAction<A>
-export function ca<A, C>(modifier: TModifier<A, A, C>): TAction<A, A, C>
-export function ca<A, P, C>(modifier: TModifier<A, P, C>): TAction<A, P, C>
+export function ca(): TActionSignal;
+export function ca<A>(): TAction<A>;
+export function ca<A>(modifier: TModifier<A, A, void>): TAction<A>;
+export function ca<A, C>(modifier: TModifier<A, A, C>): TAction<A, A, C>;
+export function ca<A, P, C>(modifier: TModifier<A, P, C>): TAction<A, P, C>;
 export function ca<A, P, C>(modifier?: TModifier<A, P, C>): TAction<A, P, C> {
-	const $ = new Subject<P>()
-	const next = $.next.bind($)
-	const action = (payload: any) => {
-		if (typeof modifier === 'function') {
-			return modifier(next, payload)
-		} else {
-			return next(payload)
-		}
-	}
-	action.id = `A#${++actionCounter}`
-	action._ = (payload: any) => () => action(payload)
-	action.$ = $
-	return action as any
+  const $ = new Subject<P>();
+  const next = (payload?: P) => $.next(payload);
+  const action = (payload: unknown) => {
+    if (typeof modifier === 'function') {
+      return modifier(next, payload as A);
+    } else {
+      return next(payload as P | undefined);
+    }
+  };
+  action.id = `A#${++actionCounter}`;
+  action._ = (payload: unknown) => () => action(payload);
+  action.$ = $;
+  return action as TAction<A, P, C>;
 }
 
 // Generalize Actions
 export const ga = <Actions>(namespace: string, actions: { [K in keyof Actions]: Actions[K] }) => {
-	Object.entries<any>(actions).forEach(([key, action]) => {
-		action.$.subscribe((payload: any) => {
-			generalActionLog({
-				action,
-				key,
-				namespace,
-				payload,
-			})
-		})
-	})
-	return actions
-}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Object.entries<any>(actions).forEach(([key, action]) => {
+    action.$.subscribe((payload: unknown) => {
+      generalActionLog({
+        action,
+        key,
+        namespace,
+        payload,
+      });
+    });
+  });
+  return actions;
+};
 
-const generalActionLog = ca<IActionDust>()
+const generalActionLog = ca<IActionDust>();
 
-export const generalActionsLog$ = generalActionLog.$
+export const generalActionsLog$ = generalActionLog.$;
 
-type TModifier<A, P, C> = (R: (payload: P) => void, a: A) => C
+type TModifier<A, P, C> = (R: (payload: P) => void, a: A) => C;
 
 export type TAction<A, P = A, C = void> = {
-	(args: A): C
-	id: string
-	_: (args: A) => () => C
-	$: Observable<P>
-}
+  id: string;
+  $: Observable<P>;
+  _: (args: A) => () => C;
+  (args: A): C;
+};
 
-export type TDummyAction = {
-	(...args: any[]): void
-	id: string
-	_: (...args: any[]) => () => void
-	$: Observable<any>
-}
+export type TActionSignal = {
+  id: string;
+  $: Observable<unknown>;
+  _: (...args: unknown[]) => () => void;
+  (...args: unknown[]): void;
+};
 
 export interface IActionDust {
-	action: TDummyAction
-	key: string
-	namespace: string
-	payload: any
+  action: TActionSignal;
+  key: string;
+  namespace: string;
+  payload: unknown;
 }
 
 /* const d = ca()

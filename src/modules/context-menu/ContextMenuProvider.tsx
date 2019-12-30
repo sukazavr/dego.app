@@ -1,8 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import { MenuContainer } from './MenuContainer'
+import { MenuContainer } from './MenuContainer';
 
 export const ContextMenuProvider = React.memo(() =>
-	ReactDOM.createPortal(<MenuContainer />, document.body)
-)
+  ReactDOM.createPortal(<MenuContainer />, document.body)
+);

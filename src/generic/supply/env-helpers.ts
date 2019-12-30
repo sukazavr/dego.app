@@ -1,8 +1,7 @@
-export const canUseDOM = !!(
-	typeof window !== 'undefined' &&
-	window.document &&
-	window.document.createElement
-)
+import { isDefined } from './type-guards';
 
-export const isProduction = process.env.NODE_ENV === 'production'
-export const isDevelopment = !isProduction
+export const canUseDOM =
+  isDefined(window) && isDefined(window.document) && isDefined(window.document.createElement);
+
+export const isProduction = process.env.NODE_ENV === 'production';
+export const isDevelopment = !isProduction;
