@@ -38,7 +38,7 @@ export const graduationToMediaCondition = (gradName: TGraduationName) => {
 type TBoxUnit = number | string;
 const boxUnitToString = (value: TBoxUnit): string => {
   if (isNumber(value)) {
-    return `${value}px`;
+    return `${value}rem`;
   }
   return value;
 };
