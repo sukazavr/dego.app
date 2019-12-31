@@ -53,11 +53,12 @@ export const Tree = React.memo(() => {
 const $container = style(scrollRegular, {
   flexGrow: 1,
   display: 'flex',
-  flexDirection: 'column',
   position: 'relative',
   overflow: 'auto',
 });
 
 const $wrapper = style({
+  flexGrow: 1,
+  height: 'fit-content',
   paddingBottom: PLACEHOLDER_HEIGHT,
 });
