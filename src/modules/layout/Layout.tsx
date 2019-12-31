@@ -17,6 +17,13 @@ const THIRD_AREA = '1 / 3 / 2 / 4';
 export const Layout = React.memo(() => {
   const style$ = useLayoutWatcher();
   const style = useObservable(style$);
+  const { wardTree$, wardNode$ } = React.useMemo(
+    () => ({
+      wardTree$: stateLayout$.lens('treePanelWidth'),
+      wardNode$: stateLayout$.lens('nodePanelWidth'),
+    }),
+    []
+  );
   return (
     <div className={$container} style={style}>
       <div className={$first}>
@@ -28,8 +35,8 @@ export const Layout = React.memo(() => {
       <div className={$third}>
         <Preview />
       </div>
-      <Divider ward={stateLayout$.lens('treePanelWidth')} area={SECOND_AREA} />
-      <Divider ward={stateLayout$.lens('nodePanelWidth')} area={THIRD_AREA} />
+      <Divider ward$={wardTree$} gridArea={SECOND_AREA} />
+      <Divider ward$={wardNode$} gridArea={THIRD_AREA} />
     </div>
   );
 });

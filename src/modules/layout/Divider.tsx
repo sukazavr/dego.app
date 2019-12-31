@@ -1,88 +1,74 @@
 import React from 'react';
-import { fromEvent, Subscription } from 'rxjs';
-import { map, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
+import { map, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { style } from 'typestyle';
-import { NestedCSSProperties } from 'typestyle/lib/types';
 
 import { Atom } from '@grammarly/focal';
 
+import { createUseWatcher } from '../../generic/supply/react-helpers';
+import { continueAfter } from '../../generic/supply/rxjs-helpers';
 import { tv } from '../../generic/supply/style-helpers';
+import { isNotNull } from '../../generic/supply/type-guards';
 
 const MIN = 100;
-const move$ = fromEvent<MouseEvent>(document, 'mousemove');
-const up$ = fromEvent<MouseEvent>(document, 'mouseup');
 
-type TProps = {
-  row?: boolean;
-  ward: Atom<number>;
-  area: string;
-};
-
-export class Divider extends React.PureComponent<TProps> {
-  private sub!: Subscription;
-  private ref = React.createRef<HTMLDivElement>();
-  componentDidMount() {
-    const { row, ward } = this.props;
-    const direction = row ? 'pageY' : 'pageX';
-    const rectSize = row ? 'height' : 'width';
-    const offsetSize = row ? 'offsetHeight' : 'offsetWidth';
-    const offsetDirection = row ? 'offsetY' : 'offsetX';
-    const el = this.ref.current as HTMLDivElement;
-    const parent = el.parentElement as HTMLDivElement;
-    this.sub = fromEvent<MouseEvent>(el, 'mousedown')
-      .pipe(
-        withLatestFrom(ward),
-        switchMap(([downE, startedFrom]) => {
-          const pos = Math.floor(el[offsetSize] / 2) - downE[offsetDirection] + downE[direction];
-          const parentRect = parent.getBoundingClientRect();
-          const max = parentRect[rectSize] - MIN;
-          const initialVal = startedFrom > max ? max : startedFrom;
-          return move$.pipe(
-            map((moveE) => {
-              moveE.preventDefault();
-              const val = initialVal + moveE[direction] - pos;
-              return val >= MIN && val <= max ? val : null;
-            }),
-            takeUntil(up$)
-          );
-        })
-      )
-      .subscribe((val) => {
-        if (val !== null) {
-          ward.set(val);
-        }
-      });
-  }
-  componentWillUnmount() {
-    this.sub.unsubscribe();
-  }
-  render() {
-    return (
-      <div
-        ref={this.ref}
-        className={this.props.row ? $row : $col}
-        style={{ gridArea: this.props.area }}
-      />
-    );
-  }
+interface IProps {
+  ward$: Atom<number>;
+  gridArea: string;
 }
 
-const common: NestedCSSProperties = {
-  backgroundColor: tv('base900'),
-  backgroundClip: 'content-box',
-  zIndex: 1,
-};
-
-const $col = style(common, {
-  cursor: 'col-resize',
-  marginLeft: '-4px',
-  width: '1px',
-  padding: '0 4px',
+export const Divider = React.memo<IProps>(({ ward$, gridArea }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  useWatcher([ref, ward$]);
+  return <div ref={ref} className={$container} style={{ gridArea }} />;
 });
 
-const $row = style(common, {
-  cursor: 'row-resize',
-  marginTop: '-4px',
-  height: '1px',
-  padding: '4px 0',
+const useWatcher = createUseWatcher<[React.RefObject<HTMLDivElement>, Atom<number>], void>(
+  ({ didMount$, didUnmount$, currentDeps$ }) => {
+    const move$ = fromEvent<MouseEvent>(document, 'mousemove');
+    const up$ = fromEvent<MouseEvent>(document, 'mouseup');
+
+    currentDeps$
+      .pipe(
+        continueAfter(didMount$),
+        switchMap(([ref, ward$]) => {
+          const el = ref.current as HTMLDivElement;
+          const parent = el.parentElement as HTMLDivElement;
+          return fromEvent<MouseEvent>(el, 'mousedown').pipe(
+            withLatestFrom(ward$),
+            switchMap(([downE, startedFrom]) => {
+              const pos = Math.floor(el.offsetWidth / 2) - downE.offsetX + downE.pageX;
+              const parentRect = parent.getBoundingClientRect();
+              const max = parentRect.width - MIN;
+              const initialVal = startedFrom > max ? max : startedFrom;
+              return move$.pipe(
+                map((moveE) => {
+                  moveE.preventDefault();
+                  const val = initialVal + moveE.pageX - pos;
+                  return val >= MIN && val <= max ? val : null;
+                }),
+                takeUntil(up$)
+              );
+            }),
+            tap((val) => {
+              if (isNotNull(val)) {
+                ward$.set(val);
+              }
+            })
+          );
+        }),
+        takeUntil(didUnmount$)
+      )
+      .subscribe();
+  }
+);
+
+const $container = style({
+  width: '1px',
+  marginLeft: '-4px',
+  padding: '0 4px',
+  backgroundClip: 'content-box',
+  backgroundColor: tv('base900'),
+  cursor: 'col-resize',
+  zIndex: 1,
 });
