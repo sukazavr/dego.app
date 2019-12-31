@@ -3,7 +3,9 @@ import { Observable } from 'rxjs';
 
 import { Atom, ReadOnlyAtom } from '@grammarly/focal';
 
-import { BODY_ID, CANVAS_ID, IElement, IElementCanvas, TElementAny } from '../states/elements';
+import {
+    BODY_ID, CANVAS_ID, IElementCanvas, IElementGeneric, TElementAny,
+} from '../states/elements';
 
 type Maybe<T> = T | null | undefined | unknown;
 
@@ -89,12 +91,12 @@ export function isNotText<T>(value: T): value is Exclude<T, string> {
   return !isText(value);
 }
 
-export function isNotElementCanvas(
+export function isElementGenericOrBody(
   value: TElementAny
 ): value is Exclude<TElementAny, IElementCanvas> {
   return value.id !== CANVAS_ID;
 }
 
-export function isTreeElement(value: TElementAny): value is IElement {
+export function isElementGeneric(value: TElementAny): value is IElementGeneric {
   return value.id !== CANVAS_ID && value.id !== BODY_ID;
 }

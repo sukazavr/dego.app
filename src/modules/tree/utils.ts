@@ -1,15 +1,15 @@
 import nanoid from 'nanoid';
 
 import {
-    BODY_ID, CANVAS_ID, EElementType, IElement, IElements,
+    BODY_ID, CANVAS_ID, EElementType, IElementGeneric, IElements,
 } from '../../generic/states/elements';
 import { defaultTree } from '../../generic/states/tree';
 import {
-    isDefined, isNotElementCanvas, isNotNull, isTreeElement,
+    isDefined, isElementGeneric, isElementGenericOrBody, isNotNull,
 } from '../../generic/supply/type-guards';
 import { elStore } from './common';
 
-export const createTreeElement = (): IElement => ({
+export const createTreeElement = (): IElementGeneric => ({
   id: nanoid(10),
   name: '',
   parent: BODY_ID,
@@ -23,10 +23,10 @@ export const createTreeElement = (): IElement => ({
   isExpanded: true,
 });
 
-export const mutateAddInside = (draft: IElements, element: IElement, parentID: string) => {
+export const mutateAddInside = (draft: IElements, element: IElementGeneric, parentID: string) => {
   parentID = parentID === CANVAS_ID ? BODY_ID : parentID;
   const parent = draft[parentID];
-  if (isNotElementCanvas(parent)) {
+  if (isElementGenericOrBody(parent)) {
     element.parent = parentID;
     const id = element.id;
     parent.children.push(id);
@@ -37,15 +37,15 @@ export const mutateAddInside = (draft: IElements, element: IElement, parentID: s
 
 export const mutateAddNeighbor = (
   draft: IElements,
-  element: IElement,
+  element: IElementGeneric,
   neighborID: string,
   below: boolean
 ) => {
   const neighbor = draft[neighborID];
-  if (isTreeElement(neighbor)) {
+  if (isElementGeneric(neighbor)) {
     const parentID = neighbor.parent;
     const parent = draft[parentID];
-    if (isNotElementCanvas(parent)) {
+    if (isElementGenericOrBody(parent)) {
       element.parent = parentID;
       const id = element.id;
       const neighborIndex = parent.children.indexOf(neighborID);
@@ -55,9 +55,9 @@ export const mutateAddNeighbor = (
   }
 };
 
-export const mutateRemoveFromParent = (draft: IElements, element: IElement) => {
+export const mutateRemoveFromParent = (draft: IElements, element: IElementGeneric) => {
   const parent = draft[element.parent];
-  if (isNotElementCanvas(parent)) {
+  if (isElementGenericOrBody(parent)) {
     const children = parent.children;
     const index = children.indexOf(element.id);
     if (index > -1) {
@@ -66,10 +66,10 @@ export const mutateRemoveFromParent = (draft: IElements, element: IElement) => {
   }
 };
 
-export const mutateRemoveFromTree = (draft: IElements, element: IElement) => {
+export const mutateRemoveFromTree = (draft: IElements, element: IElementGeneric) => {
   element.children.forEach((childID) => {
     const child = draft[childID];
-    if (isTreeElement(child)) {
+    if (isElementGeneric(child)) {
       mutateRemoveFromTree(draft, child);
     }
   });

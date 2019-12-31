@@ -5,7 +5,7 @@ import { Atom } from '@grammarly/focal';
 
 import { TElementAny } from '../../../generic/states/elements';
 import { tv } from '../../../generic/supply/style-helpers';
-import { isNotElementCanvas } from '../../../generic/supply/type-guards';
+import { isElementGenericOrBody } from '../../../generic/supply/type-guards';
 
 interface IProps {
   element$: Atom<TElementAny>;
@@ -18,7 +18,9 @@ export const ElementContentExpander = React.memo<IProps>(
     const toggle = React.useCallback(
       (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();
-        element$.modify((_) => (isNotElementCanvas(_) ? { ..._, isExpanded: !_.isExpanded } : _));
+        element$.modify((_) =>
+          isElementGenericOrBody(_) ? { ..._, isExpanded: !_.isExpanded } : _
+        );
       },
       [element$]
     );

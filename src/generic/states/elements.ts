@@ -19,7 +19,7 @@ export enum ECanvasType {
   FlexColumn,
 }
 
-export type TElementAny = IElementCanvas | IElementBody | IElement;
+export type TElementAny = IElementCanvas | IElementBody | IElementGeneric;
 
 export interface IElements {
   [ID: string]: TElementAny;
@@ -70,38 +70,38 @@ export interface IElementBody {
   children: string[];
   type: EElementType.Flex | EElementType.Grid;
   props: {
-    [EElementType.Flex]: Partial<IElementFlex>;
-    [EElementType.Grid]: Partial<IElementGrid>;
+    [EElementType.Flex]: Partial<IElementFlexProps>;
+    [EElementType.Grid]: Partial<IElementGridProps>;
   };
   isExpanded: boolean;
 }
 
-export interface IElement {
+export interface IElementGeneric {
   id: string;
   name: string;
   parent: string;
   children: string[];
   type: EElementType;
   props: {
-    [EElementType.Flex]: Partial<IElementFlex>;
-    [EElementType.Grid]: Partial<IElementGrid>;
-    [EElementType.Component]: Partial<IElementComponent>;
+    [EElementType.Flex]: Partial<IElementFlexProps>;
+    [EElementType.Grid]: Partial<IElementGridProps>;
+    [EElementType.Component]: Partial<IElementComponentProps>;
   };
   isExpanded: boolean;
 }
 
-export interface IElementFlex {
+export interface IElementFlexProps {
   width: IUnit;
   height: IUnit;
   flexDirection: TFlexDirection;
 }
 
-export interface IElementGrid {
+export interface IElementGridProps {
   width: IUnit;
   height: IUnit;
 }
 
-export interface IElementComponent {
+export interface IElementComponentProps {
   width: IUnit;
   height: IUnit;
 }

@@ -11,7 +11,7 @@ import { defaultTree, ITree } from '../../../generic/states/tree';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
 import { continueAfter, selectInTuple } from '../../../generic/supply/rxjs-helpers';
 import {
-    isArray, isDefined, isNotElementCanvas, isNotNull, isTreeElement,
+    isArray, isDefined, isElementGeneric, isElementGenericOrBody, isNotNull,
 } from '../../../generic/supply/type-guards';
 import { isArrayEqual } from '../../../generic/supply/utils';
 import {
@@ -45,7 +45,7 @@ export const useTreeDragWatcher = createUseWatcher<
         nextIndex.push(id);
       }
       const element = elements[id];
-      if (isNotElementCanvas(element)) {
+      if (isElementGenericOrBody(element)) {
         const isExpanded = element.isExpanded;
         element.children.forEach((childID) => grab(childID, path, putIndex && isExpanded));
       }
@@ -185,7 +185,7 @@ export const useTreeDragWatcher = createUseWatcher<
         elements: produce(stateApp.elements, (draft) => {
           if (isNotNull(draggingID) && isNotNull(targetID)) {
             const element = draft[draggingID];
-            if (isTreeElement(element)) {
+            if (isElementGeneric(element)) {
               if (add.above) {
                 mutateRemoveFromParent(draft, element);
                 mutateAddNeighbor(draft, element, targetID, false);

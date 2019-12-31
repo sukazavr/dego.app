@@ -7,7 +7,7 @@ import { Atom } from '@grammarly/focal';
 import { actionsTree } from '../../../generic/actions';
 import { BODY_ID, TElementAny } from '../../../generic/states/elements';
 import { useEnhancedEffect, useObservableFabric } from '../../../generic/supply/react-helpers';
-import { isNotElementCanvas, isText } from '../../../generic/supply/type-guards';
+import { isElementGenericOrBody, isText } from '../../../generic/supply/type-guards';
 import { fontRegular } from '../../../generic/theme';
 import { ElementContentNameInput } from './ElementContentNameInput';
 
@@ -21,7 +21,7 @@ export const ElementContentName = React.memo<IProps>(({ id, element$ }) => {
   const name = useObservableFabric(
     () =>
       element$.view((element) => {
-        if (isNotElementCanvas(element)) {
+        if (isElementGenericOrBody(element)) {
           return isText(element.name)
             ? element.name
             : element.id === BODY_ID
@@ -36,7 +36,7 @@ export const ElementContentName = React.memo<IProps>(({ id, element$ }) => {
   const onCommit = React.useCallback(
     (nextName: string) => {
       element$.modify((_) => {
-        if (isNotElementCanvas(_)) {
+        if (isElementGenericOrBody(_)) {
           return { ..._, name: nextName };
         } else {
           return _;

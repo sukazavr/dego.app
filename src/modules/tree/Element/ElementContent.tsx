@@ -6,7 +6,7 @@ import { EElementType, lensElementAny } from '../../../generic/states/elements';
 import { stateElements$ } from '../../../generic/states/state-app';
 import { flexIsRow } from '../../../generic/style-helpers/flex';
 import { useObservable } from '../../../generic/supply/react-helpers';
-import { isNotElementCanvas } from '../../../generic/supply/type-guards';
+import { isElementGenericOrBody } from '../../../generic/supply/type-guards';
 import { ElementContentExpander } from './ElementContentExpander';
 import { ElementContentIcon } from './ElementContentIcon';
 import { ElementContentName } from './ElementContentName';
@@ -21,7 +21,7 @@ export const ElementContent: React.FC<IProps> = React.memo(({ id }) => {
   let hasChildren = false;
   let isExpanded = false;
   let icon: TIconName = 'canvas';
-  if (isNotElementCanvas(element)) {
+  if (isElementGenericOrBody(element)) {
     hasChildren = Boolean(element.children.length);
     isExpanded = element.isExpanded;
     if (element.type === EElementType.Flex) {

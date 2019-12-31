@@ -5,7 +5,7 @@ import { delay, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { actionsTree } from '../../../generic/actions';
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
-import { isDefined, isNotNull, isTreeElement } from '../../../generic/supply/type-guards';
+import { isDefined, isElementGeneric, isNotNull } from '../../../generic/supply/type-guards';
 import { elStore } from '../common';
 import { FLASH_DURATION } from '../Element/Element';
 import {
@@ -53,7 +53,7 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
         stateElements$.modify((elements) =>
           produce(elements, (draft) => {
             const element = draft[id];
-            if (isTreeElement(element)) {
+            if (isElementGeneric(element)) {
               mutateRemoveFromParent(draft, element);
               mutateRemoveFromTree(draft, element);
             }
