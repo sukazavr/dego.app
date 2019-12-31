@@ -2,6 +2,7 @@ import React from 'react';
 import { classes, style } from 'typestyle';
 
 import { tv } from '../supply/style-helpers';
+import { isDefined } from '../supply/type-guards';
 import { fontUnit } from '../theme';
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -11,7 +12,7 @@ interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = React.forwardRef<HTMLInputElement, IProps>(
   ({ isInvalid = false, maxWidth: mw, className, style, ...rest }, ref) => {
-    const maxWidth = mw && maxWidthGrad[mw];
+    const maxWidth = isDefined(mw) ? maxWidthGrad[mw] : undefined;
     return (
       <input
         type="text"

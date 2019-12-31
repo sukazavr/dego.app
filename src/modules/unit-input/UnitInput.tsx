@@ -19,8 +19,8 @@ export const UnitInput = React.memo<TProps>(({ options, unit$ }) => {
   const ref = React.useRef<HTMLInputElement>(null);
   const { state$, actions } = useUnitInputWatcher([ref, unit$, options]);
   const state = useObservable(state$);
-  const ctxMenu = useContextMenu<{ options: TUnitOptionsKeys[]; unit$: Atom<IUnit> }>(
-    ({ payload: { options, unit$ } }) => (
+  const ctxMenu = useContextMenu(
+    () => (
       <>
         {options.map((optionName) => {
           const option = unitOptions[optionName];
@@ -35,7 +35,8 @@ export const UnitInput = React.memo<TProps>(({ options, unit$ }) => {
           );
         })}
       </>
-    )
+    ),
+    [unit$, options]
   );
   return (
     <Input

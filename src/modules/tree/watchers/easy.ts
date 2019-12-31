@@ -5,15 +5,12 @@ import { delay, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { actionsTree } from '../../../generic/actions';
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
-import { isNotNull, isTreeElement } from '../../../generic/supply/type-guards';
+import { isDefined, isNotNull, isTreeElement } from '../../../generic/supply/type-guards';
 import { elStore } from '../common';
 import { FLASH_DURATION } from '../Element/Element';
 import {
-  createTreeElement,
-  mutateAddInside,
-  mutateAddNeighbor,
-  mutateRemoveFromParent,
-  mutateRemoveFromTree,
+    createTreeElement, mutateAddInside, mutateAddNeighbor, mutateRemoveFromParent,
+    mutateRemoveFromTree,
 } from '../utils';
 
 export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
@@ -67,7 +64,7 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
     actionsTree.focus.$.pipe(
       tap(({ id }) => {
         const el = elStore.get(id);
-        if (el) {
+        if (isDefined(el)) {
           stateTree$.lens('focusedID').set(id);
           const treeEl = el.parentElement?.parentElement as HTMLElement;
           const parentScrollTop = treeEl.scrollTop;

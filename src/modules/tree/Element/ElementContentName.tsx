@@ -7,7 +7,7 @@ import { Atom } from '@grammarly/focal';
 import { actionsTree } from '../../../generic/actions';
 import { BODY_ID, TElementAny } from '../../../generic/states/elements';
 import { useEnhancedEffect, useObservableFabric } from '../../../generic/supply/react-helpers';
-import { isNotElementCanvas } from '../../../generic/supply/type-guards';
+import { isNotElementCanvas, isText } from '../../../generic/supply/type-guards';
 import { fontRegular } from '../../../generic/theme';
 import { ElementContentNameInput } from './ElementContentNameInput';
 
@@ -22,7 +22,11 @@ export const ElementContentName = React.memo<IProps>(({ id, element$ }) => {
     () =>
       element$.view((element) => {
         if (isNotElementCanvas(element)) {
-          return element.name || (element.id === BODY_ID ? 'Body' : element.type);
+          return isText(element.name)
+            ? element.name
+            : element.id === BODY_ID
+            ? 'Body'
+            : element.type;
         } else {
           return 'Canvas';
         }

@@ -1,15 +1,8 @@
 import React from 'react';
 import { combineLatest, concat, merge, NEVER, of } from 'rxjs';
 import {
-  distinctUntilChanged,
-  filter,
-  map,
-  shareReplay,
-  switchAll,
-  switchMap,
-  takeUntil,
-  tap,
-  withLatestFrom,
+    distinctUntilChanged, filter, map, shareReplay, switchAll, switchMap, takeUntil, tap,
+    withLatestFrom,
 } from 'rxjs/operators';
 
 import { Atom } from '@grammarly/focal';
@@ -18,11 +11,9 @@ import { IUnit } from '../../generic/states/unit';
 import { ca, TAction } from '../../generic/supply/action-helpers';
 import { createUseWatcher } from '../../generic/supply/react-helpers';
 import {
-  continueAfter,
-  selectInTuple,
-  switchCombine,
-  wheel$,
+    continueAfter, selectInTuple, switchCombine, wheel$,
 } from '../../generic/supply/rxjs-helpers';
+import { isDefined } from '../../generic/supply/type-guards';
 import { isArrayEqual } from '../../generic/supply/utils';
 import { TUnitOptionsKeys, unitOptions } from './options';
 import { getMultiplier } from './utils';
@@ -78,7 +69,8 @@ export const useUnitInputWatcher = createUseWatcher<
 
   const potentialOption$ = combineLatest(unit$, unitOptionsScope$).pipe(
     map(([unit, unitOptionsScope]) => {
-      return unitOptionsScope.find((option) => option.is(unit)) || unitOptions.default;
+      const potentialOption = unitOptionsScope.find((option) => option.is(unit));
+      return isDefined(potentialOption) ? potentialOption : unitOptions.default;
     }),
     distinctUntilChanged(),
     shareReplay(1)

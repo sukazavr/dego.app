@@ -2,16 +2,15 @@ import { debounceTime, skip, switchMapTo, takeUntil } from 'rxjs/operators';
 
 import { stateLayout$ } from '../../generic/states/state-app';
 import { createUseWatcher } from '../../generic/supply/react-helpers';
+import { isNotNull } from '../../generic/supply/type-guards';
 
 const LS_LAYOUT = '_!LAYOUT!_';
 
 export const useLayoutWatcher = createUseWatcher(({ didMount$, didUnmount$ }) => {
   try {
     const LSLayout = localStorage.getItem(LS_LAYOUT);
-    const ParsedLayout = LSLayout && JSON.parse(LSLayout);
-
-    if (ParsedLayout) {
-      stateLayout$.set(ParsedLayout);
+    if (isNotNull(LSLayout)) {
+      stateLayout$.set(JSON.parse(LSLayout));
     }
   } catch (error) {}
 

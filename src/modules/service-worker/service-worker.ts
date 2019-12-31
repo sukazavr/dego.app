@@ -1,3 +1,5 @@
+import { isDefined, isNotNull } from '../../generic/supply/type-guards';
+
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -59,7 +61,7 @@ function registerValidSW(swUrl: string, config?: Config) {
         }
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
+            if (isNotNull(navigator.serviceWorker.controller)) {
               // At this point, the updated precached content has been fetched,
               // but the previous service worker will still serve the older
               // content until all client tabs are closed.
@@ -69,7 +71,7 @@ function registerValidSW(swUrl: string, config?: Config) {
               );
 
               // Execute callback
-              if (config && config.onUpdate) {
+              if (isDefined(config) && config.onUpdate) {
                 config.onUpdate(registration);
               }
             } else {
@@ -79,7 +81,7 @@ function registerValidSW(swUrl: string, config?: Config) {
               console.log('Content is cached for offline use.');
 
               // Execute callback
-              if (config && config.onSuccess) {
+              if (isDefined(config) && config.onSuccess) {
                 config.onSuccess(registration);
               }
             }

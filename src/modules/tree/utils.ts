@@ -1,14 +1,12 @@
 import nanoid from 'nanoid';
 
 import {
-  BODY_ID,
-  CANVAS_ID,
-  EElementType,
-  IElement,
-  IElements,
+    BODY_ID, CANVAS_ID, EElementType, IElement, IElements,
 } from '../../generic/states/elements';
 import { defaultTree } from '../../generic/states/tree';
-import { isNotElementCanvas, isTreeElement } from '../../generic/supply/type-guards';
+import {
+    isDefined, isNotElementCanvas, isNotNull, isTreeElement,
+} from '../../generic/supply/type-guards';
 import { elStore } from './common';
 
 export const createTreeElement = (): IElement => ({
@@ -84,7 +82,7 @@ export const getPlaceholderStyle = (
   { shift }: TElMeta,
   dir: 'top' | 'bottom'
 ) => {
-  if (rect) {
+  if (isNotNull(rect)) {
     const rectTree = treeEl.getBoundingClientRect();
     return {
       top: rect[dir] - rectTree.top + treeEl.scrollTop,
@@ -98,7 +96,7 @@ export const getPlaceholderStyle = (
 
 export const getElMeta = (elID: string): TElMeta => {
   const el = elStore.get(elID);
-  if (el) {
+  if (isDefined(el)) {
     const rect = el.getBoundingClientRect();
     const tempEdge = Math.ceil(rect.height * 0.5);
     const tail = tempEdge % 2;

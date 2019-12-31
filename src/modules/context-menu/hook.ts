@@ -14,7 +14,7 @@ export const useContextMenu = <T>(menuMaker: TMenuMaker<T>, deps: unknown[] = []
       open: ca<
         T,
         { position: { left: number; top: number }; payload: T },
-        (e: React.MouseEvent<any, MouseEvent>) => void
+        (e: React.MouseEvent<unknown, MouseEvent>) => void
       >((R, payload) => (e) => {
         e.preventDefault();
         e.stopPropagation();

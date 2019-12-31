@@ -3,6 +3,7 @@ import { classes, style } from 'typestyle';
 
 import { TIconName } from '../icons';
 import { applyVariables, tv } from '../supply/style-helpers';
+import { isDefined, isPresent } from '../supply/type-guards';
 import { fontRegularBig } from '../theme';
 import { Icon } from './Icon';
 
@@ -20,8 +21,8 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
         ref={ref}
         className={classes($buttonContainer, isActive && $buttonIsActive, className)}
       >
-        {icon && <Icon icon={icon} size="3rem" />}
-        {children && <span>{children}</span>}
+        {isDefined(icon) && <Icon icon={icon} size="3rem" />}
+        {isPresent(children) && <span>{children}</span>}
       </button>
     );
   }

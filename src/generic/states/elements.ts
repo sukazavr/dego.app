@@ -1,6 +1,7 @@
 import { Lens } from '@grammarly/focal';
 
 import { TFlexDirection } from '../style-helpers/flex';
+import { isDefined } from '../supply/type-guards';
 import { EUnitType, IUnit } from './unit';
 
 export const CANVAS_ID = 'canvas';
@@ -107,7 +108,10 @@ export interface IElementComponent {
 
 export const lensElementAny = (id: string) => {
   return Lens.create<IElements, TElementAny>(
-    (state) => state[id] || defaultElements[BODY_ID],
+    (state) => {
+      const element = state[id];
+      return isDefined(element) ? element : defaultElements[BODY_ID];
+    },
     (newValue, state) => {
       return { ...state, [id]: newValue };
     }

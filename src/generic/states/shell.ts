@@ -12,7 +12,7 @@ export interface IShellState {
 }
 
 export const vwToGraduations = (vw: number) => {
-  const res: any = {};
+  const res: Record<string, boolean> = {};
   let graduation: TGraduationName;
   for (graduation in graduations) {
     const [min, max] = graduations[graduation];

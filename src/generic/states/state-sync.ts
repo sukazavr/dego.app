@@ -1,6 +1,7 @@
 import { fromEvent, merge } from 'rxjs';
 import { auditTime, debounceTime, distinctUntilChanged, map, mapTo, skip } from 'rxjs/operators';
 
+import { isNotNull } from '../supply/type-guards';
 import { vwToGraduations } from './shell';
 import { stateElements$, stateShell$ } from './state-app';
 
@@ -23,10 +24,8 @@ merge(
 const LS_ELEMENTS = '_!ELEMENTS!_';
 try {
   const LSElements = localStorage.getItem(LS_ELEMENTS);
-  const ParsedElements = LSElements && JSON.parse(LSElements);
-
-  if (ParsedElements) {
-    stateElements$.set(ParsedElements);
+  if (isNotNull(LSElements)) {
+    stateElements$.set(JSON.parse(LSElements));
   }
 } catch (error) {}
 stateElements$.pipe(skip(1), debounceTime(500)).subscribe((stateElements) => {

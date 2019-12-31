@@ -6,14 +6,11 @@ import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements';
 import { stateTree$ } from '../../../generic/states/state-app';
 import { useEnhancedEffect, useObservableFabric } from '../../../generic/supply/react-helpers';
 import { tv } from '../../../generic/supply/style-helpers';
-import { isPresent } from '../../../generic/supply/type-guards';
+import { isNotNull, isPresent } from '../../../generic/supply/type-guards';
 import { useContextMenu } from '../../context-menu/hook';
 import {
-  elStore,
-  treeElementEndDragging,
-  treeElementOnDrag,
-  treeElementSetTarget,
-  treeElementStartDragging,
+    elStore, treeElementEndDragging, treeElementOnDrag, treeElementSetTarget,
+    treeElementStartDragging,
 } from '../common';
 import { ElementContent } from './ElementContent';
 import { ElementContextMenu } from './ElementContextMenu';
@@ -43,7 +40,7 @@ export const Element = React.memo<IProps>(({ id, path }) => {
           : treeElementStartDragging._(id),
       onDragOver: (e: React.DragEvent) => {
         const draggingID = draggingID$.get();
-        if (draggingID && !path.includes(draggingID)) {
+        if (isNotNull(draggingID) && !path.includes(draggingID)) {
           e.preventDefault();
           treeElementSetTarget(id);
         }

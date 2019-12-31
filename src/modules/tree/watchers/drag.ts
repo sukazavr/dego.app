@@ -1,12 +1,6 @@
 import produce from 'immer';
 import {
-  distinct,
-  distinctUntilChanged,
-  map,
-  switchMap,
-  takeUntil,
-  tap,
-  withLatestFrom,
+    distinct, distinctUntilChanged, map, switchMap, takeUntil, tap, withLatestFrom,
 } from 'rxjs/operators';
 
 import { ReadOnlyAtom } from '@grammarly/focal';
@@ -16,20 +10,15 @@ import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/s
 import { defaultTree, ITree } from '../../../generic/states/tree';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
 import { continueAfter, selectInTuple } from '../../../generic/supply/rxjs-helpers';
-import { isNotElementCanvas, isTreeElement } from '../../../generic/supply/type-guards';
+import {
+    isArray, isDefined, isNotElementCanvas, isNotNull, isTreeElement,
+} from '../../../generic/supply/type-guards';
 import { isArrayEqual } from '../../../generic/supply/utils';
 import {
-  treeElementEndDragging,
-  treeElementOnDrag,
-  treeElementSetTarget,
-  treeElementStartDragging,
+    treeElementEndDragging, treeElementOnDrag, treeElementSetTarget, treeElementStartDragging,
 } from '../common';
 import {
-  getElMeta,
-  getPlaceholderStyle,
-  mutateAddInside,
-  mutateAddNeighbor,
-  mutateRemoveFromParent,
+    getElMeta, getPlaceholderStyle, mutateAddInside, mutateAddNeighbor, mutateRemoveFromParent,
 } from '../utils';
 
 interface ITreeContext {
@@ -50,7 +39,7 @@ export const useTreeDragWatcher = createUseWatcher<
     const grab = (id: string, parentPath: string[], putIndex: boolean) => {
       const prevPath = prevPaths[id];
       const nextPath = [...parentPath, id];
-      const path = prevPath && isArrayEqual(prevPath, nextPath) ? prevPath : nextPath;
+      const path = isArray(prevPath) && isArrayEqual(prevPath, nextPath) ? prevPath : nextPath;
       if (putIndex) {
         nextPaths[id] = path;
         nextIndex.push(id);
@@ -63,8 +52,8 @@ export const useTreeDragWatcher = createUseWatcher<
     };
     grab(CANVAS_ID, [], true);
     grab(BODY_ID, [], true);
-    nextIndex.forEach((id) => {
-      const path = nextPaths[id];
+    nextIndex.forEach((elementID) => {
+      const path = nextPaths[elementID];
       const maxDeep = path[path.length - 1];
       path.forEach((id) => {
         nextMaxDeep[id] = maxDeep;
@@ -123,7 +112,7 @@ export const useTreeDragWatcher = createUseWatcher<
                         s.highlighter.isVisible = canDrop;
                         const dndTargetPath = treePaths[targetID];
                         const dndTargetParent = dndTargetPath[dndTargetPath.length - 2];
-                        if (dndTargetParent) {
+                        if (isDefined(dndTargetParent)) {
                           const heightEdge = targetMeta.heightEdge;
                           if (y > bottom - heightEdge) {
                             s.add.below = true;
@@ -194,7 +183,7 @@ export const useTreeDragWatcher = createUseWatcher<
           flashedID: draggingID,
         },
         elements: produce(stateApp.elements, (draft) => {
-          if (draggingID && targetID) {
+          if (isNotNull(draggingID) && isNotNull(targetID)) {
             const element = draft[draggingID];
             if (isTreeElement(element)) {
               if (add.above) {
