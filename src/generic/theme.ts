@@ -1,4 +1,3 @@
-import { px } from 'csx';
 import { cssRule } from 'typestyle';
 import { NestedCSSProperties } from 'typestyle/lib/types';
 
@@ -18,14 +17,14 @@ export const fontRegular: NestedCSSProperties = {
   fontFamily: regularFontFamily,
   fontStyle: 'normal',
   fontWeight: fontWeights.normal,
-  fontSize: px(12),
-  lineHeight: px(14),
+  fontSize: '12px',
+  lineHeight: '14px',
 };
 
 export const fontRegularBig: NestedCSSProperties = {
   ...fontRegular,
-  fontSize: px(14),
-  lineHeight: px(16),
+  fontSize: '14px',
+  lineHeight: '16px',
 };
 
 export const fontUnit: NestedCSSProperties = {
