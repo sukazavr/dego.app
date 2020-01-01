@@ -54,7 +54,7 @@ export const SettingsCanvas = React.memo(() => {
         <TandemGroup>
           <Tandem
             left={<Label children="Transparent" />}
-            right={<Switcher isActive$={props.isTransparent$} />}
+            right={<Switcher value$={props.isTransparent$} />}
           />
         </TandemGroup>
         <Panel title="Size" />

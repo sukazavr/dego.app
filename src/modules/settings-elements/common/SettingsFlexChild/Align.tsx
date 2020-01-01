@@ -21,16 +21,14 @@ interface IProps {
 }
 
 export const Align = React.memo<IProps>(({ element$, parent$ }) => {
-  const { isParentRow$, preset$, setPreset, isAlignOverridden$, toggle } = React.useMemo(() => {
+  const { isParentRow$, preset$, setPreset, isAlignOverridden$ } = React.useMemo(() => {
     const flexProps$ = element$.lens(lensElementFlexProps);
     const memoPreset$ = flexProps$.lens('alignSelf');
-    const memoIsAlignOverridden$ = flexProps$.lens('isAlignOverridden');
     return {
       isParentRow$: parent$.view(lensElementFlexProps).view(projectionFlexIsRow),
       preset$: memoPreset$,
       setPreset: (preset: IElementFlexProps['alignSelf']) => () => memoPreset$.set(preset),
       isAlignOverridden$: flexProps$.lens('isAlignOverridden'),
-      toggle: () => memoIsAlignOverridden$.modify((v) => !v),
     };
   }, [element$, parent$]);
   const preset = useObservable(preset$);
@@ -39,7 +37,7 @@ export const Align = React.memo<IProps>(({ element$, parent$ }) => {
   return (
     <>
       <Panel title="Override Align" isTransparent>
-        <Switcher isActive$={isAlignOverridden$} onClick={toggle} />
+        <Switcher value$={isAlignOverridden$} />
       </Panel>
       {isAlignOverridden && (
         <TandemGroup>

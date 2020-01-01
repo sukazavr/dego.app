@@ -7,13 +7,13 @@ import { useObservable } from '../supply/react-helpers';
 import { applyVariables, tv } from '../supply/style-helpers';
 
 interface IProps {
-  isActive$: Atom<boolean>;
+  value$: Atom<boolean>;
   onClick?: () => void;
 }
 
 export const Switcher = React.memo<IProps>(
-  ({ isActive$, onClick = () => isActive$.modify((_) => !_) }) => {
-    const isActive = useObservable(isActive$);
+  ({ value$, onClick = () => value$.modify((_) => !_) }) => {
+    const isActive = useObservable(value$);
     return (
       <div className={classes($container, isActive && $active)} onClick={onClick}>
         <div className={$switcher}>
