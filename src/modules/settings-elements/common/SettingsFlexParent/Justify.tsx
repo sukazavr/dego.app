@@ -16,14 +16,14 @@ interface IProps {
   element$: Atom<IElementGeneric>;
 }
 
-export const Align = React.memo<IProps>(({ element$ }) => {
+export const Justify = React.memo<IProps>(({ element$ }) => {
   const { isRow$, preset$, setPreset } = React.useMemo(() => {
     const flexProps$ = element$.lens(lensElementFlexProps);
-    const memoPreset$ = flexProps$.lens('alignItems');
+    const memoPreset$ = flexProps$.lens('justifyContent');
     return {
       isRow$: flexProps$.view(projectionFlexIsRow),
       preset$: memoPreset$,
-      setPreset: (preset: IElementFlexProps['alignItems']) => () => memoPreset$.set(preset),
+      setPreset: (preset: IElementFlexProps['justifyContent']) => () => memoPreset$.set(preset),
     };
   }, [element$]);
   const preset = useObservable(preset$);
@@ -31,38 +31,38 @@ export const Align = React.memo<IProps>(({ element$ }) => {
   return (
     <Tandem
       middle={50}
-      left={<Label children="Align" />}
+      left={<Label children="Justify" />}
       right={
         <ButtonGroup>
           <Button
-            icon="twoBottom"
-            iconRotate={isRow ? 2 : 1}
+            icon="stackBottom"
+            iconRotate={isRow ? 1 : 2}
             isActive={preset === 'flex-start'}
             onClick={setPreset('flex-start')}
           />
           <Button
-            icon="twoCenter"
-            iconRotate={isRow ? undefined : 1}
+            icon="stackCenter"
+            iconRotate={isRow ? 1 : undefined}
             isActive={preset === 'center'}
             onClick={setPreset('center')}
           />
           <Button
-            icon="twoBottom"
-            iconRotate={isRow ? undefined : 3}
+            icon="stackBottom"
+            iconRotate={isRow ? 3 : undefined}
             isActive={preset === 'flex-end'}
             onClick={setPreset('flex-end')}
           />
           <Button
-            icon="twoStretch"
-            iconRotate={isRow ? undefined : 1}
-            isActive={preset === 'stretch'}
-            onClick={setPreset('stretch')}
+            icon="stackBetween"
+            iconRotate={isRow ? 1 : undefined}
+            isActive={preset === 'space-between'}
+            onClick={setPreset('space-between')}
           />
           <Button
-            icon="twoBaseline"
-            iconRotate={isRow ? undefined : 1}
-            isActive={preset === 'baseline'}
-            onClick={setPreset('baseline')}
+            icon="stackAround"
+            iconRotate={isRow ? 1 : undefined}
+            isActive={preset === 'space-around'}
+            onClick={setPreset('space-around')}
           />
         </ButtonGroup>
       }
