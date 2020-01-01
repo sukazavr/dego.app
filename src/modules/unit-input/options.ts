@@ -7,6 +7,11 @@ export class UnitOption {
     return this.type === EUnitType.Default ? 'default' : 'undefined';
   }
 
+  get defaultUnit() {
+    const unit: IUnit = { t: this.type, n: 0, s: this.string };
+    return unit;
+  }
+
   is = ({ t, s }: IUnit): boolean => {
     if (t !== this.type) {
       return false;
@@ -51,7 +56,7 @@ export class UnitOption {
     }
     const numberString = number.toString();
     if (numberString === string) {
-      unit.t = EUnitType.Float;
+      unit.t = number % 1 === 0 ? EUnitType.Integer : EUnitType.Float;
       unit.n = number;
       return unit;
     }
@@ -64,6 +69,7 @@ export class UnitOption {
   unitToString = ({ t: type, n: number, s: string }: IUnit): string => {
     switch (type) {
       case EUnitType.Float:
+      case EUnitType.Integer:
         return number.toString();
       case EUnitType.String:
         return string;
@@ -80,6 +86,7 @@ export class UnitOption {
 
 export const unitOptions = {
   default: new UnitOption(EUnitType.Default, 'default'),
+  int: new UnitOption(EUnitType.Integer, ''),
 
   fr: new UnitOption(EUnitType.FloatString, 'fr'),
   em: new UnitOption(EUnitType.FloatString, 'em'),

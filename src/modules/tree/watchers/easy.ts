@@ -1,11 +1,14 @@
 import produce from 'immer';
 import { merge, timer } from 'rxjs';
-import { delay, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, map, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { actionsTree } from '../../../generic/actions';
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app';
+import { defaultTree, ITree } from '../../../generic/states/tree';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
-import { isDefined, isElementGeneric, isNotNull } from '../../../generic/supply/type-guards';
+import {
+    isDefined, isElementGeneric, isNotNull, isPresent,
+} from '../../../generic/supply/type-guards';
 import { elStore } from '../common';
 import { FLASH_DURATION } from '../Element/Element';
 import {
@@ -13,7 +16,28 @@ import {
     mutateRemoveFromTree,
 } from '../utils';
 
+const LS_TREE = '_!TREE!_';
+
 export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
+  try {
+    const LSTree = localStorage.getItem(LS_TREE);
+    if (isNotNull(LSTree)) {
+      const nextTree = { ...defaultTree };
+      const { focusedID }: Partial<ITree> = JSON.parse(LSTree);
+      if (isPresent(focusedID) && stateElements$.get()[focusedID]) {
+        nextTree.focusedID = focusedID;
+      }
+      stateTree$.set(nextTree);
+    }
+  } catch (error) {}
+
+  stateTree$.pipe(skip(1), debounceTime(500), takeUntil(didUnmount$)).subscribe(({ focusedID }) => {
+    const persistentTree: Partial<ITree> = {
+      focusedID,
+    };
+    localStorage.setItem(LS_TREE, JSON.stringify(persistentTree));
+  });
+
   merge(
     actionsTree.addInside.$.pipe(
       tap(({ parentID }) => {
@@ -50,12 +74,16 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
     ),
     actionsTree.delete.$.pipe(
       tap(({ id }) => {
-        stateElements$.modify((elements) =>
-          produce(elements, (draft) => {
-            const element = draft[id];
+        stateApp$.modify((state) =>
+          produce(state, (draft) => {
+            if (id === draft.tree.focusedID) {
+              draft.tree.focusedID = null;
+            }
+            const elements = draft.elements;
+            const element = elements[id];
             if (isElementGeneric(element)) {
-              mutateRemoveFromParent(draft, element);
-              mutateRemoveFromTree(draft, element);
+              mutateRemoveFromParent(elements, element);
+              mutateRemoveFromTree(elements, element);
             }
           })
         );

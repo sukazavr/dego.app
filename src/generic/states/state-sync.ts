@@ -2,6 +2,7 @@ import { fromEvent, merge } from 'rxjs';
 import { auditTime, debounceTime, distinctUntilChanged, map, mapTo, skip } from 'rxjs/operators';
 
 import { isNotNull } from '../supply/type-guards';
+import { ELEMENTS_SCHEMA_VERSION } from './elements';
 import { vwToGraduations } from './shell';
 import { stateElements$, stateShell$ } from './state-app';
 
@@ -25,9 +26,15 @@ const LS_ELEMENTS = '_!ELEMENTS!_';
 try {
   const LSElements = localStorage.getItem(LS_ELEMENTS);
   if (isNotNull(LSElements)) {
-    stateElements$.set(JSON.parse(LSElements));
+    const parsed = JSON.parse(LSElements);
+    if (ELEMENTS_SCHEMA_VERSION === parsed.v) {
+      stateElements$.set(parsed.e);
+    }
   }
 } catch (error) {}
 stateElements$.pipe(skip(1), debounceTime(500)).subscribe((stateElements) => {
-  localStorage.setItem(LS_ELEMENTS, JSON.stringify(stateElements));
+  localStorage.setItem(
+    LS_ELEMENTS,
+    JSON.stringify({ v: ELEMENTS_SCHEMA_VERSION, e: stateElements })
+  );
 });

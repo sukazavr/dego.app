@@ -1,19 +1,19 @@
 import React from 'react';
 import { style } from 'typestyle';
 
-import { Button } from '../../generic/components/Button';
-import { ButtonGroup } from '../../generic/components/ButtonGroup';
-import { Label } from '../../generic/components/Label';
-import { Panel } from '../../generic/components/Panel';
-import { Stack } from '../../generic/components/Stack';
-import { Switcher } from '../../generic/components/Switcher';
-import { Tandem } from '../../generic/components/Tandem';
-import { TandemGroup } from '../../generic/components/TandemGroup';
-import { ECanvasType, lensElementCanvas } from '../../generic/states/elements';
-import { stateElements$ } from '../../generic/states/state-app';
-import { useObservableFabric } from '../../generic/supply/react-helpers';
-import { scrollRegular } from '../../generic/theme';
-import { UnitInput } from '../unit-input/UnitInput';
+import { Button } from '../../../generic/components/Button';
+import { ButtonGroup } from '../../../generic/components/ButtonGroup';
+import { Label } from '../../../generic/components/Label';
+import { Panel } from '../../../generic/components/Panel';
+import { Stack } from '../../../generic/components/Stack';
+import { Switcher } from '../../../generic/components/Switcher';
+import { Tandem } from '../../../generic/components/Tandem';
+import { TandemGroup } from '../../../generic/components/TandemGroup';
+import { ECanvasType, lensElementCanvas } from '../../../generic/states/elements';
+import { stateElements$ } from '../../../generic/states/state-app';
+import { useObservableFabric } from '../../../generic/supply/react-helpers';
+import { scrollRegular } from '../../../generic/theme';
+import { UnitInput } from '../../unit-input/UnitInput';
 import { useSettingsCanvasWatcher } from './watcher';
 
 export const SettingsCanvas = React.memo(() => {
@@ -63,13 +63,13 @@ export const SettingsCanvas = React.memo(() => {
             left={
               <Stack spacing={1} isInline>
                 <Label children="W" />
-                <UnitInput options={['px', 'em']} unit$={props.width$} />
+                <UnitInput options={['px']} unit$={props.width$} />
               </Stack>
             }
             right={
               <Stack spacing={1} isInline>
                 <Label children="H" />
-                <UnitInput options={['px', 'em']} unit$={props.height$} />
+                <UnitInput options={['px']} unit$={props.height$} />
               </Stack>
             }
           />

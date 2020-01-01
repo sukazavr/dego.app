@@ -1,9 +1,11 @@
 import { Lens } from '@grammarly/focal';
 
+import { unitOptions } from '../../modules/unit-input/options';
 import { TFlexDirection } from '../style-helpers/flex';
 import { isDefined } from '../supply/type-guards';
-import { EUnitType, IUnit } from './unit';
+import { IUnit } from './unit';
 
+export const ELEMENTS_SCHEMA_VERSION = 2;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -14,30 +16,43 @@ export enum EElementType {
 }
 
 export enum ECanvasType {
-  Div,
-  FlexRow,
-  FlexColumn,
+  Div = 'Div',
+  FlexRow = 'FlexRow',
+  FlexColumn = 'FlexColumn',
 }
 
 export type TElementAny = IElementCanvas | IElementBody | IElementGeneric;
+
+export type TElementGenericOrBody = IElementBody | IElementGeneric;
 
 export interface IElements {
   [ID: string]: TElementAny;
 }
 
+export const defaultElementFlexProps: IElementFlexProps = {
+  flexDirection: 'row',
+  width: unitOptions.auto.defaultUnit,
+  height: unitOptions.auto.defaultUnit,
+  flexGrow: unitOptions.int.defaultUnit,
+  flexShrink: unitOptions.int.stringToUnit('1'),
+  flexBasis: unitOptions.auto.defaultUnit,
+};
+
+export const defaultElementGridProps: IElementGridProps = {
+  width: unitOptions.auto.defaultUnit,
+  height: unitOptions.auto.defaultUnit,
+};
+
+export const defaultElementComponentProps: IElementComponentProps = {
+  width: unitOptions.auto.defaultUnit,
+  height: unitOptions.auto.defaultUnit,
+};
+
 export const defaultElements: IElements = {
   [CANVAS_ID]: {
     id: CANVAS_ID,
-    width: {
-      t: EUnitType.IntegerString,
-      n: 800,
-      s: 'px',
-    },
-    height: {
-      t: EUnitType.IntegerString,
-      n: 1000,
-      s: 'px',
-    },
+    width: unitOptions.px.stringToUnit('800px'),
+    height: unitOptions.px.stringToUnit('1000px'),
     isTransparent: true,
     type: ECanvasType.Div,
   },
@@ -47,10 +62,8 @@ export const defaultElements: IElements = {
     children: [],
     type: EElementType.Flex,
     props: {
-      Flex: {
-        flexDirection: 'column',
-      },
-      Grid: {},
+      Flex: defaultElementFlexProps,
+      Grid: defaultElementGridProps,
     },
     isExpanded: true,
   },
@@ -70,8 +83,8 @@ export interface IElementBody {
   children: string[];
   type: EElementType.Flex | EElementType.Grid;
   props: {
-    [EElementType.Flex]: Partial<IElementFlexProps>;
-    [EElementType.Grid]: Partial<IElementGridProps>;
+    [EElementType.Flex]: IElementFlexProps;
+    [EElementType.Grid]: IElementGridProps;
   };
   isExpanded: boolean;
 }
@@ -83,9 +96,9 @@ export interface IElementGeneric {
   children: string[];
   type: EElementType;
   props: {
-    [EElementType.Flex]: Partial<IElementFlexProps>;
-    [EElementType.Grid]: Partial<IElementGridProps>;
-    [EElementType.Component]: Partial<IElementComponentProps>;
+    [EElementType.Flex]: IElementFlexProps;
+    [EElementType.Grid]: IElementGridProps;
+    [EElementType.Component]: IElementComponentProps;
   };
   isExpanded: boolean;
 }
@@ -94,6 +107,9 @@ export interface IElementFlexProps {
   width: IUnit;
   height: IUnit;
   flexDirection: TFlexDirection;
+  flexGrow: IUnit;
+  flexShrink: IUnit;
+  flexBasis: IUnit;
 }
 
 export interface IElementGridProps {
@@ -122,5 +138,25 @@ export const lensElementCanvas = Lens.create<IElements, IElementCanvas>(
   (state) => state[CANVAS_ID] as IElementCanvas,
   (newValue, state) => {
     return { ...state, [CANVAS_ID]: newValue };
+  }
+);
+
+export const lensElementBody = Lens.create<IElements, IElementBody>(
+  (state) => state[BODY_ID] as IElementBody,
+  (newValue, state) => {
+    return { ...state, [BODY_ID]: newValue };
+  }
+);
+
+export const lensElementFlexProps = Lens.create<IElementGeneric, IElementFlexProps>(
+  (state) => state.props[EElementType.Flex],
+  (newValue, state) => {
+    return {
+      ...state,
+      props: {
+        ...state.props,
+        [EElementType.Flex]: newValue,
+      },
+    } as IElementGeneric;
   }
 );

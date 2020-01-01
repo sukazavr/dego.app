@@ -1,7 +1,8 @@
 import nanoid from 'nanoid';
 
 import {
-    BODY_ID, CANVAS_ID, EElementType, IElementGeneric, IElements,
+    BODY_ID, CANVAS_ID, defaultElementComponentProps, defaultElementFlexProps,
+    defaultElementGridProps, EElementType, IElementGeneric, IElements,
 } from '../../generic/states/elements';
 import { defaultTree } from '../../generic/states/tree';
 import {
@@ -16,9 +17,9 @@ export const createTreeElement = (): IElementGeneric => ({
   children: [],
   type: EElementType.Flex,
   props: {
-    Component: {},
-    Flex: {},
-    Grid: {},
+    Component: defaultElementComponentProps,
+    Flex: defaultElementFlexProps,
+    Grid: defaultElementGridProps,
   },
   isExpanded: true,
 });

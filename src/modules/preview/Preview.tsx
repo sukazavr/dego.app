@@ -24,6 +24,7 @@ const $container = style(scrollRegular, {
   display: 'flex',
   overflow: 'scroll',
   backgroundColor: tv('base100'),
+  cursor: 'move',
   $nest: {
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: tv('base900'),
