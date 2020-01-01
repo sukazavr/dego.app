@@ -17,9 +17,9 @@ export const createTreeElement = (): IElementGeneric => ({
   children: [],
   type: EElementType.Flex,
   props: {
-    Component: defaultElementComponentProps,
-    Flex: defaultElementFlexProps,
-    Grid: defaultElementGridProps,
+    Component: { ...defaultElementComponentProps },
+    Flex: { ...defaultElementFlexProps },
+    Grid: { ...defaultElementGridProps },
   },
   isExpanded: true,
 });

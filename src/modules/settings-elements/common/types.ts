@@ -43,5 +43,7 @@ export const lensElementVirtualType = Lens.create<IElementGeneric, EElementVirtu
   }
 );
 
+export const projectionFlexIsRow = (state: IElementFlexProps) => flexIsRow(state.flexDirection);
+
 export const projectionFlexIconRotate = (state: IElementFlexProps) =>
   flexIsRow(state.flexDirection) ? 1 : undefined;

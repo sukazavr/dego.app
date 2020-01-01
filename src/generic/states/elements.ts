@@ -29,6 +29,17 @@ export interface IElements {
   [ID: string]: TElementAny;
 }
 
+export interface IElementFlexProps {
+  width: IUnit;
+  height: IUnit;
+  flexDirection: TFlexDirection;
+  flexGrow: IUnit;
+  flexShrink: IUnit;
+  flexBasis: IUnit;
+  isAlignOverridden: boolean;
+  alignSelf: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
+}
+
 export const defaultElementFlexProps: IElementFlexProps = {
   flexDirection: 'row',
   width: unitOptions.auto.defaultUnit,
@@ -36,12 +47,24 @@ export const defaultElementFlexProps: IElementFlexProps = {
   flexGrow: unitOptions.int.defaultUnit,
   flexShrink: unitOptions.int.stringToUnit('1'),
   flexBasis: unitOptions.auto.defaultUnit,
+  isAlignOverridden: false,
+  alignSelf: 'flex-end',
 };
+
+export interface IElementGridProps {
+  width: IUnit;
+  height: IUnit;
+}
 
 export const defaultElementGridProps: IElementGridProps = {
   width: unitOptions.auto.defaultUnit,
   height: unitOptions.auto.defaultUnit,
 };
+
+export interface IElementComponentProps {
+  width: IUnit;
+  height: IUnit;
+}
 
 export const defaultElementComponentProps: IElementComponentProps = {
   width: unitOptions.auto.defaultUnit,
@@ -101,25 +124,6 @@ export interface IElementGeneric {
     [EElementType.Component]: IElementComponentProps;
   };
   isExpanded: boolean;
-}
-
-export interface IElementFlexProps {
-  width: IUnit;
-  height: IUnit;
-  flexDirection: TFlexDirection;
-  flexGrow: IUnit;
-  flexShrink: IUnit;
-  flexBasis: IUnit;
-}
-
-export interface IElementGridProps {
-  width: IUnit;
-  height: IUnit;
-}
-
-export interface IElementComponentProps {
-  width: IUnit;
-  height: IUnit;
 }
 
 export const lensElementAny = (id: string) => {

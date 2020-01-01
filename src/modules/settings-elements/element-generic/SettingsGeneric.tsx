@@ -116,7 +116,7 @@ const lensFocusedElementGeneric = Lens.create<IState, IElementGeneric>(
   }
 );
 
-export const projectionElementParent = (state: IState) => {
+const projectionElementParent = (state: IState) => {
   const focusedID = state.tree.focusedID;
   if (isNotNull(focusedID)) {
     const element = state.elements[focusedID];
