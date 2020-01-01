@@ -98,4 +98,159 @@ export const icons = {
       </>
     ),
   },
+  oneBottom: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1z" clipRule="evenodd" />
+        <path d="M9 10h6v9H9z" />
+      </>
+    ),
+  },
+  oneCenter: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 12H3v-1h18v1z" clipRule="evenodd" />
+        <path d="M9 7h6v9H9z" />
+      </>
+    ),
+  },
+  oneStretch: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1zM21 4H3V3h18v1z" clipRule="evenodd" />
+        <path d="M9 5h6v14H9z" />
+      </>
+    ),
+  },
+  oneBaseline: {
+    viewBox: '0 0 24 24',
+    path: (
+      <path
+        fillRule="evenodd"
+        d="M14 8h-4v3h4V8zm1 4v4H9v-4H3v-1h6V7h6v4h6v1h-6z"
+        clipRule="evenodd"
+      />
+    ),
+  },
+  twoBottom: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1z" clipRule="evenodd" />
+        <path d="M7 10h5v9H7zM13 13h4v6h-4z" />
+      </>
+    ),
+  },
+  twoCenter: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 12H3v-1h18v1z" clipRule="evenodd" />
+        <path d="M7 7h5v9H7zM13 8h4v7h-4z" />
+      </>
+    ),
+  },
+  twoStretch: {
+    viewBox: '0 0 24 24',
+    path: <path d="M3 4h18V3H3v1zM21 21v-1H3v1h18zM7 5h5v14H7V5zM17 5h-4v14h4V5z" />,
+  },
+  twoBaseline: {
+    viewBox: '0 0 24 24',
+    path: (
+      <path
+        fillRule="evenodd"
+        d="M12 12v4H7v-4H3v-1h4V7h5v4h1V8h4v3h4v1h-4v3h-4v-3h-1zm-1-4H8v3h3V8zm5 3V9h-2v2h2z"
+        clipRule="evenodd"
+      />
+    ),
+  },
+  stackBottom: {
+    viewBox: '0 0 24 24',
+    path: (
+      <path
+        fillRule="evenodd"
+        d="M17 13H7V9h10v4zM7 14h10v5H7v-5zm14 7H3v-1h18v1z"
+        clipRule="evenodd"
+      />
+    ),
+  },
+  stackCenter: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 12H3v-1h18v1z" clipRule="evenodd" />
+        <path d="M7 13h10v5H7zM7 10h10V6H7z" />
+      </>
+    ),
+  },
+  stackBetween: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1zM21 4H3V3h18v1z" clipRule="evenodd" />
+        <path d="M7 14h10v5H7zM7 9h10V5H7z" />
+      </>
+    ),
+  },
+  stackAround: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1zM21 4H3V3h18v1z" clipRule="evenodd" />
+        <path d="M7 13h10v5H7zM7 10h10V6H7z" />
+      </>
+    ),
+  },
+  gridBottom: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1z" clipRule="evenodd" />
+        <path d="M7 14h5v5H7zM13 14h4v5h-4zM7 9h5v4H7zM13 9h4v4h-4z" />
+      </>
+    ),
+  },
+  gridCenter: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 12H3v-1h18v1z" clipRule="evenodd" />
+        <path d="M7 13h5v5H7zM13 13h4v5h-4zM7 6h5v4H7zM13 6h4v4h-4z" />
+      </>
+    ),
+  },
+  gridStretch: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1zM21 4H3V3h18v1z" clipRule="evenodd" />
+        <path d="M7 12h5v7H7zM13 12h4v7h-4zM7 5h5v6H7zM13 5h4v6h-4z" />
+      </>
+    ),
+  },
+  gridBetween: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1zM21 4H3V3h18v1z" clipRule="evenodd" />
+        <path d="M7 14h5v5H7zM13 14h4v5h-4zM7 5h5v4H7zM13 5h4v4h-4z" />
+      </>
+    ),
+  },
+  gridAround: {
+    viewBox: '0 0 24 24',
+    path: (
+      <>
+        <path fillRule="evenodd" d="M21 21H3v-1h18v1zM21 4H3V3h18v1z" clipRule="evenodd" />
+        <path d="M7 13h5v5H7zM13 13h4v5h-4zM7 6h5v4H7zM13 6h4v4h-4z" />
+      </>
+    ),
+  },
+  arrowDown: {
+    viewBox: '0 0 24 24',
+    path: <path d="M11 3h2v14h3l-4 4-4-4h3V3z" />,
+  },
 };
