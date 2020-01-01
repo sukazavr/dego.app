@@ -5,7 +5,8 @@ import { TFlexDirection } from '../style-helpers/flex';
 import { isDefined } from '../supply/type-guards';
 import { IUnit } from './unit';
 
-export const ELEMENTS_SCHEMA_VERSION = 1;
+// TODO: auto gen from defaultElements and defaultGenericElement
+export const ELEMENTS_SCHEMA_VERSION = 2;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -40,6 +41,7 @@ export interface IElementFlexProps {
   alignSelf: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
   isOrderOverridden: boolean;
   order: IUnit;
+  alignItems: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
 }
 
 export const defaultElementFlexProps: IElementFlexProps = {
@@ -53,6 +55,7 @@ export const defaultElementFlexProps: IElementFlexProps = {
   alignSelf: 'flex-end',
   isOrderOverridden: false,
   order: unitOptions.int.stringToUnit('1'),
+  alignItems: 'stretch',
 };
 
 export interface IElementGridProps {
