@@ -1,7 +1,7 @@
 import React from 'react';
 import { classes, style } from 'typestyle';
 
-import { applyVariables, tv } from '../supply/style-helpers';
+import { applyVariables, av, tv } from '../supply/style-helpers';
 import { Label } from './Label';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -33,14 +33,17 @@ const $container = style(
     alignItems: 'center',
     padding: '0 1rem',
     minHeight: '3.25rem',
-    backgroundColor: 'var(--color-bg)',
+    backgroundColor: av('color-bg'),
   }
 );
 
 const $isTransparent = style(
   applyVariables({
     'color-bg': 'transparent',
-  })
+  }),
+  {
+    borderTop: `1px solid ${tv('base100')}`,
+  }
 );
 
 const $title = style({

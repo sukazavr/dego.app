@@ -9,6 +9,7 @@ import { Align } from './Align';
 import { Justify } from './Justify';
 import { Reverse } from './Reverse';
 import { SpacingBetweenChildren } from './SpacingBetweenChildren';
+import { Wrap } from './Wrap';
 
 interface IProps {
   element$: Atom<IElementGeneric>;
@@ -25,6 +26,7 @@ export const SettingsFlexParent = React.memo<IProps>(({ element$, parent$ }) => 
         <Reverse element$={element$} />
         <SpacingBetweenChildren element$={element$} />
       </TandemGroup>
+      <Wrap element$={element$} />
     </>
   );
 });

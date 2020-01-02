@@ -6,7 +6,7 @@ import { isDefined } from '../supply/type-guards';
 import { IUnit } from './unit';
 
 // TODO: auto gen from defaultElements and defaultGenericElement
-export const ELEMENTS_SCHEMA_VERSION = 1;
+export const ELEMENTS_SCHEMA_VERSION = 2;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -50,6 +50,15 @@ export interface IElementFlexProps {
     | 'space-around'
     | 'space-evenly';
   spacingBetweenChildren: IUnit;
+  flexWrap: 'nowrap' | 'wrap' | 'wrap-reverse';
+  alignContent:
+    | 'flex-start'
+    | 'flex-end'
+    | 'center'
+    | 'space-between'
+    | 'space-around'
+    | 'space-evenly'
+    | 'stretch';
 }
 
 export const defaultElementFlexProps: IElementFlexProps = {
@@ -66,6 +75,8 @@ export const defaultElementFlexProps: IElementFlexProps = {
   alignItems: 'stretch',
   justifyContent: 'flex-start',
   spacingBetweenChildren: unitOptions.px.defaultUnit,
+  flexWrap: 'nowrap',
+  alignContent: 'stretch',
 };
 
 export interface IElementGridProps {
