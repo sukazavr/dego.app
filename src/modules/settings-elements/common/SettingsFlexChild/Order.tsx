@@ -47,11 +47,11 @@ export const Order = React.memo<IProps>(({ element$ }) => {
       {isOrderOverridden && (
         <TandemGroup>
           <Tandem
-            middle={50}
+            leftMax={50}
             left={<Label children="Order" />}
             right={
               <Tandem
-                middle={50}
+                leftMax={50}
                 left={<UnitInput options={['int']} unit$={order$} />}
                 right={
                   <ButtonGroup>

@@ -22,7 +22,7 @@ export const Reverse = React.memo<IProps>(({ element$ }) => {
   }, [element$]);
   return (
     <Tandem
-      middle={50}
+      leftMax={50}
       left={<Label children="Reverse" />}
       right={<Switcher value$={isReversed$} />}
     />

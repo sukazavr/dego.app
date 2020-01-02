@@ -34,7 +34,7 @@ export const Justify = React.memo<IProps>(({ element$ }) => {
   const iconFlip = isReversed ? (isRow ? 1 : 2) : undefined;
   return (
     <Tandem
-      middle={50}
+      leftMax={50}
       left={<Label children="Justify" />}
       right={
         <ButtonGroup>

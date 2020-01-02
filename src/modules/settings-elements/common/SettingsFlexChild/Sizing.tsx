@@ -54,7 +54,7 @@ export const Sizing = React.memo<IProps>(({ element$, parent$ }) => {
   return (
     <TandemGroup>
       <Tandem
-        middle={50}
+        leftMax={50}
         left={<Label children="Sizing" />}
         right={
           <ButtonGroup>
@@ -85,7 +85,7 @@ export const Sizing = React.memo<IProps>(({ element$, parent$ }) => {
         }
       />
       <Tandem
-        middle={50}
+        leftMax={50}
         left={null}
         right={
           <Stack isInline spacing={1}>

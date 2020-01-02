@@ -42,7 +42,7 @@ export const Align = React.memo<IProps>(({ element$, parent$ }) => {
       {isAlignOverridden && (
         <TandemGroup>
           <Tandem
-            middle={50}
+            leftMax={50}
             left={<Label children="Align" />}
             right={
               <ButtonGroup>

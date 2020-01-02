@@ -8,6 +8,7 @@ import { IElementGeneric } from '../../../../generic/states/elements';
 import { Align } from './Align';
 import { Justify } from './Justify';
 import { Reverse } from './Reverse';
+import { SpacingBetweenChildren } from './SpacingBetweenChildren';
 
 interface IProps {
   element$: Atom<IElementGeneric>;
@@ -22,6 +23,7 @@ export const SettingsFlexParent = React.memo<IProps>(({ element$, parent$ }) => 
         <Align element$={element$} />
         <Justify element$={element$} />
         <Reverse element$={element$} />
+        <SpacingBetweenChildren element$={element$} />
       </TandemGroup>
     </>
   );

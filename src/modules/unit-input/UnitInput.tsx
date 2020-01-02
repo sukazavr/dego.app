@@ -13,9 +13,10 @@ import { useUnitInputWatcher } from './watcher';
 type TProps = {
   unit$: Atom<IUnit>;
   options: TUnitOptionsKeys[];
+  isFull?: boolean;
 };
 
-export const UnitInput = React.memo<TProps>(({ options, unit$ }) => {
+export const UnitInput = React.memo<TProps>(({ unit$, options, isFull }) => {
   const ref = React.useRef<HTMLInputElement>(null);
   const { state$, actions } = useUnitInputWatcher([ref, unit$, options]);
   const state = useObservable(state$);
@@ -41,7 +42,7 @@ export const UnitInput = React.memo<TProps>(({ options, unit$ }) => {
   return (
     <Input
       ref={ref}
-      maxWidth="s"
+      maxWidth={isFull ? undefined : 's'}
       spellCheck={false}
       value={state.value}
       placeholder={state.placeholder}
