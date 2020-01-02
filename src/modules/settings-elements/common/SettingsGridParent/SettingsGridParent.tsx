@@ -15,7 +15,7 @@ export const SettingsGridParent = React.memo<IProps>(({ element$, parent$ }) => 
   return (
     <>
       <Panel title="Grid Parent" />
-      <Alert icon="info" text="Not yet implemented" />;
+      <Alert icon="info" text="Not yet implemented" />
     </>
   );
 });

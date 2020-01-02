@@ -14,7 +14,7 @@ export const SettingsComponent = React.memo<IProps>(({ element$ }) => {
   return (
     <>
       <Panel title="Component" />
-      <Alert icon="info" text="Not yet implemented" />;
+      <Alert icon="info" text="Not yet implemented" />
     </>
   );
 });

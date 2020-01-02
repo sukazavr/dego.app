@@ -19,6 +19,7 @@ import { SettingsComponent } from '../common/SettingsComponent/SettingsComponent
 import { SettingsFlexChild } from '../common/SettingsFlexChild/SettingsFlexChild';
 import { SettingsFlexParent } from '../common/SettingsFlexParent/SettingsFlexParent';
 import { SettingsGridParent } from '../common/SettingsGridParent/SettingsGridParent';
+import { Size } from '../common/Size/Size';
 import { EElementVirtualType, isVirtualTypeFlex, lensElementVirtualType } from '../common/types';
 
 interface IProps {
@@ -76,6 +77,7 @@ export const SettingsGeneric = React.memo<IProps>(({ elementID }) => {
           <SettingsGridParent element$={element$} parent$={parent$} />
         )}
         {virtualType === EElementVirtualType.Component && <SettingsComponent element$={element$} />}
+        <Size element$={element$} />
       </div>
     </div>
   );

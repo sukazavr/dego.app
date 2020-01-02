@@ -61,13 +61,13 @@ export const SettingsCanvas = React.memo(() => {
         <TandemGroup>
           <Tandem
             left={
-              <Stack spacing={1} isInline>
+              <Stack spacing={1} isInline isCentered>
                 <Label children="W" />
                 <UnitInput options={['px']} unit$={props.width$} />
               </Stack>
             }
             right={
-              <Stack spacing={1} isInline>
+              <Stack spacing={1} isInline isCentered>
                 <Label children="H" />
                 <UnitInput options={['px']} unit$={props.height$} />
               </Stack>
