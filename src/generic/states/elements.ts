@@ -6,7 +6,7 @@ import { isDefined } from '../supply/type-guards';
 import { IUnit } from './unit';
 
 // TODO: auto gen from defaultElements and defaultGenericElement
-export const ELEMENTS_SCHEMA_VERSION = 1;
+export const ELEMENTS_SCHEMA_VERSION = 2;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 

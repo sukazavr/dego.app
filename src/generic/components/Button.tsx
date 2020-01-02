@@ -11,10 +11,11 @@ interface IProps extends React.HTMLAttributes<HTMLButtonElement> {
   isActive?: boolean;
   icon?: TIconName;
   iconRotate?: 1 | 2 | 3; // 1 = 90deg, 2 = 180deg, 3 = 270deg
+  iconFlip?: 1 | 2; // 1 = vertical, 2 = horizontal
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, IProps>(
-  ({ icon, iconRotate, isActive = false, children, className, ...rest }, ref) => {
+  ({ icon, iconRotate, iconFlip, isActive = false, children, className, ...rest }, ref) => {
     return (
       <button
         type="button"
@@ -22,7 +23,7 @@ export const Button = React.forwardRef<HTMLButtonElement, IProps>(
         ref={ref}
         className={classes($buttonContainer, isActive && $buttonIsActive, className)}
       >
-        {isDefined(icon) && <Icon icon={icon} rotate={iconRotate} size="3rem" />}
+        {isDefined(icon) && <Icon icon={icon} rotate={iconRotate} flip={iconFlip} size="3rem" />}
         {isPresent(children) && <span>{children}</span>}
       </button>
     );

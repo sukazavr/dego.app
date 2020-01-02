@@ -9,6 +9,7 @@ interface IProps extends React.SVGAttributes<SVGElement> {
   size?: string;
   role?: 'presentation' | 'img';
   rotate?: 1 | 2 | 3; // 1 = 90deg, 2 = 180deg, 3 = 270deg
+  flip?: 1 | 2; // 1 = vertical, 2 = horizontal
 }
 
 export const Icon = React.memo<IProps>(
@@ -18,6 +19,7 @@ export const Icon = React.memo<IProps>(
     size = DEFAULT_SIZE,
     role = 'presentation',
     rotate,
+    flip,
     ...rest
   }) => {
     const { viewBox, path } = icons[icon];
@@ -30,6 +32,11 @@ export const Icon = React.memo<IProps>(
     };
     if (isDefined(rotate)) {
       props.transform = `rotate(${rotate * 90})`;
+    }
+    if (isDefined(flip)) {
+      props.transform = `scale(${flip === 1 ? '-1,1' : '1,-1'})${
+        isDefined(props.transform) ? ` ${props.transform}` : ''
+      }`;
     }
     return (
       <svg {...props} {...rest}>
