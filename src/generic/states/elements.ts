@@ -9,7 +9,7 @@ import {
 import { IUnit } from './unit';
 
 // TODO: auto gen from defaultElements and defaultGenericElement
-export const ELEMENTS_SCHEMA_VERSION = 2;
+export const ELEMENTS_SCHEMA_VERSION = 1;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -104,10 +104,14 @@ export const defaultElementGridParentProps: IElementGridParentProps = {};
 
 export interface IElementComponentProps {
   color: string;
+  hasRandomText: boolean;
+  randomTextLength: IUnit;
 }
 
 export const defaultElementComponentProps: IElementComponentProps = {
   color: COMPONENT_COLORS[5],
+  hasRandomText: false,
+  randomTextLength: unitOptions.int.defaultUnit,
 };
 
 export interface IElementCanvas {
