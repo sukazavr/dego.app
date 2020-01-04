@@ -3,18 +3,18 @@ import React from 'react';
 import { Atom } from '@grammarly/focal';
 
 import { Panel } from '../../../../generic/components/Panel';
-import { IElementGeneric } from '../../../../generic/states/elements';
+import { IElementComponentProps } from '../../../../generic/states/elements';
 import { Color } from './Color';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
+  componentProps$: Atom<IElementComponentProps>;
 }
 
-export const SettingsComponent = React.memo<IProps>(({ element$ }) => {
+export const SettingsComponent = React.memo<IProps>(({ componentProps$ }) => {
   return (
     <>
       <Panel title="Component" />
-      <Color element$={element$} />
+      <Color componentProps$={componentProps$} />
     </>
   );
 });

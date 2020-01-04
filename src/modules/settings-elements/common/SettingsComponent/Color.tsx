@@ -4,25 +4,22 @@ import { style } from 'typestyle';
 import { Atom } from '@grammarly/focal';
 
 import { Panel } from '../../../../generic/components/Panel';
-import {
-    IElementComponentProps, IElementGeneric, lensElementComponentProps,
-} from '../../../../generic/states/elements';
+import { IElementComponentProps } from '../../../../generic/states/elements';
 import { COMPONENT_COLORS } from '../../../../generic/style-helpers/component-colors';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
+  componentProps$: Atom<IElementComponentProps>;
 }
 
-export const Color = React.memo<IProps>(({ element$ }) => {
+export const Color = React.memo<IProps>(({ componentProps$ }) => {
   const { preset$, setPreset } = React.useMemo(() => {
-    const componentProps$ = element$.lens(lensElementComponentProps);
     const memoPreset$ = componentProps$.lens('color');
     return {
       preset$: memoPreset$,
       setPreset: (preset: IElementComponentProps['color']) => () => memoPreset$.set(preset),
     };
-  }, [element$]);
+  }, [componentProps$]);
   const preset = useObservable(preset$);
   return (
     <>

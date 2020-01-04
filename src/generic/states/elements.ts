@@ -3,11 +3,13 @@ import { Lens } from '@grammarly/focal';
 import { unitOptions } from '../../modules/unit-input/options';
 import { COMPONENT_COLORS } from '../style-helpers/component-colors';
 import { TFlexDirection } from '../style-helpers/flex';
-import { isDefined } from '../supply/type-guards';
+import {
+    isDefined, isElementBody, isElementGeneric, isElementGenericOrBody,
+} from '../supply/type-guards';
 import { IUnit } from './unit';
 
 // TODO: auto gen from defaultElements and defaultGenericElement
-export const ELEMENTS_SCHEMA_VERSION = 1;
+export const ELEMENTS_SCHEMA_VERSION = 2;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -31,10 +33,17 @@ export interface IElements {
   [ID: string]: TElementAny;
 }
 
-export interface IElementFlexProps {
+export interface IElementCommonProps {
   width: IUnit;
   height: IUnit;
-  flexDirection: TFlexDirection;
+}
+
+export const defaultElementCommonProps: IElementCommonProps = {
+  width: unitOptions.auto.defaultUnit,
+  height: unitOptions.auto.defaultUnit,
+};
+
+export interface IElementFlexChildProps {
   flexGrow: IUnit;
   flexShrink: IUnit;
   flexBasis: IUnit;
@@ -42,6 +51,20 @@ export interface IElementFlexProps {
   alignSelf: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
   isOrderOverridden: boolean;
   order: IUnit;
+}
+
+export const defaultElementFlexChildProps: IElementFlexChildProps = {
+  flexGrow: unitOptions.int.defaultUnit,
+  flexShrink: unitOptions.int.stringToUnit('1'),
+  flexBasis: unitOptions.auto.defaultUnit,
+  isAlignOverridden: false,
+  alignSelf: 'flex-end',
+  isOrderOverridden: false,
+  order: unitOptions.int.stringToUnit('1'),
+};
+
+export interface IElementFlexParentProps {
+  flexDirection: TFlexDirection;
   alignItems: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
   justifyContent:
     | 'flex-start'
@@ -62,17 +85,8 @@ export interface IElementFlexProps {
     | 'stretch';
 }
 
-export const defaultElementFlexProps: IElementFlexProps = {
+export const defaultElementFlexParentProps: IElementFlexParentProps = {
   flexDirection: 'row',
-  width: unitOptions.auto.defaultUnit,
-  height: unitOptions.auto.defaultUnit,
-  flexGrow: unitOptions.int.defaultUnit,
-  flexShrink: unitOptions.int.stringToUnit('1'),
-  flexBasis: unitOptions.auto.defaultUnit,
-  isAlignOverridden: false,
-  alignSelf: 'flex-end',
-  isOrderOverridden: false,
-  order: unitOptions.int.stringToUnit('1'),
   alignItems: 'stretch',
   justifyContent: 'flex-start',
   spacingBetweenChildren: unitOptions.px.defaultUnit,
@@ -80,47 +94,20 @@ export const defaultElementFlexProps: IElementFlexProps = {
   alignContent: 'stretch',
 };
 
-export interface IElementGridProps {
-  width: IUnit;
-  height: IUnit;
-}
+export interface IElementGridChildProps {}
 
-export const defaultElementGridProps: IElementGridProps = {
-  width: unitOptions.auto.defaultUnit,
-  height: unitOptions.auto.defaultUnit,
-};
+export const defaultElementGridChildProps: IElementGridChildProps = {};
+
+export interface IElementGridParentProps {}
+
+export const defaultElementGridParentProps: IElementGridParentProps = {};
 
 export interface IElementComponentProps {
-  width: IUnit;
-  height: IUnit;
   color: string;
 }
 
 export const defaultElementComponentProps: IElementComponentProps = {
-  width: unitOptions.auto.defaultUnit,
-  height: unitOptions.auto.defaultUnit,
   color: COMPONENT_COLORS[5],
-};
-
-export const defaultElements: IElements = {
-  [CANVAS_ID]: {
-    id: CANVAS_ID,
-    width: unitOptions.px.stringToUnit('800px'),
-    height: unitOptions.px.stringToUnit('1000px'),
-    isTransparent: true,
-    type: ECanvasType.Div,
-  },
-  [BODY_ID]: {
-    id: BODY_ID,
-    name: '',
-    children: [],
-    type: EElementType.Flex,
-    props: {
-      Flex: defaultElementFlexProps,
-      Grid: defaultElementGridProps,
-    },
-    isExpanded: true,
-  },
 };
 
 export interface IElementCanvas {
@@ -137,8 +124,10 @@ export interface IElementBody {
   children: string[];
   type: EElementType.Flex | EElementType.Grid;
   props: {
-    [EElementType.Flex]: IElementFlexProps;
-    [EElementType.Grid]: IElementGridProps;
+    FlexChild: IElementFlexChildProps;
+    FlexParent: IElementFlexParentProps;
+    GridParent: IElementGridParentProps;
+    Common: IElementCommonProps;
   };
   isExpanded: boolean;
 }
@@ -150,12 +139,47 @@ export interface IElementGeneric {
   children: string[];
   type: EElementType;
   props: {
-    [EElementType.Flex]: IElementFlexProps;
-    [EElementType.Grid]: IElementGridProps;
-    [EElementType.Component]: IElementComponentProps;
+    FlexChild: IElementFlexChildProps;
+    FlexParent: IElementFlexParentProps;
+    GridChild: IElementGridChildProps;
+    GridParent: IElementGridParentProps;
+    Component: IElementComponentProps;
+    Common: IElementCommonProps;
   };
   isExpanded: boolean;
 }
+
+export const defaultElements: IElements = {
+  [CANVAS_ID]: {
+    id: CANVAS_ID,
+    width: unitOptions.px.stringToUnit('800px'),
+    height: unitOptions.px.stringToUnit('1000px'),
+    isTransparent: true,
+    type: ECanvasType.Div,
+  },
+  [BODY_ID]: {
+    id: BODY_ID,
+    name: '',
+    children: [],
+    type: EElementType.Flex,
+    props: {
+      FlexChild: defaultElementFlexChildProps,
+      FlexParent: defaultElementFlexParentProps,
+      GridParent: defaultElementGridParentProps,
+      Common: defaultElementCommonProps,
+    },
+    isExpanded: true,
+  },
+};
+
+export const getDefaultProps = () => ({
+  FlexChild: { ...defaultElementFlexChildProps },
+  FlexParent: { ...defaultElementFlexParentProps },
+  GridChild: { ...defaultElementGridChildProps },
+  GridParent: { ...defaultElementGridParentProps },
+  Component: { ...defaultElementComponentProps },
+  Common: { ...defaultElementCommonProps },
+});
 
 export const lensElementAny = (id: string) => {
   return Lens.create<IElements, TElementAny>(
@@ -183,28 +207,33 @@ export const lensElementBody = Lens.create<IElements, IElementBody>(
   }
 );
 
-export const lensElementFlexProps = Lens.create<IElementGeneric, IElementFlexProps>(
-  (state) => state.props[EElementType.Flex],
+export const lensElementProps = Lens.create<TElementAny, IElementGeneric['props']>(
+  (state) => {
+    const defaultProps = getDefaultProps();
+    if (isElementGenericOrBody(state)) {
+      return { ...defaultProps, ...state.props };
+    } else {
+      return defaultProps;
+    }
+  },
   (newValue, state) => {
-    return {
-      ...state,
-      props: {
-        ...state.props,
-        [EElementType.Flex]: newValue,
-      },
-    } as IElementGeneric;
-  }
-);
-
-export const lensElementComponentProps = Lens.create<IElementGeneric, IElementComponentProps>(
-  (state) => state.props[EElementType.Component],
-  (newValue, state) => {
-    return {
-      ...state,
-      props: {
-        ...state.props,
-        [EElementType.Component]: newValue,
-      },
-    } as IElementGeneric;
+    if (isElementGeneric(state)) {
+      return {
+        ...state,
+        props: newValue,
+      };
+    } else if (isElementBody(state)) {
+      return {
+        ...state,
+        props: {
+          FlexChild: newValue.FlexChild,
+          FlexParent: newValue.FlexParent,
+          GridParent: newValue.GridParent,
+          Common: newValue.Common,
+        },
+      };
+    } else {
+      return state;
+    }
   }
 );

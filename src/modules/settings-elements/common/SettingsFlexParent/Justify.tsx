@@ -6,28 +6,26 @@ import { Button } from '../../../../generic/components/Button';
 import { ButtonGroup } from '../../../../generic/components/ButtonGroup';
 import { Label } from '../../../../generic/components/Label';
 import { Tandem } from '../../../../generic/components/Tandem';
-import {
-    IElementFlexProps, IElementGeneric, lensElementFlexProps,
-} from '../../../../generic/states/elements';
+import { IElementFlexParentProps } from '../../../../generic/states/elements';
 import { flexIsReversed } from '../../../../generic/style-helpers/flex';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 import { projectionFlexIsRow } from '../types';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
+  flexParentProps$: Atom<IElementFlexParentProps>;
 }
 
-export const Justify = React.memo<IProps>(({ element$ }) => {
+export const Justify = React.memo<IProps>(({ flexParentProps$ }) => {
   const { isRow$, isReversed$, preset$, setPreset } = React.useMemo(() => {
-    const flexProps$ = element$.lens(lensElementFlexProps);
-    const memoPreset$ = flexProps$.lens('justifyContent');
+    const memoPreset$ = flexParentProps$.lens('justifyContent');
     return {
-      isRow$: flexProps$.view(projectionFlexIsRow),
-      isReversed$: flexProps$.view((props) => flexIsReversed(props.flexDirection)),
+      isRow$: flexParentProps$.view(projectionFlexIsRow),
+      isReversed$: flexParentProps$.view((props) => flexIsReversed(props.flexDirection)),
       preset$: memoPreset$,
-      setPreset: (preset: IElementFlexProps['justifyContent']) => () => memoPreset$.set(preset),
+      setPreset: (preset: IElementFlexParentProps['justifyContent']) => () =>
+        memoPreset$.set(preset),
     };
-  }, [element$]);
+  }, [flexParentProps$]);
   const preset = useObservable(preset$);
   const isRow = useObservable(isRow$);
   const isReversed = useObservable(isReversed$);

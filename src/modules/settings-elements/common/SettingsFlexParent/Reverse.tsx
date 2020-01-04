@@ -5,21 +5,19 @@ import { Atom, Lens } from '@grammarly/focal';
 import { Label } from '../../../../generic/components/Label';
 import { Switcher } from '../../../../generic/components/Switcher';
 import { Tandem } from '../../../../generic/components/Tandem';
-import {
-    IElementFlexProps, IElementGeneric, lensElementFlexProps,
-} from '../../../../generic/states/elements';
+import { IElementFlexParentProps } from '../../../../generic/states/elements';
 import { flexIsReversed, TFlexDirection } from '../../../../generic/style-helpers/flex';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
+  flexParentProps$: Atom<IElementFlexParentProps>;
 }
 
-export const Reverse = React.memo<IProps>(({ element$ }) => {
+export const Reverse = React.memo<IProps>(({ flexParentProps$ }) => {
   const { isReversed$ } = React.useMemo(() => {
     return {
-      isReversed$: element$.lens(lensElementFlexProps).lens(lensIsReversed),
+      isReversed$: flexParentProps$.lens(lensIsReversed),
     };
-  }, [element$]);
+  }, [flexParentProps$]);
   return (
     <Tandem
       leftMax={50}
@@ -29,7 +27,7 @@ export const Reverse = React.memo<IProps>(({ element$ }) => {
   );
 });
 
-const lensIsReversed = Lens.create<IElementFlexProps, boolean>(
+const lensIsReversed = Lens.create<IElementFlexParentProps, boolean>(
   ({ flexDirection }) => flexIsReversed(flexDirection),
   (newValue, state) => {
     const direction = state.flexDirection;

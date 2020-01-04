@@ -4,20 +4,19 @@ import { Atom } from '@grammarly/focal';
 
 import { Label } from '../../../../generic/components/Label';
 import { Tandem } from '../../../../generic/components/Tandem';
-import { IElementGeneric, lensElementFlexProps } from '../../../../generic/states/elements';
+import { IElementFlexParentProps } from '../../../../generic/states/elements';
 import { UnitInput } from '../../../unit-input/UnitInput';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
+  flexParentProps$: Atom<IElementFlexParentProps>;
 }
 
-export const SpacingBetweenChildren = React.memo<IProps>(({ element$ }) => {
+export const SpacingBetweenChildren = React.memo<IProps>(({ flexParentProps$ }) => {
   const { spacingBetweenChildren$ } = React.useMemo(() => {
-    const flexProps$ = element$.lens(lensElementFlexProps);
     return {
-      spacingBetweenChildren$: flexProps$.lens('spacingBetweenChildren'),
+      spacingBetweenChildren$: flexParentProps$.lens('spacingBetweenChildren'),
     };
-  }, [element$]);
+  }, [flexParentProps$]);
   return (
     <Tandem
       left={<Label children="Spacing Between Children" />}

@@ -7,17 +7,16 @@ import { Panel } from '../../../../generic/components/Panel';
 import { Stack } from '../../../../generic/components/Stack';
 import { Tandem } from '../../../../generic/components/Tandem';
 import { TandemGroup } from '../../../../generic/components/TandemGroup';
-import { IElementGeneric, lensElementFlexProps } from '../../../../generic/states/elements';
+import { IElementCommonProps } from '../../../../generic/states/elements';
 import { TUnitOptionsKeys } from '../../../unit-input/options';
 import { UnitInput } from '../../../unit-input/UnitInput';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
+  commonProps$: Atom<IElementCommonProps>;
 }
 
-export const Size = React.memo<IProps>(({ element$ }) => {
+export const Size = React.memo<IProps>(({ commonProps$ }) => {
   const { width$, height$, options } = React.useMemo(() => {
-    const flexProps$ = element$.lens(lensElementFlexProps);
     return {
       options: [
         'auto',
@@ -31,10 +30,10 @@ export const Size = React.memo<IProps>(({ element$ }) => {
         'max-content',
         'inherit',
       ] as TUnitOptionsKeys[],
-      width$: flexProps$.lens('width'),
-      height$: flexProps$.lens('height'),
+      width$: commonProps$.lens('width'),
+      height$: commonProps$.lens('height'),
     };
-  }, [element$]);
+  }, [commonProps$]);
   return (
     <>
       <Panel title="Size" />

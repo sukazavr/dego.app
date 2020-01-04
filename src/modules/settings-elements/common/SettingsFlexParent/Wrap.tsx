@@ -9,28 +9,25 @@ import { Panel } from '../../../../generic/components/Panel';
 import { Switcher } from '../../../../generic/components/Switcher';
 import { Tandem } from '../../../../generic/components/Tandem';
 import { TandemGroup } from '../../../../generic/components/TandemGroup';
-import {
-    IElementFlexProps, IElementGeneric, lensElementFlexProps,
-} from '../../../../generic/states/elements';
+import { IElementFlexParentProps } from '../../../../generic/states/elements';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 import { projectionFlexIsRow } from '../types';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
+  flexParentProps$: Atom<IElementFlexParentProps>;
 }
 
-export const Wrap = React.memo<IProps>(({ element$ }) => {
+export const Wrap = React.memo<IProps>(({ flexParentProps$ }) => {
   const { isRow$, preset$, setPreset, isActive$, isReversed$ } = React.useMemo(() => {
-    const flexProps$ = element$.lens(lensElementFlexProps);
-    const memoPreset$ = flexProps$.lens('alignContent');
+    const memoPreset$ = flexParentProps$.lens('alignContent');
     return {
-      isRow$: flexProps$.view(projectionFlexIsRow),
+      isRow$: flexParentProps$.view(projectionFlexIsRow),
       preset$: memoPreset$,
-      setPreset: (preset: IElementFlexProps['alignContent']) => () => memoPreset$.set(preset),
-      isActive$: flexProps$.lens(lensIsActive),
-      isReversed$: flexProps$.lens(lensIsReversed),
+      setPreset: (preset: IElementFlexParentProps['alignContent']) => () => memoPreset$.set(preset),
+      isActive$: flexParentProps$.lens(lensIsActive),
+      isReversed$: flexParentProps$.lens(lensIsReversed),
     };
-  }, [element$]);
+  }, [flexParentProps$]);
   const preset = useObservable(preset$);
   const isRow = useObservable(isRow$);
   const isActive = useObservable(isActive$);
@@ -104,7 +101,7 @@ export const Wrap = React.memo<IProps>(({ element$ }) => {
   );
 });
 
-const lensIsActive = Lens.create<IElementFlexProps, boolean>(
+const lensIsActive = Lens.create<IElementFlexParentProps, boolean>(
   (props) => props.flexWrap !== 'nowrap',
   (newValue, state) => {
     return {
@@ -114,7 +111,7 @@ const lensIsActive = Lens.create<IElementFlexProps, boolean>(
   }
 );
 
-const lensIsReversed = Lens.create<IElementFlexProps, boolean>(
+const lensIsReversed = Lens.create<IElementFlexParentProps, boolean>(
   ({ flexWrap }) => flexWrap.includes('reverse'),
   (newValue, state) => ({ ...state, flexWrap: newValue ? 'wrap-reverse' : 'wrap' })
 );

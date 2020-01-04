@@ -2,7 +2,9 @@ import produce from 'immer';
 
 import { Lens } from '@grammarly/focal';
 
-import { EElementType, IElementFlexProps, IElementGeneric } from '../../../generic/states/elements';
+import {
+    EElementType, IElementFlexParentProps, IElementGeneric,
+} from '../../../generic/states/elements';
 import { flexIsRow } from '../../../generic/style-helpers/flex';
 
 export enum EElementVirtualType {
@@ -18,7 +20,7 @@ export const isVirtualTypeFlex = (virtualType: EElementVirtualType) =>
 export const lensElementVirtualType = Lens.create<IElementGeneric, EElementVirtualType>(
   ({ type, props }) => {
     if (type === EElementType.Flex) {
-      return flexIsRow(props[EElementType.Flex].flexDirection)
+      return flexIsRow(props.FlexParent.flexDirection)
         ? EElementVirtualType.FlexRow
         : EElementVirtualType.FlexColumn;
     } else if (type === EElementType.Grid) {
@@ -33,7 +35,7 @@ export const lensElementVirtualType = Lens.create<IElementGeneric, EElementVirtu
       const isColumn = newValue === EElementVirtualType.FlexColumn;
       if (isRow || isColumn) {
         draft.type = EElementType.Flex;
-        draft.props[EElementType.Flex].flexDirection = isRow ? 'row' : 'column';
+        draft.props.FlexParent.flexDirection = isRow ? 'row' : 'column';
       } else if (newValue === EElementVirtualType.Grid) {
         draft.type = EElementType.Grid;
       } else {
@@ -43,7 +45,5 @@ export const lensElementVirtualType = Lens.create<IElementGeneric, EElementVirtu
   }
 );
 
-export const projectionFlexIsRow = (state: IElementFlexProps) => flexIsRow(state.flexDirection);
-
-export const projectionFlexIconRotate = (state: IElementFlexProps) =>
-  flexIsRow(state.flexDirection) ? 1 : undefined;
+export const projectionFlexIsRow = (state: IElementFlexParentProps) =>
+  flexIsRow(state.flexDirection);

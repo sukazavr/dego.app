@@ -6,20 +6,21 @@ import { Lens } from '@grammarly/focal';
 import { Button } from '../../../generic/components/Button';
 import { ButtonGroup } from '../../../generic/components/ButtonGroup';
 import {
-    BODY_ID, CANVAS_ID, ECanvasType, EElementType, IElementCanvas, IElementGeneric,
+    BODY_ID, CANVAS_ID, ECanvasType, EElementType, IElementCanvas, lensElementProps, TElementAny,
 } from '../../../generic/states/elements';
 import { IState, stateApp$ } from '../../../generic/states/state-app';
-import { useObservable, useObservableFabric } from '../../../generic/supply/react-helpers';
+import { useObservable } from '../../../generic/supply/react-helpers';
 import {
     isElementGeneric, isElementGenericOrBody, isNotNull,
 } from '../../../generic/supply/type-guards';
 import { scrollRegular } from '../../../generic/theme';
 import { createTreeElement } from '../../tree/utils';
+import { SettingsCommon } from '../common/SettingsCommon/SettingsCommon';
 import { SettingsComponent } from '../common/SettingsComponent/SettingsComponent';
 import { SettingsFlexChild } from '../common/SettingsFlexChild/SettingsFlexChild';
 import { SettingsFlexParent } from '../common/SettingsFlexParent/SettingsFlexParent';
+import { SettingsGridChild } from '../common/SettingsGridChild/SettingsGridChild';
 import { SettingsGridParent } from '../common/SettingsGridParent/SettingsGridParent';
-import { Size } from '../common/Size/Size';
 import { EElementVirtualType, isVirtualTypeFlex, lensElementVirtualType } from '../common/types';
 
 interface IProps {
@@ -27,21 +28,34 @@ interface IProps {
 }
 
 export const SettingsGeneric = React.memo<IProps>(({ elementID }) => {
-  const { element$, parent$, virtualType$, setVirtualType } = React.useMemo(() => {
+  const {
+    parentType$,
+    flexChildProps$,
+    flexParentProps$,
+    componentProps$,
+    commonProps$,
+    parentFlexParentProps$,
+    virtualType$,
+    setVirtualType,
+  } = React.useMemo(() => {
     const memoElement$ = stateApp$.lens(lensFocusedElementGeneric);
+    const memoElementParent$ = stateApp$.view(projectionElementParent);
+    const memoElementProps$ = memoElement$.lens(lensElementProps);
+    const memoElementParentProps$ = memoElementParent$.view(lensElementProps);
     const memoVirtualType$ = memoElement$.lens(lensElementVirtualType);
     return {
-      element$: memoElement$,
-      parent$: stateApp$.view(projectionElementParent),
+      parentType$: memoElementParent$.view('type'),
+      flexChildProps$: memoElementProps$.lens('FlexChild'),
+      flexParentProps$: memoElementProps$.lens('FlexParent'),
+      componentProps$: memoElementProps$.lens('Component'),
+      commonProps$: memoElementProps$.lens('Common'),
+      parentFlexParentProps$: memoElementParentProps$.view('FlexParent'),
       virtualType$: memoVirtualType$,
       setVirtualType: (type: EElementVirtualType) => () => memoVirtualType$.set(type),
     };
   }, []);
   const virtualType = useObservable(virtualType$);
-  const isParentFlex = useObservableFabric(
-    () => parent$.view((_) => _.type === EElementType.Flex),
-    [parent$]
-  );
+  const parentType = useObservable(parentType$);
   return (
     <div className={$container}>
       <div className={$wrapper}>
@@ -69,15 +83,21 @@ export const SettingsGeneric = React.memo<IProps>(({ elementID }) => {
             />
           )}
         </ButtonGroup>
-        {isParentFlex && <SettingsFlexChild element$={element$} parent$={parent$} />}
+        {parentType === EElementType.Flex && (
+          <SettingsFlexChild
+            flexChildProps$={flexChildProps$}
+            parentFlexParentProps$={parentFlexParentProps$}
+          />
+        )}
+        {parentType === EElementType.Grid && <SettingsGridChild />}
         {isVirtualTypeFlex(virtualType) && (
-          <SettingsFlexParent element$={element$} parent$={parent$} />
+          <SettingsFlexParent flexParentProps$={flexParentProps$} />
         )}
-        {virtualType === EElementVirtualType.Grid && (
-          <SettingsGridParent element$={element$} parent$={parent$} />
+        {virtualType === EElementVirtualType.Grid && <SettingsGridParent />}
+        {virtualType === EElementVirtualType.Component && (
+          <SettingsComponent componentProps$={componentProps$} />
         )}
-        {virtualType === EElementVirtualType.Component && <SettingsComponent element$={element$} />}
-        <Size element$={element$} />
+        <SettingsCommon commonProps$={commonProps$} />
       </div>
     </div>
   );
@@ -91,13 +111,13 @@ const $wrapper = style({
   minWidth: '180px',
 });
 
-const lensFocusedElementGeneric = Lens.create<IState, IElementGeneric>(
+const lensFocusedElementGeneric = Lens.create<IState, TElementAny>(
   (state) => {
     const focusedID = state.tree.focusedID;
     if (isNotNull(focusedID)) {
       const element = state.elements[focusedID];
       if (isElementGenericOrBody(element)) {
-        return element as IElementGeneric;
+        return element;
       }
     }
     return createTreeElement();
@@ -123,7 +143,7 @@ const projectionElementParent = (state: IState) => {
   if (isNotNull(focusedID)) {
     const element = state.elements[focusedID];
     if (isElementGeneric(element)) {
-      return state.elements[element.parent] as IElementGeneric;
+      return state.elements[element.parent];
     }
   }
   const canvas = state.elements[CANVAS_ID] as IElementCanvas;
@@ -131,8 +151,8 @@ const projectionElementParent = (state: IState) => {
   if (canvas.type === ECanvasType.Div) {
     virtualCanvas.type = EElementType.Component;
   } else {
-    const flexProps = virtualCanvas.props[EElementType.Flex];
-    flexProps.flexDirection = canvas.type === ECanvasType.FlexRow ? 'row' : 'column';
+    virtualCanvas.props.FlexParent.flexDirection =
+      canvas.type === ECanvasType.FlexRow ? 'row' : 'column';
   }
   return virtualCanvas;
 };

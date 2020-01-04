@@ -25,7 +25,7 @@ export const ElementContent: React.FC<IProps> = React.memo(({ id }) => {
     hasChildren = Boolean(element.children.length);
     isExpanded = element.isExpanded;
     if (element.type === EElementType.Flex) {
-      icon = flexIsRow(element.props[EElementType.Flex].flexDirection) ? 'flexRow' : 'flexColumn';
+      icon = flexIsRow(element.props.FlexParent.flexDirection) ? 'flexRow' : 'flexColumn';
     } else if (element.type === EElementType.Grid) {
       icon = 'grid';
     } else if (element.type === EElementType.Component) {

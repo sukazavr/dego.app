@@ -10,16 +10,16 @@ import { Stack } from '../../../../generic/components/Stack';
 import { Tandem } from '../../../../generic/components/Tandem';
 import { TandemGroup } from '../../../../generic/components/TandemGroup';
 import {
-    IElementFlexProps, IElementGeneric, lensElementFlexProps,
+    IElementFlexChildProps, IElementFlexParentProps,
 } from '../../../../generic/states/elements';
+import { flexIsRow } from '../../../../generic/style-helpers/flex';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 import { unitOptions } from '../../../unit-input/options';
 import { UnitInput } from '../../../unit-input/UnitInput';
-import { projectionFlexIconRotate } from '../types';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
-  parent$: ReadOnlyAtom<IElementGeneric>;
+  flexChildProps$: Atom<IElementFlexChildProps>;
+  parentFlexParentProps$: ReadOnlyAtom<IElementFlexParentProps>;
 }
 
 enum EPreset {
@@ -29,7 +29,7 @@ enum EPreset {
   Custom,
 }
 
-export const Sizing = React.memo<IProps>(({ element$, parent$ }) => {
+export const Sizing = React.memo<IProps>(({ flexChildProps$, parentFlexParentProps$ }) => {
   const {
     iconRotate$,
     preset$,
@@ -38,17 +38,18 @@ export const Sizing = React.memo<IProps>(({ element$, parent$ }) => {
     flexShrink$,
     flexBasis$,
   } = React.useMemo(() => {
-    const flexProps$ = element$.lens(lensElementFlexProps);
-    const memoPreset$ = flexProps$.lens(lensPreset);
+    const memoPreset$ = flexChildProps$.lens(lensPreset);
     return {
-      iconRotate$: parent$.view(lensElementFlexProps).view(projectionFlexIconRotate),
+      iconRotate$: parentFlexParentProps$.view((state) =>
+        flexIsRow(state.flexDirection) ? 1 : undefined
+      ),
       preset$: memoPreset$,
       setPreset: (preset: EPreset) => () => memoPreset$.set(preset),
-      flexGrow$: flexProps$.lens('flexGrow'),
-      flexShrink$: flexProps$.lens('flexShrink'),
-      flexBasis$: flexProps$.lens('flexBasis'),
+      flexGrow$: flexChildProps$.lens('flexGrow'),
+      flexShrink$: flexChildProps$.lens('flexShrink'),
+      flexBasis$: flexChildProps$.lens('flexBasis'),
     };
-  }, [element$, parent$]);
+  }, [flexChildProps$, parentFlexParentProps$]);
   const preset = useObservable(preset$);
   const iconRotate = useObservable(iconRotate$);
   return (
@@ -108,7 +109,7 @@ export const Sizing = React.memo<IProps>(({ element$, parent$ }) => {
   );
 });
 
-const lensPreset = Lens.create<IElementFlexProps, EPreset>(
+const lensPreset = Lens.create<IElementFlexChildProps, EPreset>(
   ({ flexGrow, flexShrink, flexBasis }) => {
     const grow = flexGrow.n;
     const shrink = flexShrink.n;

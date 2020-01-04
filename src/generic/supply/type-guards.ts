@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Atom, ReadOnlyAtom } from '@grammarly/focal';
 
 import {
-    BODY_ID, CANVAS_ID, IElementCanvas, IElementGeneric, TElementAny,
+    BODY_ID, CANVAS_ID, IElementBody, IElementCanvas, IElementGeneric, TElementAny,
 } from '../states/elements';
 
 type Maybe<T> = T | null | undefined | unknown;
@@ -99,4 +99,8 @@ export function isElementGenericOrBody(
 
 export function isElementGeneric(value: TElementAny): value is IElementGeneric {
   return value.id !== CANVAS_ID && value.id !== BODY_ID;
+}
+
+export function isElementBody(value: TElementAny): value is IElementBody {
+  return value.id === BODY_ID;
 }

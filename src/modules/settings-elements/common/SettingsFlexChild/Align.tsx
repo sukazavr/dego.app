@@ -10,27 +10,26 @@ import { Switcher } from '../../../../generic/components/Switcher';
 import { Tandem } from '../../../../generic/components/Tandem';
 import { TandemGroup } from '../../../../generic/components/TandemGroup';
 import {
-    IElementFlexProps, IElementGeneric, lensElementFlexProps,
+    IElementFlexChildProps, IElementFlexParentProps,
 } from '../../../../generic/states/elements';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 import { projectionFlexIsRow } from '../types';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
-  parent$: ReadOnlyAtom<IElementGeneric>;
+  flexChildProps$: Atom<IElementFlexChildProps>;
+  parentFlexParentProps$: ReadOnlyAtom<IElementFlexParentProps>;
 }
 
-export const Align = React.memo<IProps>(({ element$, parent$ }) => {
+export const Align = React.memo<IProps>(({ flexChildProps$, parentFlexParentProps$ }) => {
   const { isParentRow$, preset$, setPreset, isAlignOverridden$ } = React.useMemo(() => {
-    const flexProps$ = element$.lens(lensElementFlexProps);
-    const memoPreset$ = flexProps$.lens('alignSelf');
+    const memoPreset$ = flexChildProps$.lens('alignSelf');
     return {
-      isParentRow$: parent$.view(lensElementFlexProps).view(projectionFlexIsRow),
+      isParentRow$: parentFlexParentProps$.view(projectionFlexIsRow),
       preset$: memoPreset$,
-      setPreset: (preset: IElementFlexProps['alignSelf']) => () => memoPreset$.set(preset),
-      isAlignOverridden$: flexProps$.lens('isAlignOverridden'),
+      setPreset: (preset: IElementFlexChildProps['alignSelf']) => () => memoPreset$.set(preset),
+      isAlignOverridden$: flexChildProps$.lens('isAlignOverridden'),
     };
-  }, [element$, parent$]);
+  }, [flexChildProps$, parentFlexParentProps$]);
   const preset = useObservable(preset$);
   const isParentRow = useObservable(isParentRow$);
   const isAlignOverridden = useObservable(isAlignOverridden$);

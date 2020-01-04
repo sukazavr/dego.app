@@ -9,15 +9,13 @@ import { Panel } from '../../../../generic/components/Panel';
 import { Switcher } from '../../../../generic/components/Switcher';
 import { Tandem } from '../../../../generic/components/Tandem';
 import { TandemGroup } from '../../../../generic/components/TandemGroup';
-import {
-    IElementFlexProps, IElementGeneric, lensElementFlexProps,
-} from '../../../../generic/states/elements';
+import { IElementFlexChildProps } from '../../../../generic/states/elements';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 import { unitOptions } from '../../../unit-input/options';
 import { UnitInput } from '../../../unit-input/UnitInput';
 
 interface IProps {
-  element$: Atom<IElementGeneric>;
+  flexChildProps$: Atom<IElementFlexChildProps>;
 }
 
 enum EPreset {
@@ -26,17 +24,16 @@ enum EPreset {
   Custom,
 }
 
-export const Order = React.memo<IProps>(({ element$ }) => {
+export const Order = React.memo<IProps>(({ flexChildProps$ }) => {
   const { preset$, setPreset, order$, isOrderOverridden$ } = React.useMemo(() => {
-    const flexProps$ = element$.lens(lensElementFlexProps);
-    const memoPreset$ = flexProps$.lens(lensPreset);
+    const memoPreset$ = flexChildProps$.lens(lensPreset);
     return {
       preset$: memoPreset$,
       setPreset: (preset: EPreset) => () => memoPreset$.set(preset),
-      order$: flexProps$.lens('order'),
-      isOrderOverridden$: flexProps$.lens('isOrderOverridden'),
+      order$: flexChildProps$.lens('order'),
+      isOrderOverridden$: flexChildProps$.lens('isOrderOverridden'),
     };
-  }, [element$]);
+  }, [flexChildProps$]);
   const preset = useObservable(preset$);
   const isOrderOverridden = useObservable(isOrderOverridden$);
   return (
@@ -76,7 +73,7 @@ export const Order = React.memo<IProps>(({ element$ }) => {
   );
 });
 
-const lensPreset = Lens.create<IElementFlexProps, EPreset>(
+const lensPreset = Lens.create<IElementFlexChildProps, EPreset>(
   (props) => {
     const order = props.order.n;
     return order === 1 ? EPreset.First : order === -1 ? EPreset.Last : EPreset.Custom;
