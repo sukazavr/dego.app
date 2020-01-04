@@ -1,12 +1,13 @@
 import { Lens } from '@grammarly/focal';
 
 import { unitOptions } from '../../modules/unit-input/options';
+import { COMPONENT_COLORS } from '../style-helpers/component-colors';
 import { TFlexDirection } from '../style-helpers/flex';
 import { isDefined } from '../supply/type-guards';
 import { IUnit } from './unit';
 
 // TODO: auto gen from defaultElements and defaultGenericElement
-export const ELEMENTS_SCHEMA_VERSION = 2;
+export const ELEMENTS_SCHEMA_VERSION = 1;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -92,11 +93,13 @@ export const defaultElementGridProps: IElementGridProps = {
 export interface IElementComponentProps {
   width: IUnit;
   height: IUnit;
+  color: string;
 }
 
 export const defaultElementComponentProps: IElementComponentProps = {
   width: unitOptions.auto.defaultUnit,
   height: unitOptions.auto.defaultUnit,
+  color: COMPONENT_COLORS[5],
 };
 
 export const defaultElements: IElements = {
@@ -188,6 +191,19 @@ export const lensElementFlexProps = Lens.create<IElementGeneric, IElementFlexPro
       props: {
         ...state.props,
         [EElementType.Flex]: newValue,
+      },
+    } as IElementGeneric;
+  }
+);
+
+export const lensElementComponentProps = Lens.create<IElementGeneric, IElementComponentProps>(
+  (state) => state.props[EElementType.Component],
+  (newValue, state) => {
+    return {
+      ...state,
+      props: {
+        ...state.props,
+        [EElementType.Component]: newValue,
       },
     } as IElementGeneric;
   }
