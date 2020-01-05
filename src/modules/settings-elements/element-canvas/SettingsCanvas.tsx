@@ -24,6 +24,7 @@ export const SettingsCanvas = React.memo(() => {
       width$: canvas$.lens('width'),
       height$: canvas$.lens('height'),
       isTransparent$: canvas$.lens('isTransparent'),
+      isBorderless$: canvas$.lens('isBorderless'),
     };
   }, []);
   const canvasType = useObservableFabric(
@@ -50,11 +51,15 @@ export const SettingsCanvas = React.memo(() => {
             onClick={changeType._(ECanvasType.FlexColumn)}
           />
         </ButtonGroup>
-        <Panel title="Background" />
+        <Panel title="Appearance" />
         <TandemGroup>
           <Tandem
             left={<Label children="Transparent" />}
             right={<Switcher value$={props.isTransparent$} />}
+          />
+          <Tandem
+            left={<Label children="Borderless" />}
+            right={<Switcher value$={props.isBorderless$} />}
           />
         </TandemGroup>
         <Panel title="Size" />

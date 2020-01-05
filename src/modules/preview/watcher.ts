@@ -24,6 +24,9 @@ export const usePreviewWatcher = createUseWatcher<
     if (!_.isTransparent) {
       style.backgroundImage = 'none';
     }
+    if (_.isBorderless) {
+      style.border = 'none';
+    }
     if (_.type !== ECanvasType.Div) {
       style.display = 'flex';
       if (_.type === ECanvasType.FlexColumn) {

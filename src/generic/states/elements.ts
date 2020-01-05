@@ -116,10 +116,11 @@ export const defaultElementComponentProps: IElementComponentProps = {
 
 export interface IElementCanvas {
   id: typeof CANVAS_ID;
+  type: ECanvasType;
   width: IUnit;
   height: IUnit;
-  type: ECanvasType;
   isTransparent: boolean;
+  isBorderless: boolean;
 }
 
 export interface IElementBody {
@@ -156,10 +157,11 @@ export interface IElementGeneric {
 export const defaultElements: IElements = {
   [CANVAS_ID]: {
     id: CANVAS_ID,
+    type: ECanvasType.Div,
     width: unitOptions.px.numberToUnit(800),
     height: unitOptions.px.numberToUnit(800),
     isTransparent: true,
-    type: ECanvasType.Div,
+    isBorderless: false,
   },
   [BODY_ID]: {
     id: BODY_ID,

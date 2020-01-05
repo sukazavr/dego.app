@@ -5,5 +5,8 @@
   "importSorter.importStringConfiguration.tabType": "space",
   "importSorter.importStringConfiguration.trailingComma": "multiLine",
   "importSorter.importStringConfiguration.hasSemicolon": true,
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "cSpell.words": [
+    "Borderless"
+  ]
 }
