@@ -5,6 +5,7 @@ export const actionsTree = ga('tree', {
   addInside: ca<{ parentID: string }>(),
   addAbove: ca<{ neighborID: string }>(),
   addBelow: ca<{ neighborID: string }>(),
+  duplicate: ca<{ id: string }>(),
   delete: ca<{ id: string }>(),
   focus: ca<{ id: string }>(),
   editName: ca<{ id: string }>((R, payload) => {

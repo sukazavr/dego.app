@@ -1,8 +1,12 @@
 import produce from 'immer';
+import nanoid from 'nanoid';
 import { merge, timer } from 'rxjs';
 import { debounceTime, delay, filter, map, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { actionsTree } from '../../../generic/actions';
+import {
+    IElementGeneric, IElements, TElementGenericOrBody,
+} from '../../../generic/states/elements';
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app';
 import { defaultTree, ITree } from '../../../generic/states/tree';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
@@ -72,6 +76,32 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
         }));
       })
     ),
+    actionsTree.duplicate.$.pipe(
+      tap(({ id }) => {
+        stateApp$.modify((state) => {
+          const elements = state.elements;
+          const donor = elements[id];
+          if (isElementGeneric(donor)) {
+            const newElements: IElements = {};
+            const parent = elements[donor.parent] as TElementGenericOrBody;
+            const newElementID = duplicateElement(elements, newElements, donor, parent.id);
+            return {
+              ...state,
+              elements: {
+                ...elements,
+                ...newElements,
+                [parent.id]: { ...parent, children: parent.children.concat(newElementID) },
+              },
+              tree: {
+                ...state.tree,
+                flashedID: newElementID,
+              },
+            };
+          }
+          return state;
+        });
+      })
+    ),
     actionsTree.delete.$.pipe(
       tap(({ id }) => {
         stateApp$.modify((state) =>
@@ -121,3 +151,21 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
     .pipe(takeUntil(didUnmount$))
     .subscribe();
 });
+
+const duplicateElement = (
+  source: IElements,
+  sink: IElements,
+  donor: IElementGeneric,
+  parentID: string
+) => {
+  const recipient: IElementGeneric = JSON.parse(JSON.stringify(donor));
+  const id = nanoid(10);
+  recipient.id = id;
+  recipient.parent = parentID;
+  recipient.children = recipient.children.map((childID) => {
+    const child = source[childID] as IElementGeneric;
+    return duplicateElement(source, sink, child, id);
+  });
+  sink[id] = recipient;
+  return id;
+};

@@ -13,11 +13,11 @@ interface IProps {
 
 export const ElementContextMenu = React.memo<IProps>(({ id }) => {
   useWatcher([id]);
-  const isElement = id !== CANVAS_ID && id !== BODY_ID;
+  const isElementGeneric = id !== CANVAS_ID && id !== BODY_ID;
   return (
     <>
       <MenuItem children="Add Element Inside" onClick={actionsTree.addInside._({ parentID: id })} />
-      {isElement && (
+      {isElementGeneric && (
         <>
           <MenuItem
             children="Add Element Above"
@@ -27,6 +27,8 @@ export const ElementContextMenu = React.memo<IProps>(({ id }) => {
             children="Add Element Below"
             onClick={actionsTree.addBelow._({ neighborID: id })}
           />
+          <MenuDivider />
+          <MenuItem children="Duplicate" onClick={actionsTree.duplicate._({ id })} />
           <MenuDivider />
           <MenuItem children="Delete" onClick={actionsTree.delete._({ id })} />
         </>

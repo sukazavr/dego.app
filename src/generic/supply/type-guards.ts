@@ -92,15 +92,15 @@ export function isNotText<T>(value: T): value is Exclude<T, string> {
 }
 
 export function isElementGenericOrBody(
-  value: TElementAny
+  value?: TElementAny
 ): value is Exclude<TElementAny, IElementCanvas> {
-  return value.id !== CANVAS_ID;
+  return isDefined(value) && value.id !== CANVAS_ID;
 }
 
-export function isElementGeneric(value: TElementAny): value is IElementGeneric {
-  return value.id !== CANVAS_ID && value.id !== BODY_ID;
+export function isElementGeneric(value?: TElementAny): value is IElementGeneric {
+  return isDefined(value) && value.id !== CANVAS_ID && value.id !== BODY_ID;
 }
 
-export function isElementBody(value: TElementAny): value is IElementBody {
-  return value.id === BODY_ID;
+export function isElementBody(value?: TElementAny): value is IElementBody {
+  return isDefined(value) && value.id === BODY_ID;
 }
