@@ -129,8 +129,8 @@ export const useUnitInputWatcher = createUseWatcher<
     .pipe(
       map(canIncrement),
       distinctUntilChanged(),
-      switchMap((canIncrement) =>
-        canIncrement
+      switchMap((isIncrementable) =>
+        isIncrementable
           ? combineLatest(el$, unitAtom$).pipe(
               switchCombine(
                 merge(

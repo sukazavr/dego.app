@@ -60,6 +60,7 @@ const makeTextLine = (length: number) => {
   } else {
     let res = '';
     const refLength = ref.length;
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     while (length--) {
       res += ref.charAt(Math.floor(Math.random() * refLength));
     }
