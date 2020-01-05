@@ -25,7 +25,7 @@ export const usePreviewWatcher = createUseWatcher<
       style.backgroundImage = 'none';
     }
     if (_.isBorderless) {
-      style.border = 'none';
+      style.outline = 'none';
     }
     if (_.type !== ECanvasType.Div) {
       style.display = 'flex';
