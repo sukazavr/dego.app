@@ -13,7 +13,11 @@ export class UnitOption {
   }
 
   is = ({ t, s }: IUnit): boolean => {
-    if (t !== this.type) {
+    if (
+      !(this.type === EUnitType.Float && t === EUnitType.Integer) &&
+      !(this.type === EUnitType.FloatString && t === EUnitType.IntegerString) &&
+      t !== this.type
+    ) {
       return false;
     }
     switch (this.type) {
@@ -42,33 +46,13 @@ export class UnitOption {
     }
   };
 
-  stringToUnit = (_: string) => {
-    const string = _.trim();
-    const unit: IUnit = { ...defaultUnit };
-    if (string === '') {
-      return unit;
-    }
-    const number = parseFloat(string);
-    if (isNaN(number)) {
-      unit.t = EUnitType.String;
-      unit.s = string;
-      return unit;
-    }
-    const numberString = number.toString();
-    if (numberString === string) {
-      unit.t = number % 1 === 0 ? EUnitType.Integer : EUnitType.Float;
-      unit.n = number;
-      return unit;
-    }
-    unit.t = number % 1 === 0 ? EUnitType.IntegerString : EUnitType.FloatString;
-    unit.n = number;
-    unit.s = string.replace(numberString, '').toLowerCase();
-    return unit;
-  };
+  numberToUnit = (n: number) => stringToUnit(`${n}${this.string}`);
+
+  stringToUnit = (_: string) => stringToUnit(_);
 
   unitToString = (u: IUnit) => unitToString(u);
 
-  canIncrement = ({ t }: IUnit) => t !== EUnitType.Default && t !== EUnitType.String;
+  canIncrement = (u: IUnit) => canIncrement(u);
 }
 
 export const unitOptions = {
@@ -107,3 +91,29 @@ export const unitToString = ({ t: type, n: number, s: string }: IUnit): string =
       return '';
   }
 };
+
+export const stringToUnit = (_: string) => {
+  const string = _.trim();
+  const unit: IUnit = { ...defaultUnit };
+  if (string === '') {
+    return unit;
+  }
+  const number = parseFloat(string);
+  if (isNaN(number)) {
+    unit.t = EUnitType.String;
+    unit.s = string;
+    return unit;
+  }
+  const numberString = number.toString();
+  if (numberString === string) {
+    unit.t = number % 1 === 0 ? EUnitType.Integer : EUnitType.Float;
+    unit.n = number;
+    return unit;
+  }
+  unit.t = number % 1 === 0 ? EUnitType.IntegerString : EUnitType.FloatString;
+  unit.n = number;
+  unit.s = string.replace(numberString, '').toLowerCase();
+  return unit;
+};
+
+export const canIncrement = ({ t }: IUnit) => t !== EUnitType.Default && t !== EUnitType.String;

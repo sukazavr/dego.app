@@ -84,7 +84,7 @@ const lensPreset = Lens.create<IElementFlexChildProps, EPreset>(
     } else {
       return {
         ...state,
-        order: unitOptions.int.stringToUnit(newValue === EPreset.First ? '1' : '-1'),
+        order: unitOptions.int.numberToUnit(newValue === EPreset.First ? 1 : -1),
       };
     }
   }

@@ -1,8 +1,8 @@
 import React from 'react';
 import { combineLatest, concat, merge, NEVER, of } from 'rxjs';
 import {
-    distinctUntilChanged, filter, map, shareReplay, switchAll, switchMap, takeUntil, tap,
-    withLatestFrom,
+    distinctUntilChanged, filter, map, shareReplay, switchAll, switchMap, switchMapTo, takeUntil,
+    tap, withLatestFrom,
 } from 'rxjs/operators';
 
 import { Atom } from '@grammarly/focal';
@@ -13,9 +13,9 @@ import { createUseWatcher } from '../../generic/supply/react-helpers';
 import {
     continueAfter, selectInTuple, switchCombine, wheel$,
 } from '../../generic/supply/rxjs-helpers';
-import { isDefined } from '../../generic/supply/type-guards';
+import { isDefined, isText } from '../../generic/supply/type-guards';
 import { isArrayEqual } from '../../generic/supply/utils';
-import { TUnitOptionsKeys, unitOptions } from './options';
+import { canIncrement, TUnitOptionsKeys, unitOptions, unitToString } from './options';
 import { getMultiplier } from './utils';
 
 export const useUnitInputWatcher = createUseWatcher<
@@ -93,22 +93,41 @@ export const useUnitInputWatcher = createUseWatcher<
     takeUntil(didUnmount$)
   ).subscribe(([e, potentialOption, unitOptionsScope, unitAtom]) => {
     const nextValue = e.target.value;
-    const unit = potentialOption.stringToUnit(nextValue);
-    const isValid = unitOptionsScope.some((option) => option.is(unit));
-    if (isValid) {
-      unitAtom.set(unit);
+    if (isText(nextValue.trim())) {
+      const unit = potentialOption.stringToUnit(nextValue);
+      const isValid = unitOptionsScope.some((option) => option.is(unit));
+      if (isValid) {
+        unitAtom.set(unit);
+      }
+      state$.set({
+        value: nextValue,
+        placeholder: potentialOption.placeholder,
+        isInvalid: !isValid,
+      });
+    } else {
+      unitAtom.set(unitOptionsScope[0].defaultUnit);
+      state$.set({
+        value: nextValue,
+        placeholder: potentialOption.placeholder,
+        isInvalid: false,
+      });
     }
-    state$.set({
-      value: e.target.value,
-      placeholder: potentialOption.placeholder,
-      isInvalid: !isValid,
+  });
+
+  onBlur.$.pipe(switchMapTo(unitAtom$), takeUntil(didUnmount$)).subscribe((unitAtom) => {
+    state$.modify((state) => {
+      if (state.isInvalid) {
+        return state;
+      } else {
+        return { ...state, value: unitToString(unitAtom.get()) };
+      }
     });
   });
 
   // Increment by keyboard arrows and mouse wheel
-  combineLatest(unit$, potentialOption$)
+  unit$
     .pipe(
-      map(([unit, potentialOption]) => potentialOption.canIncrement(unit)),
+      map(canIncrement),
       distinctUntilChanged(),
       switchMap((canIncrement) =>
         canIncrement

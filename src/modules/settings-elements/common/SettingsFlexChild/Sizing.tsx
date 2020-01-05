@@ -128,18 +128,18 @@ const lensPreset = Lens.create<IElementFlexChildProps, EPreset>(
     return produce(state, (draft) => {
       if (newValue === EPreset.Shrink) {
         draft.flexGrow = unitOptions.int.defaultUnit;
-        draft.flexShrink = unitOptions.int.stringToUnit('1');
+        draft.flexShrink = unitOptions.int.numberToUnit(1);
         draft.flexBasis = unitOptions.auto.defaultUnit;
       } else if (newValue === EPreset.Grow) {
-        draft.flexGrow = unitOptions.int.stringToUnit('1');
-        draft.flexShrink = unitOptions.int.stringToUnit('1');
+        draft.flexGrow = unitOptions.int.numberToUnit(1);
+        draft.flexShrink = unitOptions.int.numberToUnit(1);
         draft.flexBasis = unitOptions['%'].defaultUnit;
       } else if (newValue === EPreset.None) {
         draft.flexGrow = unitOptions.int.defaultUnit;
         draft.flexShrink = unitOptions.int.defaultUnit;
         draft.flexBasis = unitOptions.auto.defaultUnit;
       } else {
-        draft.flexGrow = unitOptions.int.stringToUnit('1');
+        draft.flexGrow = unitOptions.int.numberToUnit(1);
       }
     });
   }

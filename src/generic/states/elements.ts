@@ -55,12 +55,12 @@ export interface IElementFlexChildProps {
 
 export const defaultElementFlexChildProps: IElementFlexChildProps = {
   flexGrow: unitOptions.int.defaultUnit,
-  flexShrink: unitOptions.int.stringToUnit('1'),
+  flexShrink: unitOptions.int.numberToUnit(1),
   flexBasis: unitOptions.auto.defaultUnit,
   isAlignOverridden: false,
   alignSelf: 'flex-end',
   isOrderOverridden: false,
-  order: unitOptions.int.stringToUnit('1'),
+  order: unitOptions.int.numberToUnit(1),
 };
 
 export interface IElementFlexParentProps {
@@ -156,8 +156,8 @@ export interface IElementGeneric {
 export const defaultElements: IElements = {
   [CANVAS_ID]: {
     id: CANVAS_ID,
-    width: unitOptions.px.stringToUnit('800px'),
-    height: unitOptions.px.stringToUnit('1000px'),
+    width: unitOptions.px.numberToUnit(800),
+    height: unitOptions.px.numberToUnit(800),
     isTransparent: true,
     type: ECanvasType.Div,
   },
