@@ -17,6 +17,9 @@ export const COMPONENT_COLORS = [
   '#ff5722',
   '#795548',
   '#607d8b',
+  '#858585',
+  '#D6D6D6',
+  '#f2f2f2',
 ];
 
 export const COMPONENT_COLORS_LIGHT = [
@@ -25,6 +28,8 @@ export const COMPONENT_COLORS_LIGHT = [
   COMPONENT_COLORS[11],
   COMPONENT_COLORS[12],
   COMPONENT_COLORS[13],
+  COMPONENT_COLORS[19],
+  COMPONENT_COLORS[20],
 ];
 
 let lastIndex = 0;

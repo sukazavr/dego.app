@@ -30,7 +30,7 @@ export const Color = React.memo<IProps>(({ componentProps$ }) => {
             key={color}
             className={$color}
             style={{
-              boxShadow: `${color} 0px 0px 0px ${preset === color ? 0.5 : 2}rem inset`,
+              boxShadow: `${color} 0px 0px 0px ${preset === color ? 0.8 : 2}rem inset`,
             }}
             onClick={setPreset(color)}
           />
@@ -42,8 +42,8 @@ export const Color = React.memo<IProps>(({ componentProps$ }) => {
 
 const $container = style({
   display: 'grid',
-  gridTemplateColumns: 'repeat(6, 4rem)',
-  gridTemplateRows: 'repeat(3, 4rem)',
+  gridTemplateColumns: 'repeat(7, 3.25rem)',
+  gridTemplateRows: 'repeat(3, 3.25rem)',
   gridGap: '.5rem',
   justifyContent: 'space-between',
   padding: '1rem 1rem 2rem',
