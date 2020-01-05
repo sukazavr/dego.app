@@ -1,4 +1,5 @@
 import React from 'react';
+import { style } from 'typestyle';
 
 import { actionsTree } from '../../../generic/actions';
 import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements';
@@ -15,25 +16,19 @@ export const ElementContextMenu = React.memo<IProps>(({ id }) => {
   useWatcher([id]);
   const isElementGeneric = id !== CANVAS_ID && id !== BODY_ID;
   return (
-    <>
-      <MenuItem children="Add Element Inside" onClick={actionsTree.addInside._({ parentID: id })} />
+    <div className={$container}>
+      <MenuItem children="Add Child" onClick={actionsTree.addInside._({ parentID: id })} />
       {isElementGeneric && (
         <>
-          <MenuItem
-            children="Add Element Above"
-            onClick={actionsTree.addAbove._({ neighborID: id })}
-          />
-          <MenuItem
-            children="Add Element Below"
-            onClick={actionsTree.addBelow._({ neighborID: id })}
-          />
+          <MenuItem children="Add Before" onClick={actionsTree.addAbove._({ neighborID: id })} />
+          <MenuItem children="Add After" onClick={actionsTree.addBelow._({ neighborID: id })} />
           <MenuDivider />
           <MenuItem children="Duplicate" onClick={actionsTree.duplicate._({ id })} />
           <MenuDivider />
           <MenuItem children="Delete" onClick={actionsTree.delete._({ id })} />
         </>
       )}
-    </>
+    </div>
   );
 });
 
@@ -46,4 +41,8 @@ const useWatcher = createUseWatcher<[string], void>(({ currentDeps$ }) => {
       stateTree$.lens('scopedID').set(null);
     },
   });
+});
+
+const $container = style({
+  minWidth: '140px',
 });
