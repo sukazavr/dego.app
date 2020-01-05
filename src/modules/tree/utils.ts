@@ -4,20 +4,25 @@ import {
     BODY_ID, CANVAS_ID, EElementType, getDefaultProps, IElementGeneric, IElements,
 } from '../../generic/states/elements';
 import { defaultTree } from '../../generic/states/tree';
+import { getComponentNextColor } from '../../generic/style-helpers/component-colors';
 import {
     isDefined, isElementGeneric, isElementGenericOrBody, isNotNull,
 } from '../../generic/supply/type-guards';
 import { elStore } from './common';
 
-export const createTreeElement = (): IElementGeneric => ({
-  id: nanoid(10),
-  name: '',
-  parent: BODY_ID,
-  children: [],
-  type: EElementType.Flex,
-  props: getDefaultProps(),
-  isExpanded: true,
-});
+export const createTreeElement = (): IElementGeneric => {
+  const element = {
+    id: nanoid(10),
+    name: '',
+    parent: BODY_ID,
+    children: [],
+    type: EElementType.Flex,
+    props: getDefaultProps(),
+    isExpanded: true,
+  };
+  element.props.Component.color = getComponentNextColor();
+  return element;
+};
 
 export const mutateAddInside = (draft: IElements, element: IElementGeneric, parentID: string) => {
   parentID = parentID === CANVAS_ID ? BODY_ID : parentID;

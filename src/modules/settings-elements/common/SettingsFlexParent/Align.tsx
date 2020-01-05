@@ -7,7 +7,7 @@ import { ButtonGroup } from '../../../../generic/components/ButtonGroup';
 import { Label } from '../../../../generic/components/Label';
 import { Tandem } from '../../../../generic/components/Tandem';
 import { IElementFlexParentProps } from '../../../../generic/states/elements';
-import { flexIsReversed } from '../../../../generic/style-helpers/flex';
+import { flexDirectionIsReversed } from '../../../../generic/style-helpers/flex';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 import { projectionFlexIsRow } from '../types';
 
@@ -20,7 +20,7 @@ export const Align = React.memo<IProps>(({ flexParentProps$ }) => {
     const memoPreset$ = flexParentProps$.lens('alignItems');
     return {
       isRow$: flexParentProps$.view(projectionFlexIsRow),
-      isReversed$: flexParentProps$.view((props) => flexIsReversed(props.flexDirection)),
+      isReversed$: flexParentProps$.view((props) => flexDirectionIsReversed(props.flexDirection)),
       preset$: memoPreset$,
       setPreset: (preset: IElementFlexParentProps['alignItems']) => () => memoPreset$.set(preset),
     };

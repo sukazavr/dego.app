@@ -4,26 +4,34 @@ import { distinctUntilChanged, switchMap, takeUntil, tap } from 'rxjs/operators'
 
 import { ReadOnlyAtom } from '@grammarly/focal';
 
-import { lensElementCanvas } from '../../generic/states/elements';
+import { ECanvasType, lensElementCanvas } from '../../generic/states/elements';
 import { stateElements$ } from '../../generic/states/state-app';
 import { createUseWatcher } from '../../generic/supply/react-helpers';
 import { continueAfter, selectInTuple } from '../../generic/supply/rxjs-helpers';
 
 export const usePreviewWatcher = createUseWatcher<
   [React.RefObject<HTMLDivElement>],
-  ReadOnlyAtom<{
-    width: number;
-    height: number;
-  }>
+  ReadOnlyAtom<React.CSSProperties>
 >(({ currentDeps$, didMount$, didUnmount$ }) => {
   const move$ = fromEvent<MouseEvent>(document, 'mousemove');
   const up$ = fromEvent<MouseEvent>(document, 'mouseup');
 
-  const canvasStyle$ = stateElements$.view(lensElementCanvas).view((_) => ({
-    height: _.height.n,
-    width: _.width.n,
-    backgroundImage: _.isTransparent ? undefined : 'none',
-  }));
+  const canvasStyle$ = stateElements$.view(lensElementCanvas).view((_) => {
+    const style: React.CSSProperties = {
+      height: _.height.n,
+      width: _.width.n,
+    };
+    if (!_.isTransparent) {
+      style.backgroundImage = 'none';
+    }
+    if (_.type !== ECanvasType.Div) {
+      style.display = 'flex';
+      if (_.type === ECanvasType.FlexColumn) {
+        style.flexDirection = 'column';
+      }
+    }
+    return style;
+  });
 
   currentDeps$
     .pipe(

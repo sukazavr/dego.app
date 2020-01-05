@@ -12,7 +12,7 @@ import { TandemGroup } from '../../../../generic/components/TandemGroup';
 import {
     IElementFlexChildProps, IElementFlexParentProps,
 } from '../../../../generic/states/elements';
-import { flexIsRow } from '../../../../generic/style-helpers/flex';
+import { flexDirectionIsRow } from '../../../../generic/style-helpers/flex';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 import { unitOptions } from '../../../unit-input/options';
 import { UnitInput } from '../../../unit-input/UnitInput';
@@ -41,7 +41,7 @@ export const Sizing = React.memo<IProps>(({ flexChildProps$, parentFlexParentPro
     const memoPreset$ = flexChildProps$.lens(lensPreset);
     return {
       iconRotate$: parentFlexParentProps$.view((state) =>
-        flexIsRow(state.flexDirection) ? 1 : undefined
+        flexDirectionIsRow(state.flexDirection) ? 1 : undefined
       ),
       preset$: memoPreset$,
       setPreset: (preset: EPreset) => () => memoPreset$.set(preset),

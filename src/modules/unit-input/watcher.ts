@@ -122,9 +122,7 @@ export const useUnitInputWatcher = createUseWatcher<
                         switchMap(() =>
                           wheel$.pipe(
                             tap((e) => {
-                              if (e.ctrlKey) {
-                                e.preventDefault(); // // Prevent zoom-in/out
-                              }
+                              e.preventDefault(); // Prevent zoom-in/out & scroll
                             }),
                             takeUntil(onMouseLeave.$)
                           )

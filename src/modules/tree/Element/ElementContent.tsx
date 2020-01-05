@@ -4,7 +4,7 @@ import { style } from 'typestyle';
 import { TIconName } from '../../../generic/icons';
 import { EElementType, lensElementAny } from '../../../generic/states/elements';
 import { stateElements$ } from '../../../generic/states/state-app';
-import { flexIsRow } from '../../../generic/style-helpers/flex';
+import { flexDirectionIsRow } from '../../../generic/style-helpers/flex';
 import { useObservable } from '../../../generic/supply/react-helpers';
 import { isElementGenericOrBody } from '../../../generic/supply/type-guards';
 import { ElementContentExpander } from './ElementContentExpander';
@@ -25,7 +25,7 @@ export const ElementContent: React.FC<IProps> = React.memo(({ id }) => {
     hasChildren = Boolean(element.children.length);
     isExpanded = element.isExpanded;
     if (element.type === EElementType.Flex) {
-      icon = flexIsRow(element.props.FlexParent.flexDirection) ? 'flexRow' : 'flexColumn';
+      icon = flexDirectionIsRow(element.props.FlexParent.flexDirection) ? 'flexRow' : 'flexColumn';
     } else if (element.type === EElementType.Grid) {
       icon = 'grid';
     } else if (element.type === EElementType.Component) {

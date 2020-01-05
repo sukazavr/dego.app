@@ -18,3 +18,14 @@ export const COMPONENT_COLORS = [
   '#795548',
   '#607d8b',
 ];
+
+export const COMPONENT_COLORS_LIGHT = [
+  COMPONENT_COLORS[7],
+  COMPONENT_COLORS[10],
+  COMPONENT_COLORS[11],
+  COMPONENT_COLORS[12],
+  COMPONENT_COLORS[13],
+];
+
+let lastIndex = 0;
+export const getComponentNextColor = () => COMPONENT_COLORS[lastIndex++ % COMPONENT_COLORS.length];

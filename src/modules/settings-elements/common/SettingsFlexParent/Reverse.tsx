@@ -6,7 +6,7 @@ import { Label } from '../../../../generic/components/Label';
 import { Switcher } from '../../../../generic/components/Switcher';
 import { Tandem } from '../../../../generic/components/Tandem';
 import { IElementFlexParentProps } from '../../../../generic/states/elements';
-import { flexIsReversed, TFlexDirection } from '../../../../generic/style-helpers/flex';
+import { flexDirectionIsReversed, TFlexDirection } from '../../../../generic/style-helpers/flex';
 
 interface IProps {
   flexParentProps$: Atom<IElementFlexParentProps>;
@@ -28,7 +28,7 @@ export const Reverse = React.memo<IProps>(({ flexParentProps$ }) => {
 });
 
 const lensIsReversed = Lens.create<IElementFlexParentProps, boolean>(
-  ({ flexDirection }) => flexIsReversed(flexDirection),
+  ({ flexDirection }) => flexDirectionIsReversed(flexDirection),
   (newValue, state) => {
     const direction = state.flexDirection;
     const nextDirection = (newValue

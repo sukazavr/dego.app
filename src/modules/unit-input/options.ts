@@ -66,20 +66,7 @@ export class UnitOption {
     return unit;
   };
 
-  unitToString = ({ t: type, n: number, s: string }: IUnit): string => {
-    switch (type) {
-      case EUnitType.Float:
-      case EUnitType.Integer:
-        return number.toString();
-      case EUnitType.String:
-        return string;
-      case EUnitType.FloatString:
-      case EUnitType.IntegerString:
-        return number + string;
-      default:
-        return '';
-    }
-  };
+  unitToString = (u: IUnit) => unitToString(u);
 
   canIncrement = ({ t }: IUnit) => t !== EUnitType.Default && t !== EUnitType.String;
 }
@@ -105,3 +92,18 @@ export const unitOptions = {
 };
 
 export type TUnitOptionsKeys = keyof typeof unitOptions;
+
+export const unitToString = ({ t: type, n: number, s: string }: IUnit): string => {
+  switch (type) {
+    case EUnitType.Float:
+    case EUnitType.Integer:
+      return number.toString();
+    case EUnitType.String:
+      return string;
+    case EUnitType.FloatString:
+    case EUnitType.IntegerString:
+      return number + string;
+    default:
+      return '';
+  }
+};

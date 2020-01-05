@@ -5,7 +5,7 @@ import { Lens } from '@grammarly/focal';
 import {
     EElementType, IElementFlexParentProps, IElementGeneric,
 } from '../../../generic/states/elements';
-import { flexIsRow } from '../../../generic/style-helpers/flex';
+import { flexDirectionIsRow } from '../../../generic/style-helpers/flex';
 
 export enum EElementVirtualType {
   FlexRow = 'FlexRow',
@@ -20,7 +20,7 @@ export const isVirtualTypeFlex = (virtualType: EElementVirtualType) =>
 export const lensElementVirtualType = Lens.create<IElementGeneric, EElementVirtualType>(
   ({ type, props }) => {
     if (type === EElementType.Flex) {
-      return flexIsRow(props.FlexParent.flexDirection)
+      return flexDirectionIsRow(props.FlexParent.flexDirection)
         ? EElementVirtualType.FlexRow
         : EElementVirtualType.FlexColumn;
     } else if (type === EElementType.Grid) {
@@ -46,4 +46,4 @@ export const lensElementVirtualType = Lens.create<IElementGeneric, EElementVirtu
 );
 
 export const projectionFlexIsRow = (state: IElementFlexParentProps) =>
-  flexIsRow(state.flexDirection);
+  flexDirectionIsRow(state.flexDirection);

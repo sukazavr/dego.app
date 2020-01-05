@@ -32,6 +32,12 @@ export const fontUnit: NestedCSSProperties = {
   fontFamily: monoFontFamily,
 };
 
+export const fontPreview: NestedCSSProperties = {
+  ...fontUnit,
+  fontSize: '13px',
+  lineHeight: '15px',
+};
+
 export const scrollRegular: NestedCSSProperties = {
   $nest: {
     '&::-webkit-scrollbar': {
