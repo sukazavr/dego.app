@@ -15,12 +15,13 @@ const MIN = 100;
 interface IProps {
   ward$: Atom<number>;
   gridArea: string;
+  zIndex?: number;
 }
 
-export const Divider = React.memo<IProps>(({ ward$, gridArea }) => {
+export const Divider = React.memo<IProps>(({ ward$, gridArea, zIndex }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   useWatcher([ref, ward$]);
-  return <div ref={ref} className={$container} style={{ gridArea }} />;
+  return <div ref={ref} className={$container} style={{ gridArea, zIndex }} />;
 });
 
 const useWatcher = createUseWatcher<[React.RefObject<HTMLDivElement>, Atom<number>], void>(

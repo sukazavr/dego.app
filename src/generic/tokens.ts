@@ -1,6 +1,7 @@
 export const regularFontFamily =
   'Roboto, "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif';
 export const monoFontFamily = '"Roboto Mono", monospace';
+export const monoCodeFontFamily = 'Monaco,Menlo,Consolas,"Courier New",monospace';
 
 export const themeVariables = {
   'grid-size': '8px',

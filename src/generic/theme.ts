@@ -3,7 +3,9 @@ import { NestedCSSProperties } from 'typestyle/lib/types';
 
 import { canUseDOM } from './supply/env-helpers';
 import { tv } from './supply/style-helpers';
-import { fontWeights, monoFontFamily, regularFontFamily, themeVariables } from './tokens';
+import {
+    fontWeights, monoCodeFontFamily, monoFontFamily, regularFontFamily, themeVariables,
+} from './tokens';
 
 // Init
 if (canUseDOM) {
@@ -30,6 +32,14 @@ export const fontRegularBig: NestedCSSProperties = {
 export const fontUnit: NestedCSSProperties = {
   ...fontRegular,
   fontFamily: monoFontFamily,
+};
+
+export const fontExportResult: NestedCSSProperties = {
+  fontFamily: monoCodeFontFamily,
+  fontStyle: 'normal',
+  fontWeight: fontWeights.normal,
+  fontSize: '14px',
+  lineHeight: '18px',
 };
 
 export const fontPreview: NestedCSSProperties = {

@@ -2,6 +2,7 @@ import React from 'react';
 import { classes, style } from 'typestyle';
 
 import { applyVariables, av, tv } from '../supply/style-helpers';
+import { isDefined } from '../supply/type-guards';
 import { Label } from './Label';
 
 interface IProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -15,7 +16,12 @@ export const Panel = React.forwardRef<HTMLDivElement, IProps>(
       <div
         {...rest}
         ref={ref}
-        className={classes($container, isTransparent && $isTransparent, className)}
+        className={classes(
+          $container,
+          isTransparent && $isTransparent,
+          isDefined(rest.onClick) && $isClickable,
+          className
+        )}
       >
         <Label children={title} className={$title} />
         {children}
@@ -45,6 +51,10 @@ const $isTransparent = style(
     borderTop: `1px solid ${tv('base100')}`,
   }
 );
+
+const $isClickable = style({
+  cursor: 'pointer',
+});
 
 const $title = style({
   flexGrow: 1,

@@ -14,7 +14,7 @@ const $container = style(horizontalSpaced('-1px'), {
   display: 'flex',
   $nest: {
     [`.${$buttonContainer}`]: {
-      flexGrow: 1,
+      flex: '1 1 0',
     },
     [`.${$buttonIsActive}`]: {
       zIndex: 1,

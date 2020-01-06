@@ -4,6 +4,8 @@ import { NestedCSSProperties } from 'typestyle/lib/types';
 
 import { stateLayout$ } from '../../generic/states/state-app';
 import { useObservable } from '../../generic/supply/react-helpers';
+import { ExportResult } from '../export/ExportResult';
+import { ExportSettings } from '../export/ExportSettings';
 import { Preview } from '../preview/Preview';
 import { Tree } from '../tree/Tree';
 import { AreaSecond } from './AreaSecond';
@@ -14,6 +16,7 @@ import { useLayoutWatcher } from './watcher';
 const FIRST_AREA = '1 / 1 / 2 / 2';
 const SECOND_AREA = '1 / 2 / 2 / 3';
 const THIRD_AREA = '1 / 3 / 2 / 4';
+const EXPORT_RESULT_AREA = '1 / 2 / 2 / 4';
 
 export const Layout = React.memo(() => {
   const style$ = useLayoutWatcher();
@@ -29,6 +32,7 @@ export const Layout = React.memo(() => {
     <div className={$container} style={style}>
       <div className={$first}>
         <Tree />
+        <ExportSettings />
         <Footer />
       </div>
       <div className={$second}>
@@ -37,8 +41,9 @@ export const Layout = React.memo(() => {
       <div className={$third}>
         <Preview />
       </div>
-      <Divider ward$={wardTree$} gridArea={SECOND_AREA} />
+      <Divider ward$={wardTree$} gridArea={SECOND_AREA} zIndex={2} />
       <Divider ward$={wardNode$} gridArea={THIRD_AREA} />
+      <ExportResult gridArea={EXPORT_RESULT_AREA} />
     </div>
   );
 });
