@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 import { CANVAS_ID } from '../../generic/states/elements';
 import { stateTree$ } from '../../generic/states/state-app';
 import { useObservableFabric } from '../../generic/supply/react-helpers';

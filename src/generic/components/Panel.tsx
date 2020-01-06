@@ -4,8 +4,8 @@ import { classes, style } from 'typestyle';
 import { applyVariables, av, tv } from '../supply/style-helpers';
 import { Label } from './Label';
 
-interface IProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string;
+interface IProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+  title: React.ReactNode;
   isTransparent?: boolean;
 }
 

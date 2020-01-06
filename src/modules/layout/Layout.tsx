@@ -8,6 +8,7 @@ import { Preview } from '../preview/Preview';
 import { Tree } from '../tree/Tree';
 import { AreaSecond } from './AreaSecond';
 import { Divider } from './Divider';
+import { Footer } from './Footer';
 import { useLayoutWatcher } from './watcher';
 
 const FIRST_AREA = '1 / 1 / 2 / 2';
@@ -28,6 +29,7 @@ export const Layout = React.memo(() => {
     <div className={$container} style={style}>
       <div className={$first}>
         <Tree />
+        <Footer />
       </div>
       <div className={$second}>
         <AreaSecond />
