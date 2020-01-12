@@ -14,6 +14,6 @@ export const getElementClassName = (element: TElementAny) =>
 
 export const stringToClassName = (str: string) => {
   const step1 = str.replace(/^[^-_a-zA-Z]+/, '').replace(/^-(?:[-0-9]+)/, '-');
-  const step2 = step1 && step1.replace(/[^-_a-zA-Z0-9]+/g, '-');
+  const step2 = isText(step1) ? step1.replace(/[^-_a-zA-Z0-9]+/g, '-') : '';
   return step2;
 };
