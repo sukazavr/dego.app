@@ -2,6 +2,7 @@ import React from 'react';
 import { style } from 'typestyle';
 
 import { actionsTree } from '../../generic/actions';
+import { Alert } from '../../generic/components/Alert';
 import { BODY_ID } from '../../generic/states/elements';
 import { stateTree$ } from '../../generic/states/state-app';
 import { useObservableFabric } from '../../generic/supply/react-helpers';
@@ -44,6 +45,9 @@ export const Tree = React.memo(() => {
     <div ref={ref} className={$container} style={style} onContextMenu={ctxMenu.open({})}>
       <div className={$wrapper}>
         {list}
+        {list.length === 2 && (
+          <Alert icon="rightClick" text="Right click this area to create element" />
+        )}
         <Highlighter />
       </div>
     </div>
