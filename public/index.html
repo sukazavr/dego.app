@@ -1,58 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<link
-			href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			href="https://fonts.googleapis.com/css?family=Roboto+Mono:400&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
-			rel="stylesheet"
-		/>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Mono:400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
+      rel="stylesheet"
+    />
 
-		<title>%REACT_APP_OG_SITE_NAME%</title>
-		<link rel="canonical" href="%REACT_APP_OG_URL%" />
-		<meta name="description" content="%REACT_APP_OG_DESCRIPTION%" />
+    <% if (process.env.NODE_ENV === 'production') { %>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WFQBRTX');</script>
+    <% } %>
 
-		<!-- Favicon -->
-		<link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png">
-		<link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png">
-		<link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png">
-		<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-		<link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#3991e5">
-		<meta name="msapplication-TileColor" content="#ffffff">
-		<meta name="theme-color" content="#ffffff">
+    <title>%REACT_APP_OG_SITE_NAME%</title>
+    <link rel="canonical" href="%REACT_APP_OG_URL%" />
+    <meta name="description" content="%REACT_APP_OG_DESCRIPTION%" />
 
-		<!-- Critical CSS -->
-		<style type="text/css">
-			html,
-			body {
-				width: 100%;
-				height: 100%;
-				margin: 0;
-				padding: 0;
-				font-size: var(--grid-size, 8px);
-				font-family: sans-serif;
-				background: #fff;
-			}
-		</style>
-	</head>
-	<body>
-		<noscript>
-			<div style="font-size:2em;padding:2em">
-				<h1>JavaScript is disabled</h1>
-				<p style="font-size:1.2em">Please enable JS and refresh the page</p>
-			</div>
-		</noscript>
-		<div id="root">
-			<div style="font-size:8em;width:1em;margin:2em auto">🎴</div>
-		</div>
-	</body>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#3991e5">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Critical CSS -->
+    <style type="text/css">
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-size: var(--grid-size, 8px);
+        font-family: sans-serif;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <% if (process.env.NODE_ENV === 'production') { %>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WFQBRTX"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe>
+      <% } %>
+      <div style="font-size:2em;padding:2em">
+        <h1>JavaScript is disabled</h1>
+        <p style="font-size:1.2em">Please enable JS and refresh the page</p>
+      </div>
+    </noscript>
+    <div id="root">
+      <div style="font-size:8em;width:1em;margin:2em auto">🎴</div>
+    </div>
+  </body>
 </html>
