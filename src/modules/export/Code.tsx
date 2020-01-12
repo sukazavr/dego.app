@@ -1,3 +1,4 @@
+import copyToClipboard from 'clipboard-copy';
 import React from 'react';
 import { style } from 'typestyle';
 
@@ -18,8 +19,7 @@ export const Code = React.memo<IProps>(({ title, code }) => {
     const el = ref.current as HTMLPreElement;
     const codeToBuffer = isText(el.textContent) ? el.textContent : el.innerText;
     if (isText(codeToBuffer)) {
-      console.log(codeToBuffer);
-      //clipboardCopy(codeToBuffer)
+      copyToClipboard(codeToBuffer);
     }
   }, [ref]);
   return (
