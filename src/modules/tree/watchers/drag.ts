@@ -3,9 +3,9 @@ import {
     distinct, distinctUntilChanged, map, switchMap, takeUntil, tap, withLatestFrom,
 } from 'rxjs/operators';
 
-import { ReadOnlyAtom } from '@grammarly/focal';
+import { Atom, ReadOnlyAtom } from '@grammarly/focal';
 
-import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements';
+import { BODY_ID, CANVAS_ID, IElements } from '../../../generic/states/elements';
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app';
 import { defaultTree, ITree } from '../../../generic/states/tree';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
@@ -31,43 +31,52 @@ export const useTreeDragWatcher = createUseWatcher<
   [React.RefObject<HTMLDivElement>],
   { tree$: ReadOnlyAtom<ITreeContext> }
 >(({ currentDeps$, didMount$, didUnmount$ }) => {
-  let prevPaths: Record<string, string[]> = {};
-  const tree$ = stateElements$.view<ITreeContext>((elements) => {
-    const nextPaths: { [id: string]: string[] } = {};
-    const nextIndex: string[] = [];
-    const nextMaxDeep: { [id: string]: string } = {};
-    const grab = (id: string, parentPath: string[], putIndex: boolean) => {
-      const prevPath = prevPaths[id];
-      const nextPath = [...parentPath, id];
-      const path = isArray(prevPath) && isArrayEqual(prevPath, nextPath) ? prevPath : nextPath;
-      if (putIndex) {
-        nextPaths[id] = path;
-        nextIndex.push(id);
-      }
-      const element = elements[id];
-      if (isElementGenericOrBody(element)) {
-        const isExpanded = element.isExpanded;
-        element.children.forEach((childID) => grab(childID, path, putIndex && isExpanded));
-      }
-    };
-    grab(CANVAS_ID, [], true);
-    grab(BODY_ID, [], true);
-    nextIndex.forEach((elementID) => {
-      const path = nextPaths[elementID];
-      const maxDeep = path[path.length - 1];
-      path.forEach((id) => {
-        nextMaxDeep[id] = maxDeep;
-      });
-    });
-    prevPaths = nextPaths;
-    return {
-      treeIndex: nextIndex,
-      treePaths: nextPaths,
-      treeMaxDeep: nextMaxDeep,
-    };
-  });
-
   const draggingID$ = stateTree$.lens('draggingID');
+  const exportedID$ = stateTree$.view('exportedID');
+
+  let prevPaths: Record<string, string[]> = {};
+  const tree$ = Atom.combine<IElements, string | null, ITreeContext>(
+    stateElements$,
+    exportedID$,
+    (elements, exportedID) => {
+      const nextPaths: { [id: string]: string[] } = {};
+      const nextIndex: string[] = [];
+      const nextMaxDeep: { [id: string]: string } = {};
+      const grab = (id: string, parentPath: string[], putIndex: boolean) => {
+        const prevPath = prevPaths[id];
+        const nextPath = [...parentPath, id];
+        const path = isArray(prevPath) && isArrayEqual(prevPath, nextPath) ? prevPath : nextPath;
+        if (putIndex) {
+          nextPaths[id] = path;
+          nextIndex.push(id);
+        }
+        const element = elements[id];
+        if (isElementGenericOrBody(element)) {
+          const isExpanded = element.isExpanded;
+          element.children.forEach((childID) => grab(childID, path, putIndex && isExpanded));
+        }
+      };
+      if (isNotNull(exportedID)) {
+        grab(exportedID, [], true);
+      } else {
+        grab(CANVAS_ID, [], true);
+        grab(BODY_ID, [], true);
+      }
+      nextIndex.forEach((elementID) => {
+        const path = nextPaths[elementID];
+        const maxDeep = path[path.length - 1];
+        path.forEach((id) => {
+          nextMaxDeep[id] = maxDeep;
+        });
+      });
+      prevPaths = nextPaths;
+      return {
+        treeIndex: nextIndex,
+        treePaths: nextPaths,
+        treeMaxDeep: nextMaxDeep,
+      };
+    }
+  );
 
   currentDeps$
     .pipe(

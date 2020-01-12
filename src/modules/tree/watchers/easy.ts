@@ -27,20 +27,27 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
     const LSTree = localStorage.getItem(LS_TREE);
     if (isNotNull(LSTree)) {
       const nextTree = { ...defaultTree };
-      const { focusedID }: Partial<ITree> = JSON.parse(LSTree);
-      if (isPresent(focusedID) && stateElements$.get()[focusedID]) {
+      const { focusedID, exportedID }: Partial<ITree> = JSON.parse(LSTree);
+      const elements = stateElements$.get();
+      if (isPresent(focusedID) && elements[focusedID]) {
         nextTree.focusedID = focusedID;
+      }
+      if (isPresent(exportedID) && elements[exportedID]) {
+        nextTree.exportedID = exportedID;
       }
       stateTree$.set(nextTree);
     }
   } catch (error) {}
 
-  stateTree$.pipe(skip(1), debounceTime(500), takeUntil(didUnmount$)).subscribe(({ focusedID }) => {
-    const persistentTree: Partial<ITree> = {
-      focusedID,
-    };
-    localStorage.setItem(LS_TREE, JSON.stringify(persistentTree));
-  });
+  stateTree$
+    .pipe(skip(1), debounceTime(500), takeUntil(didUnmount$))
+    .subscribe(({ focusedID, exportedID }) => {
+      const persistentTree: Partial<ITree> = {
+        focusedID,
+        exportedID,
+      };
+      localStorage.setItem(LS_TREE, JSON.stringify(persistentTree));
+    });
 
   merge(
     actionsTree.addInside.$.pipe(
@@ -106,14 +113,11 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
       tap(({ id }) => {
         stateApp$.modify((state) =>
           produce(state, (draft) => {
-            if (id === draft.tree.focusedID) {
-              draft.tree.focusedID = null;
-            }
             const elements = draft.elements;
             const element = elements[id];
             if (isElementGeneric(element)) {
               mutateRemoveFromParent(elements, element);
-              mutateRemoveFromTree(elements, element);
+              mutateRemoveFromTree(draft, element);
             }
           })
         );

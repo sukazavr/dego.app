@@ -1,7 +1,8 @@
 export interface ITree {
   draggingID: string | null;
   hoveredID: string | null;
-  focusedID: string | null;
+  focusedID: string | null; // [LS]
+  exportedID: string | null; // [LS]
   flashedID: string | null; // What to animate after drop
   scopedID: string | null; // Used in context menu
   targetID: string | null; // Where to drop
@@ -25,6 +26,7 @@ export const defaultTree: ITree = {
   draggingID: null,
   hoveredID: null,
   focusedID: null,
+  exportedID: null,
   flashedID: null,
   scopedID: null,
   targetID: null,

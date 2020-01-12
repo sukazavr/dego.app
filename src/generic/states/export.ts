@@ -4,15 +4,21 @@ export enum EExportLayout {
 }
 
 export interface IExport {
-  targetID: string | null;
-  layout: EExportLayout;
-  firstPanelWidth: number;
-  secondPanelWidth: number;
+  layout: {
+    firstPanelWidth: number;
+    secondPanelWidth: number;
+  };
+  settings: {
+    layout: EExportLayout;
+  };
 }
 
 export const defaultExport: IExport = {
-  targetID: null,
-  layout: EExportLayout.HTML,
-  firstPanelWidth: 400,
-  secondPanelWidth: 400,
+  layout: {
+    firstPanelWidth: 400,
+    secondPanelWidth: 400,
+  },
+  settings: {
+    layout: EExportLayout.HTML,
+  },
 };

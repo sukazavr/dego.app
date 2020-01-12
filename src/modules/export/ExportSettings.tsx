@@ -1,30 +1,26 @@
 import React from 'react';
 import { style } from 'typestyle';
 
+import { actionsExport } from '../../generic/actions';
 import { Button } from '../../generic/components/Button';
 import { ButtonGroup } from '../../generic/components/ButtonGroup';
 import { ButtonSecondary } from '../../generic/components/ButtonSecondary';
 import { Panel } from '../../generic/components/Panel';
-import { BODY_ID } from '../../generic/states/elements';
 import { EExportLayout } from '../../generic/states/export';
-import { stateExport$ } from '../../generic/states/state-app';
-import { useObservable } from '../../generic/supply/react-helpers';
+import { stateTree$ } from '../../generic/states/state-app';
+import { useObservable, useObservableFabric } from '../../generic/supply/react-helpers';
 import { isNotNull } from '../../generic/supply/type-guards';
 import { scrollRegular } from '../../generic/theme';
+import { useExportSettingsWatcher } from './watcher-settings';
 
 export const ExportSettings = React.memo(() => {
-  const { toggle, setLayout } = React.useMemo(() => {
-    return {
-      toggle: () => stateExport$.lens('targetID').modify((_) => (isNotNull(_) ? null : BODY_ID)),
-      setLayout: (preset: EExportLayout) => () => stateExport$.lens('layout').set(preset),
-    };
-  }, []);
-  const { targetID, layout } = useObservable(stateExport$);
-  const isOpen = isNotNull(targetID);
+  const { settings$, setLayout } = useExportSettingsWatcher();
+  const { layout } = useObservable(settings$);
+  const isOpen = useObservableFabric(() => stateTree$.view('exportedID').view(isNotNull), []);
   return (
     <div className={$container} style={{ height: isOpen ? '300px' : undefined }}>
       <div className={$wrapper}>
-        <Panel title="Export" onClick={toggle}>
+        <Panel title="Export" onClick={actionsExport.toggle}>
           {isOpen && <ButtonSecondary children="Back To Editor" />}
         </Panel>
         <div className={$settings}>

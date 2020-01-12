@@ -41,7 +41,7 @@ const $code = style(scrollRegular, fontExportResult, {
   textTransform: 'none',
   wordBreak: 'break-all',
   wordWrap: 'break-word',
-  tabSize: '4',
+  tabSize: 2,
   counterReset: 'line',
   color: tv('base300'),
   overflow: 'auto',

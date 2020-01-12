@@ -12,9 +12,11 @@ import { flexDirectionIsRow } from './flex';
 export const getNormalizedElementCSSProperties = ({
   element,
   parentType,
+  excludeComponentStyle = false,
 }: {
   element: TElementGenericOrBody;
   parentType: EElementType;
+  excludeComponentStyle?: boolean;
 }) => {
   const style: types.NestedCSSProperties = {};
   if (parentType === EElementType.Flex) {
@@ -47,7 +49,7 @@ export const getNormalizedElementCSSProperties = ({
       style.flexWrap = flexParentProps.flexWrap;
     }
   }
-  if (element.type === EElementType.Component) {
+  if (!excludeComponentStyle && element.type === EElementType.Component) {
     const componentProps = element.props.Component;
     style.backgroundColor = componentProps.color;
     if (COMPONENT_COLORS_LIGHT.includes(componentProps.color)) {

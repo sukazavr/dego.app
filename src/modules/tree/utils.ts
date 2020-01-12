@@ -3,6 +3,7 @@ import nanoid from 'nanoid';
 import {
     BODY_ID, CANVAS_ID, EElementType, getDefaultProps, IElementGeneric, IElements,
 } from '../../generic/states/elements';
+import { IState } from '../../generic/states/state-app';
 import { defaultTree } from '../../generic/states/tree';
 import { getComponentNextColor } from '../../generic/style-helpers/component-colors';
 import {
@@ -67,14 +68,23 @@ export const mutateRemoveFromParent = (draft: IElements, element: IElementGeneri
   }
 };
 
-export const mutateRemoveFromTree = (draft: IElements, element: IElementGeneric) => {
+export const mutateRemoveFromTree = (draft: IState, element: IElementGeneric) => {
+  const tree = draft.tree;
+  const elements = draft.elements;
+  const elementID = element.id;
   element.children.forEach((childID) => {
-    const child = draft[childID];
+    const child = elements[childID];
     if (isElementGeneric(child)) {
       mutateRemoveFromTree(draft, child);
     }
   });
-  delete draft[element.id];
+  if (tree.focusedID === elementID) {
+    tree.focusedID = null;
+  }
+  if (tree.exportedID === elementID) {
+    tree.exportedID = null;
+  }
+  delete elements[elementID];
 };
 
 export const getPlaceholderStyle = (

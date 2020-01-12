@@ -1,20 +1,5 @@
 import { BODY_ID, TElementAny } from '../states/elements';
-import { isDefined, isElementGenericOrBody, isText } from './type-guards';
-
-export const stringToSlug = (str: string) => str.replace(/\s+/g, '-').toLowerCase();
-
-export const slugToTitle = (slug: string) =>
-  slug.replace('-', ' ').replace(/^./, (str) => str.toUpperCase());
-
-export const mapToQuery = (map?: Record<string, string | number>) => {
-  let q: string = '';
-  if (isDefined(map)) {
-    q = Object.entries(map)
-      .map((v) => v.join('='))
-      .join('&');
-  }
-  return isText(q) ? `?${q}` : q;
-};
+import { isElementGenericOrBody, isText } from './type-guards';
 
 export const getElementName = (element: TElementAny) => {
   if (isElementGenericOrBody(element)) {
@@ -22,4 +7,13 @@ export const getElementName = (element: TElementAny) => {
   } else {
     return 'Canvas';
   }
+};
+
+export const getElementClassName = (element: TElementAny) =>
+  stringToClassName(getElementName(element));
+
+export const stringToClassName = (str: string) => {
+  const step1 = str.replace(/^[^-_a-zA-Z]+/, '').replace(/^-(?:[-0-9]+)/, '-');
+  const step2 = step1 && step1.replace(/[^-_a-zA-Z0-9]+/g, '-');
+  return step2;
 };

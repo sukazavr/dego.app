@@ -14,3 +14,8 @@ export const actionsTree = ga('tree', {
     }
   }),
 });
+
+export const actionsExport = ga('export', {
+  toggle: ca(),
+  open: ca<{ exportedID: string }>(),
+});

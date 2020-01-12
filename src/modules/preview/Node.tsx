@@ -9,7 +9,7 @@ import {
 } from '../../generic/states/elements';
 import { stateElements$ } from '../../generic/states/state-app';
 import { getNormalizedElementCSSProperties } from '../../generic/style-helpers/normalize';
-import { getElementName } from '../../generic/supply/formaters';
+import { getElementClassName, getElementName } from '../../generic/supply/formaters';
 import { useObservable } from '../../generic/supply/react-helpers';
 import { tv } from '../../generic/supply/style-helpers';
 import { isDefined, isElementGeneric } from '../../generic/supply/type-guards';
@@ -20,11 +20,11 @@ interface IProps {
 }
 
 export const Node = React.memo<IProps>(({ elementID }) => {
-  const { name$, CSSProperties$, text$, tree$ } = React.useMemo(() => {
+  const { className$, CSSProperties$, text$, tree$ } = React.useMemo(() => {
     const node$ = getNode(elementID);
     const element$ = node$.view('element');
     return {
-      name$: element$.view(getElementName),
+      className$: element$.view(getElementClassName),
       CSSProperties$: node$.view(getNormalizedElementCSSProperties),
       text$: element$.view((e) => {
         if (isElementGeneric(e)) {
@@ -39,12 +39,12 @@ export const Node = React.memo<IProps>(({ elementID }) => {
       tree$: reactiveList(element$.view('children'), (eID) => <Node elementID={eID} key={eID} />),
     };
   }, [elementID]);
-  const name = useObservable(name$);
+  const className = useObservable(className$);
   const CSSProperties = useObservable(CSSProperties$);
   const text = useObservable(text$);
   const tree = useObservable(tree$);
   return React.createElement('div', {
-    className: classes($container, style(CSSProperties, { $debugName: name })),
+    className: classes($container, style(CSSProperties, { $debugName: className })),
     children: isDefined(text) ? text : tree,
     onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       e.stopPropagation();
@@ -70,7 +70,7 @@ const makeTextLine = (length: number) => {
 
 const getNode = (elementID: string) =>
   stateElements$.view((state): { element: TElementGenericOrBody; parentType: EElementType } => {
-    const element = state[elementID] as TElementGenericOrBody;
+    const element = state[elementID] as TElementGenericOrBody | undefined;
     if (isDefined(element)) {
       if (isElementGeneric(element)) {
         return {
