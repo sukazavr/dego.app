@@ -12,6 +12,7 @@
     "nanoid": "^2.1.7",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
+    "react-app-rewired": "^2.1.5",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
     "rxjs": "^6.5.3",
@@ -19,8 +20,8 @@
     "typestyle": "^2.0.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
     "lint": "eslint src/**/*.{ts,tsx}"
   },
   "browserslist": {
