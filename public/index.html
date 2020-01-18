@@ -22,12 +22,21 @@
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WFQBRTX');</script>
+    })(window,document,'script','dataLayer','%REACT_APP_GTM%');</script>
     <% } %>
 
     <title>%REACT_APP_OG_SITE_NAME%</title>
     <link rel="canonical" href="%REACT_APP_OG_URL%" />
     <meta name="description" content="%REACT_APP_OG_DESCRIPTION%" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="%REACT_APP_OG_URL%" />
+    <meta property="og:site_name" content="%REACT_APP_OG_SITE_NAME%" />
+    <meta property="og:title" content="%REACT_APP_OG_TITLE%" />
+    <meta property="og:description" content="%REACT_APP_OG_DESCRIPTION%" />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png">
@@ -55,7 +64,7 @@
   <body>
     <noscript>
       <% if (process.env.NODE_ENV === 'production') { %>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WFQBRTX"
+      <iframe src="https://www.googletagmanager.com/ns.html?id=%REACT_APP_GTM%"
       height="0" width="0" style="display:none;visibility:hidden"></iframe>
       <% } %>
       <div style="font-size:2em;padding:2em">
