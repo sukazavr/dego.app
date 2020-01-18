@@ -52,6 +52,7 @@ export const getNormalizedElementCSSProperties = ({
   if (!excludeComponentStyle && element.type === EElementType.Component) {
     const componentProps = element.props.Component;
     style.backgroundColor = componentProps.color;
+    style.wordBreak = 'break-all';
     if (COMPONENT_COLORS_LIGHT.includes(componentProps.color)) {
       style.color = tv('base900');
     }
