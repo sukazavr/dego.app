@@ -33,7 +33,7 @@ export const RandomText = React.memo<IProps>(({ componentProps$ }) => {
           <Tandem
             left={<Label children="Text Length" />}
             leftMax={150}
-            leftLoose
+            leader="left"
             right={<UnitInput options={['int']} unit$={randomTextLength$} />}
             rightAlign="flex-end"
           />

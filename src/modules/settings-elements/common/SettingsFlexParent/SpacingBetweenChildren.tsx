@@ -21,7 +21,7 @@ export const SpacingBetweenChildren = React.memo<IProps>(({ flexParentProps$ }) 
     <Tandem
       left={<Label children="Spacing Between Children" />}
       leftMax={150}
-      leftLoose
+      leader="left"
       right={<UnitInput options={['px', 'em', 'rem', '%']} unit$={spacingBetweenChildren$} />}
       rightAlign="flex-end"
     />
