@@ -2,7 +2,7 @@
 
 > Framework agnostic layout editor with export
 
-![Screenshot](https://gitlab.com/sukazavr/css-grid-layout-generator/raw/master/public/demo.png)
+![Screenshot](https://github.com/sukazavr/dego.app/raw/master/public/demo.png)
 
 ## [https://dego.app/](https://dego.app/)
 
