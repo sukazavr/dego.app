@@ -16,7 +16,7 @@ export const COMPONENT_COLORS = [
   '#ff9800',
   '#ff5722',
   '#795548',
-  '#607d8b',
+  '#000',
   '#858585',
   '#D6D6D6',
   '#f2f2f2',
