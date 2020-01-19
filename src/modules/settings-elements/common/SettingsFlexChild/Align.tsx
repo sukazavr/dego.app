@@ -13,6 +13,7 @@ import {
     IElementFlexChildProps, IElementFlexParentProps,
 } from '../../../../generic/states/elements';
 import { useObservable } from '../../../../generic/supply/react-helpers';
+import { TooltipProvider } from '../../../tooltip/TooltipProvider';
 import { projectionFlexIsRow } from '../types';
 
 interface IProps {
@@ -35,6 +36,7 @@ export const Align = React.memo<IProps>(({ flexChildProps$, parentFlexParentProp
   const isAlignOverridden = useObservable(isAlignOverridden$);
   return (
     <>
+      <TooltipProvider />
       <Panel title="Override Align" isTransparent>
         <Switcher value$={isAlignOverridden$} />
       </Panel>
@@ -50,30 +52,35 @@ export const Align = React.memo<IProps>(({ flexChildProps$, parentFlexParentProp
                   iconRotate={isParentRow ? undefined : 1}
                   isActive={preset === 'flex-start'}
                   onClick={setPreset('flex-start')}
+                  data-tip="flex-start"
                 />
                 <Button
                   icon="oneCenter"
                   iconRotate={isParentRow ? undefined : 1}
                   isActive={preset === 'center'}
                   onClick={setPreset('center')}
+                  data-tip="center"
                 />
                 <Button
                   icon="oneBottom"
                   iconRotate={isParentRow ? 2 : 3}
                   isActive={preset === 'flex-end'}
                   onClick={setPreset('flex-end')}
+                  data-tip="flex-end"
                 />
                 <Button
                   icon="oneStretch"
                   iconRotate={isParentRow ? undefined : 1}
                   isActive={preset === 'stretch'}
                   onClick={setPreset('stretch')}
+                  data-tip="stretch"
                 />
                 <Button
                   icon="oneBaseline"
                   iconRotate={isParentRow ? undefined : 1}
                   isActive={preset === 'baseline'}
                   onClick={setPreset('baseline')}
+                  data-tip="baseline"
                 />
               </ButtonGroup>
             }

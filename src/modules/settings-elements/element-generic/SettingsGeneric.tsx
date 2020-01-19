@@ -14,6 +14,7 @@ import {
     isElementGeneric, isElementGenericOrBody, isNotNull,
 } from '../../../generic/supply/type-guards';
 import { scrollRegular } from '../../../generic/theme';
+import { TooltipProvider } from '../../tooltip/TooltipProvider';
 import { createTreeElement } from '../../tree/utils';
 import { SettingsCommon } from '../common/SettingsCommon/SettingsCommon';
 import { SettingsComponent } from '../common/SettingsComponent/SettingsComponent';
@@ -59,27 +60,36 @@ export const SettingsGeneric = React.memo<IProps>(({ elementID }) => {
   return (
     <div className={$container}>
       <div className={$wrapper}>
+        <TooltipProvider />
         <ButtonGroup style={{ padding: '1rem' }}>
           <Button
             icon="flexRow"
             isActive={virtualType === EElementVirtualType.FlexRow}
             onClick={setVirtualType(EElementVirtualType.FlexRow)}
+            data-tip="flex-direction: row"
+            data-place="bottom"
           />
           <Button
             icon="flexColumn"
             isActive={virtualType === EElementVirtualType.FlexColumn}
             onClick={setVirtualType(EElementVirtualType.FlexColumn)}
+            data-tip="flex-direction: column"
+            data-place="bottom"
           />
           <Button
             icon="grid"
             isActive={virtualType === EElementVirtualType.Grid}
             onClick={setVirtualType(EElementVirtualType.Grid)}
+            data-tip="display: grid"
+            data-place="bottom"
           />
           {elementID !== BODY_ID && (
             <Button
               icon="component"
               isActive={virtualType === EElementVirtualType.Component}
               onClick={setVirtualType(EElementVirtualType.Component)}
+              data-tip="visual placeholder"
+              data-place="bottom"
             />
           )}
         </ButtonGroup>

@@ -14,6 +14,7 @@ import {
 } from '../../../../generic/states/elements';
 import { flexDirectionIsRow } from '../../../../generic/style-helpers/flex';
 import { useObservable } from '../../../../generic/supply/react-helpers';
+import { TooltipProvider } from '../../../tooltip/TooltipProvider';
 import { unitOptions } from '../../../unit-input/options';
 import { UnitInput } from '../../../unit-input/UnitInput';
 
@@ -54,6 +55,7 @@ export const Sizing = React.memo<IProps>(({ flexChildProps$, parentFlexParentPro
   const iconRotate = useObservable(iconRotate$);
   return (
     <TandemGroup>
+      <TooltipProvider />
       <Tandem
         leftMax={50}
         left={<Label children="Sizing" />}
@@ -64,23 +66,27 @@ export const Sizing = React.memo<IProps>(({ flexChildProps$, parentFlexParentPro
               iconRotate={iconRotate}
               isActive={preset === EPreset.Shrink}
               onClick={setPreset(EPreset.Shrink)}
+              data-tip="flex: 0 1 auto (default)"
             />
             <Button
               icon="flexGrow"
               iconRotate={iconRotate}
               isActive={preset === EPreset.Grow}
               onClick={setPreset(EPreset.Grow)}
+              data-tip="flex: 1 1 0%"
             />
             <Button
               icon="flexNone"
               iconRotate={iconRotate}
               isActive={preset === EPreset.None}
               onClick={setPreset(EPreset.None)}
+              data-tip="flex: none"
             />
             <Button
               icon="more"
               isActive={preset === EPreset.Custom}
               onClick={setPreset(EPreset.Custom)}
+              data-tip="custom"
             />
           </ButtonGroup>
         }
