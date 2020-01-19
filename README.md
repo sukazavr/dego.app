@@ -4,16 +4,11 @@
 
 ![Screenshot](https://github.com/sukazavr/dego.app/raw/master/public/demo.png)
 
-## [https://dego.app/](https://dego.app/)
+## [dego.app](https://dego.app/)
 
-## Roadmap
+## [Roadmap](https://www.producthunt.com/upcoming/dego-app/goals)
 
 - Soon
-  - [ ] Tooltips
-  - [ ] Remove all children in ctx menu
-  - [ ] Size (min & max) for elements
-  - [ ] Padding
-  - [ ] Override margin
   - [ ] Grid
 - Export Code
   - [ ] Export CSS as CSS-in-JS
