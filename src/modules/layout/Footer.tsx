@@ -3,9 +3,13 @@ import { style } from 'typestyle';
 
 import { ButtonSecondary } from '../../generic/components/ButtonSecondary';
 import { Panel } from '../../generic/components/Panel';
+import { stateShell$ } from '../../generic/states/state-app';
+import { useObservableFabric } from '../../generic/supply/react-helpers';
 import { tv } from '../../generic/supply/style-helpers';
+import { Update } from './Update';
 
 export const Footer = React.memo(() => {
+  const isUpdateAvailable = useObservableFabric(() => stateShell$.view('isUpdateAvailable'), []);
   return (
     <Panel
       title={
@@ -15,7 +19,11 @@ export const Footer = React.memo(() => {
         </>
       }
     >
-      <ButtonSecondary children="Donate" href="https://www.buymeacoffee.com/sukazavr" />
+      {isUpdateAvailable ? (
+        <Update />
+      ) : (
+        <ButtonSecondary children="Donate" href="https://www.buymeacoffee.com/sukazavr" />
+      )}
     </Panel>
   );
 });
