@@ -7,6 +7,7 @@ export const actionsTree = ga('tree', {
   addBelow: ca<{ neighborID: string }>(),
   duplicate: ca<{ id: string }>(),
   delete: ca<{ id: string }>(),
+  deleteChildren: ca<{ id: string }>(),
   focus: ca<{ id: string }>(),
   editName: ca<{ id: string }>((R, payload) => {
     if (payload.id !== CANVAS_ID) {

@@ -3,8 +3,9 @@ import { style } from 'typestyle';
 
 import { actionsExport, actionsTree } from '../../../generic/actions';
 import { BODY_ID, CANVAS_ID } from '../../../generic/states/elements';
-import { stateTree$ } from '../../../generic/states/state-app';
+import { stateElements$, stateTree$ } from '../../../generic/states/state-app';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
+import { isElementGenericOrBody } from '../../../generic/supply/type-guards';
 import { MenuDivider } from '../../context-menu/MenuDivider';
 import { MenuItem } from '../../context-menu/MenuItem';
 
@@ -14,6 +15,9 @@ interface IProps {
 
 export const ElementContextMenu = React.memo<IProps>(({ id }) => {
   useWatcher([id]);
+  const elements = stateElements$.get();
+  const element = elements[id];
+  const hasChildren = isElementGenericOrBody(element) && element.children.length > 0;
   const isElementCanvas = id === CANVAS_ID;
   const isElementGeneric = id !== CANVAS_ID && id !== BODY_ID;
   return (
@@ -40,6 +44,11 @@ export const ElementContextMenu = React.memo<IProps>(({ id }) => {
         children="Delete"
         onClick={actionsTree.delete._({ id })}
         isDisabled={!isElementGeneric}
+      />
+      <MenuItem
+        children="Delete Children"
+        onClick={actionsTree.deleteChildren._({ id })}
+        isDisabled={isElementCanvas || !hasChildren}
       />
       <MenuDivider />
       <MenuItem

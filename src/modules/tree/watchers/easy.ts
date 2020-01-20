@@ -11,7 +11,7 @@ import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/s
 import { defaultTree, ITree } from '../../../generic/states/tree';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
 import {
-    isDefined, isElementGeneric, isNotNull, isPresent,
+    isDefined, isElementGeneric, isElementGenericOrBody, isNotNull, isPresent,
 } from '../../../generic/supply/type-guards';
 import { elStore } from '../common';
 import { FLASH_DURATION } from '../Element/Element';
@@ -118,6 +118,23 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
             if (isElementGeneric(element)) {
               mutateRemoveFromParent(elements, element);
               mutateRemoveFromTree(draft, element);
+            }
+          })
+        );
+      })
+    ),
+    actionsTree.deleteChildren.$.pipe(
+      tap(({ id }) => {
+        stateApp$.modify((state) =>
+          produce(state, (draft) => {
+            const elements = draft.elements;
+            const element = state.elements[id];
+            if (isElementGenericOrBody(element) && element.children.length > 0) {
+              element.children.forEach((childID) => {
+                const childElement = elements[childID] as IElementGeneric;
+                mutateRemoveFromParent(elements, childElement);
+                mutateRemoveFromTree(draft, childElement);
+              });
             }
           })
         );
