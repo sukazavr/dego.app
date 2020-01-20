@@ -58,6 +58,7 @@ export class UnitOption {
 export const unitOptions = {
   default: new UnitOption(EUnitType.Default, 'default'),
   int: new UnitOption(EUnitType.Integer, ''),
+  float: new UnitOption(EUnitType.Float, ''),
 
   fr: new UnitOption(EUnitType.FloatString, 'fr'),
   em: new UnitOption(EUnitType.FloatString, 'em'),

@@ -20,30 +20,39 @@ interface IProps {
 }
 
 export const Node = React.memo<IProps>(({ elementID }) => {
-  const { className$, CSSProperties$, text$, tree$ } = React.useMemo(() => {
+  const { className$, CSSProperties$, text$, tree$, instances$ } = React.useMemo(() => {
     const node$ = getNode(elementID);
     const element$ = node$.view('element');
     return {
       className$: element$.view(getElementClassName),
       CSSProperties$: node$.view(getNormalizedElementCSSProperties),
-      text$: element$.view((e) => {
-        if (isElementGeneric(e)) {
-          if (e.type === EElementType.Component) {
-            const componentProps = e.props.Component;
-            return componentProps.hasRandomText
-              ? makeTextLine(componentProps.randomTextLength.n)
-              : getElementName(e);
+      text$: element$.view((element) => {
+        if (isElementGeneric(element)) {
+          if (element.type === EElementType.Component) {
+            const mockupProps = element.props.Mockup;
+            return mockupProps.hasRandomText
+              ? makeTextLine(mockupProps.randomTextLength.n)
+              : getElementName(element);
           }
         }
       }),
       tree$: reactiveList(element$.view('children'), (eID) => <Node elementID={eID} key={eID} />),
+      instances$: element$.view((element) => {
+        if (isElementGeneric(element)) {
+          const instances = element.props.Mockup.instances.n;
+          return instances < 1 ? 1 : instances;
+        } else {
+          return 1;
+        }
+      }),
     };
   }, [elementID]);
   const className = useObservable(className$);
   const CSSProperties = useObservable(CSSProperties$);
   const text = useObservable(text$);
   const tree = useObservable(tree$);
-  return React.createElement('div', {
+  const instances = useObservable(instances$);
+  const node = React.createElement('div', {
     className: classes($container, style(CSSProperties, { $debugName: className })),
     children: isDefined(text) ? text : tree,
     onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -51,6 +60,15 @@ export const Node = React.memo<IProps>(({ elementID }) => {
       actionsTree.focus({ id: elementID });
     },
   });
+  return instances > 1 ? (
+    <>
+      {[...new Array(instances)].map((_, key) =>
+        React.createElement(React.Fragment, { children: node, key })
+      )}
+    </>
+  ) : (
+    node
+  );
 });
 
 const ref = 'ab.cde fghi!jkl mno.pqrs tuvw?xyz';
@@ -93,6 +111,7 @@ const getNode = (elementID: string) =>
   });
 
 const $container = style({
+  wordBreak: 'break-all',
   $nest: {
     '&:hover': {
       boxShadow: `inset 0 0 0 1px ${tv('base')}, inset 0 0 0 2px ${tv(

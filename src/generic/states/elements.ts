@@ -1,15 +1,15 @@
 import { Lens } from '@grammarly/focal';
 
 import { unitOptions } from '../../modules/unit-input/options';
-import { COMPONENT_COLORS } from '../style-helpers/component-colors';
 import { TFlexDirection } from '../style-helpers/flex';
+import { PRESET_COLORS } from '../style-helpers/preset-colors';
 import {
     isDefined, isElementBody, isElementGeneric, isElementGenericOrBody,
 } from '../supply/type-guards';
 import { IUnit } from './unit';
 
 // TODO: auto gen from defaultElements and defaultGenericElement
-export const ELEMENTS_SCHEMA_VERSION = 1;
+export const ELEMENTS_SCHEMA_VERSION = 2;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -41,6 +41,24 @@ export interface IElementCommonProps {
 export const defaultElementCommonProps: IElementCommonProps = {
   width: unitOptions.auto.defaultUnit,
   height: unitOptions.auto.defaultUnit,
+};
+
+export interface IElementMockupProps {
+  hasBG: boolean;
+  BGColor: string;
+  BGOpacity: IUnit;
+  hasRandomText: boolean;
+  randomTextLength: IUnit;
+  instances: IUnit;
+}
+
+export const defaultElementMockupProps: IElementMockupProps = {
+  hasBG: false,
+  BGColor: PRESET_COLORS[5],
+  BGOpacity: unitOptions.float.numberToUnit(1),
+  hasRandomText: false,
+  randomTextLength: unitOptions.int.defaultUnit,
+  instances: unitOptions.int.numberToUnit(1),
 };
 
 export interface IElementFlexChildProps {
@@ -103,15 +121,11 @@ export interface IElementGridParentProps {}
 export const defaultElementGridParentProps: IElementGridParentProps = {};
 
 export interface IElementComponentProps {
-  color: string;
-  hasRandomText: boolean;
-  randomTextLength: IUnit;
+  tag: string;
 }
 
 export const defaultElementComponentProps: IElementComponentProps = {
-  color: COMPONENT_COLORS[5],
-  hasRandomText: false,
-  randomTextLength: unitOptions.int.defaultUnit,
+  tag: 'div',
 };
 
 export interface IElementCanvas {
@@ -150,6 +164,7 @@ export interface IElementGeneric {
     GridParent: IElementGridParentProps;
     Component: IElementComponentProps;
     Common: IElementCommonProps;
+    Mockup: IElementMockupProps;
   };
   isExpanded: boolean;
 }
@@ -185,6 +200,7 @@ export const getDefaultProps = () => ({
   GridParent: { ...defaultElementGridParentProps },
   Component: { ...defaultElementComponentProps },
   Common: { ...defaultElementCommonProps },
+  Mockup: { ...defaultElementMockupProps },
 });
 
 export const lensElementAny = (id: string) => {

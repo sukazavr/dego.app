@@ -7,21 +7,21 @@ import { Panel } from '../../../../generic/components/Panel';
 import { Switcher } from '../../../../generic/components/Switcher';
 import { Tandem } from '../../../../generic/components/Tandem';
 import { TandemGroup } from '../../../../generic/components/TandemGroup';
-import { IElementComponentProps } from '../../../../generic/states/elements';
+import { IElementMockupProps } from '../../../../generic/states/elements';
 import { useObservable } from '../../../../generic/supply/react-helpers';
 import { UnitInput } from '../../../unit-input/UnitInput';
 
 interface IProps {
-  componentProps$: Atom<IElementComponentProps>;
+  mockupProps$: Atom<IElementMockupProps>;
 }
 
-export const RandomText = React.memo<IProps>(({ componentProps$ }) => {
+export const RandomText = React.memo<IProps>(({ mockupProps$ }) => {
   const { hasRandomText$, randomTextLength$ } = React.useMemo(() => {
     return {
-      hasRandomText$: componentProps$.lens('hasRandomText'),
-      randomTextLength$: componentProps$.lens('randomTextLength'),
+      hasRandomText$: mockupProps$.lens('hasRandomText'),
+      randomTextLength$: mockupProps$.lens('randomTextLength'),
     };
-  }, [componentProps$]);
+  }, [mockupProps$]);
   const hasRandomText = useObservable(hasRandomText$);
   return (
     <>

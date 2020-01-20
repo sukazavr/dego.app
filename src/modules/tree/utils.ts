@@ -5,7 +5,7 @@ import {
 } from '../../generic/states/elements';
 import { IState } from '../../generic/states/state-app';
 import { defaultTree } from '../../generic/states/tree';
-import { getComponentNextColor } from '../../generic/style-helpers/component-colors';
+import { getPresetNextColor } from '../../generic/style-helpers/preset-colors';
 import {
     isDefined, isElementGeneric, isElementGenericOrBody, isNotNull,
 } from '../../generic/supply/type-guards';
@@ -21,7 +21,7 @@ export const createTreeElement = (): IElementGeneric => {
     props: getDefaultProps(),
     isExpanded: true,
   };
-  element.props.Component.color = getComponentNextColor();
+  element.props.Mockup.BGColor = getPresetNextColor();
   return element;
 };
 

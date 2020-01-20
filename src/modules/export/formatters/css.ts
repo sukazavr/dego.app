@@ -29,7 +29,7 @@ const targetToLines = (elementID: string, elements: IElements) => {
   const rules = getNormalizedElementCSSProperties({
     element,
     parentType,
-    excludeComponentStyle: true,
+    excludeMockupStyle: true,
   });
   const $nest = rules.$nest;
   delete rules.$nest;

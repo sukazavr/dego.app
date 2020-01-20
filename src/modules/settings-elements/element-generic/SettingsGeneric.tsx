@@ -22,6 +22,7 @@ import { SettingsFlexChild } from '../common/SettingsFlexChild/SettingsFlexChild
 import { SettingsFlexParent } from '../common/SettingsFlexParent/SettingsFlexParent';
 import { SettingsGridChild } from '../common/SettingsGridChild/SettingsGridChild';
 import { SettingsGridParent } from '../common/SettingsGridParent/SettingsGridParent';
+import { SettingsMockup } from '../common/SettingsMockup/SettingsMockup';
 import { EElementVirtualType, isVirtualTypeFlex, lensElementVirtualType } from '../common/types';
 
 interface IProps {
@@ -35,6 +36,7 @@ export const SettingsGeneric = React.memo<IProps>(({ elementID }) => {
     flexParentProps$,
     componentProps$,
     commonProps$,
+    mockupProps$,
     parentFlexParentProps$,
     virtualType$,
     setVirtualType,
@@ -50,6 +52,7 @@ export const SettingsGeneric = React.memo<IProps>(({ elementID }) => {
       flexParentProps$: memoElementProps$.lens('FlexParent'),
       componentProps$: memoElementProps$.lens('Component'),
       commonProps$: memoElementProps$.lens('Common'),
+      mockupProps$: memoElementProps$.lens('Mockup'),
       parentFlexParentProps$: memoElementParentProps$.view('FlexParent'),
       virtualType$: memoVirtualType$,
       setVirtualType: (type: EElementVirtualType) => () => memoVirtualType$.set(type),
@@ -108,6 +111,9 @@ export const SettingsGeneric = React.memo<IProps>(({ elementID }) => {
           <SettingsComponent componentProps$={componentProps$} />
         )}
         <SettingsCommon commonProps$={commonProps$} />
+        {elementID !== BODY_ID && (
+          <SettingsMockup mockupProps$={mockupProps$} virtualType={virtualType} />
+        )}
       </div>
     </div>
   );

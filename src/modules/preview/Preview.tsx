@@ -49,6 +49,5 @@ const $canvas = style(fontPreview, {
   backgroundSize: '20px',
   outline: `1px solid ${tv('base900')}`,
   overflow: 'hidden',
-  color: tv('base'),
   cursor: 'default',
 });

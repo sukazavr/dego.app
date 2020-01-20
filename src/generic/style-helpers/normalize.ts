@@ -6,17 +6,18 @@ import {
     TElementGenericOrBody,
 } from '../states/elements';
 import { tv } from '../supply/style-helpers';
-import { COMPONENT_COLORS_LIGHT } from './component-colors';
+import { isElementGeneric } from '../supply/type-guards';
 import { flexDirectionIsRow } from './flex';
+import { PRESET_COLORS_LIGHT } from './preset-colors';
 
 export const getNormalizedElementCSSProperties = ({
   element,
   parentType,
-  excludeComponentStyle = false,
+  excludeMockupStyle = false,
 }: {
   element: TElementGenericOrBody;
   parentType: EElementType;
-  excludeComponentStyle?: boolean;
+  excludeMockupStyle?: boolean;
 }) => {
   const style: types.NestedCSSProperties = {};
   if (parentType === EElementType.Flex) {
@@ -49,12 +50,14 @@ export const getNormalizedElementCSSProperties = ({
       style.flexWrap = flexParentProps.flexWrap;
     }
   }
-  if (!excludeComponentStyle && element.type === EElementType.Component) {
-    const componentProps = element.props.Component;
-    style.backgroundColor = componentProps.color;
-    style.wordBreak = 'break-all';
-    if (COMPONENT_COLORS_LIGHT.includes(componentProps.color)) {
-      style.color = tv('base900');
+  if (!excludeMockupStyle && isElementGeneric(element)) {
+    const mockupProps = element.props.Mockup;
+    style.color = tv('base900');
+    if (mockupProps.hasBG) {
+      style.backgroundColor = mockupProps.BGColor;
+      if (!PRESET_COLORS_LIGHT.includes(mockupProps.BGColor)) {
+        style.color = tv('base');
+      }
     }
   }
   setSize(style, element.props.Common);
