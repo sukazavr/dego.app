@@ -19,22 +19,33 @@ export const ElementContextMenu = React.memo<IProps>(({ id }) => {
   return (
     <div className={$container}>
       <MenuItem children="Add Child" onClick={actionsTree.addInside._({ parentID: id })} />
-      {isElementGeneric && (
-        <>
-          <MenuItem children="Add Before" onClick={actionsTree.addAbove._({ neighborID: id })} />
-          <MenuItem children="Add After" onClick={actionsTree.addBelow._({ neighborID: id })} />
-          <MenuDivider />
-          <MenuItem children="Duplicate" onClick={actionsTree.duplicate._({ id })} />
-          <MenuDivider />
-          <MenuItem children="Delete" onClick={actionsTree.delete._({ id })} />
-        </>
-      )}
-      {!isElementCanvas && (
-        <>
-          <MenuDivider />
-          <MenuItem children="Export" onClick={actionsExport.open._({ exportedID: id })} />
-        </>
-      )}
+      <MenuItem
+        children="Add Before"
+        onClick={actionsTree.addAbove._({ neighborID: id })}
+        isDisabled={!isElementGeneric}
+      />
+      <MenuItem
+        children="Add After"
+        onClick={actionsTree.addBelow._({ neighborID: id })}
+        isDisabled={!isElementGeneric}
+      />
+      <MenuDivider />
+      <MenuItem
+        children="Duplicate"
+        onClick={actionsTree.duplicate._({ id })}
+        isDisabled={!isElementGeneric}
+      />
+      <MenuDivider />
+      <MenuItem
+        children="Delete"
+        onClick={actionsTree.delete._({ id })}
+        isDisabled={!isElementGeneric}
+      />
+      <MenuDivider />
+      <MenuItem
+        children="Export"
+        onClick={actionsExport.open._({ exportedID: isElementCanvas ? BODY_ID : id })}
+      />
     </div>
   );
 });
