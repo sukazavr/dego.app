@@ -10,6 +10,7 @@ export interface IExport {
   };
   settings: {
     layout: EExportLayout;
+    eliminateEmptyCSSRules: boolean;
   };
 }
 
@@ -20,5 +21,6 @@ export const defaultExport: IExport = {
   },
   settings: {
     layout: EExportLayout.HTML,
+    eliminateEmptyCSSRules: true,
   },
 };

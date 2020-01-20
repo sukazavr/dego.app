@@ -6,6 +6,7 @@ import { Button } from '../../generic/components/Button';
 import { ButtonGroup } from '../../generic/components/ButtonGroup';
 import { ButtonSecondary } from '../../generic/components/ButtonSecondary';
 import { Panel } from '../../generic/components/Panel';
+import { Switcher } from '../../generic/components/Switcher';
 import { EExportLayout } from '../../generic/states/export';
 import { stateTree$ } from '../../generic/states/state-app';
 import { useObservable, useObservableFabric } from '../../generic/supply/react-helpers';
@@ -15,6 +16,11 @@ import { useExportSettingsWatcher } from './watcher-settings';
 
 export const ExportSettings = React.memo(() => {
   const { settings$, setLayout } = useExportSettingsWatcher();
+  const { eliminateEmptyCSSRules$ } = React.useMemo(() => {
+    return {
+      eliminateEmptyCSSRules$: settings$.lens('eliminateEmptyCSSRules'),
+    };
+  }, [settings$]);
   const { layout } = useObservable(settings$);
   const isOpen = useObservableFabric(() => stateTree$.view('exportedID').view(isNotNull), []);
   return (
@@ -25,18 +31,23 @@ export const ExportSettings = React.memo(() => {
         </Panel>
         <div className={$settings}>
           {isOpen && (
-            <ButtonGroup style={{ padding: '1rem' }}>
-              <Button
-                children="HTML"
-                isActive={layout === EExportLayout.HTML}
-                onClick={setLayout(EExportLayout.HTML)}
-              />
-              <Button
-                children="JSX"
-                isActive={layout === EExportLayout.JSX}
-                onClick={setLayout(EExportLayout.JSX)}
-              />
-            </ButtonGroup>
+            <>
+              <ButtonGroup style={{ padding: '1rem' }}>
+                <Button
+                  children="HTML"
+                  isActive={layout === EExportLayout.HTML}
+                  onClick={setLayout(EExportLayout.HTML)}
+                />
+                <Button
+                  children="JSX"
+                  isActive={layout === EExportLayout.JSX}
+                  onClick={setLayout(EExportLayout.JSX)}
+                />
+              </ButtonGroup>
+              <Panel title="Eliminate empty CSS-rules" isTransparent>
+                <Switcher value$={eliminateEmptyCSSRules$} />
+              </Panel>
+            </>
           )}
         </div>
       </div>

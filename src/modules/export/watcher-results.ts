@@ -32,7 +32,9 @@ export const useExportResultsWatcher = createUseWatcher(() => {
       };
       if (isNotNull(exportedID)) {
         params.first.title = 'CSS';
-        params.first.code = toCSS(exportedID, elements);
+        params.first.code = toCSS(exportedID, elements, {
+          eliminateEmptyCSSRules: settings.eliminateEmptyCSSRules,
+        });
         const isJSX = settings.layout === EExportLayout.JSX;
         params.second = {
           title: isJSX ? 'JSX' : 'HTML',
