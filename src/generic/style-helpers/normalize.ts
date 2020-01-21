@@ -47,7 +47,7 @@ export const getNormalizedElementCSSProperties = ({
       style.flexWrap = flexParentProps.flexWrap;
     }
     if (flexParentProps.alignContent !== 'stretch') {
-      style.flexWrap = flexParentProps.flexWrap;
+      style.alignContent = flexParentProps.alignContent;
     }
   }
   if (!excludeMockupStyle && isElementGeneric(element)) {
