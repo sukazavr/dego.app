@@ -13,7 +13,7 @@ import { fontRegularBig } from '../../generic/theme';
 
 export const GlobalSettingsProvider = createSharedProvider(() => {
   useWatcher();
-  return <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} className={$container} />;
+  return <ToastContainer position={toast.POSITION.TOP_RIGHT} className={$container} />;
 });
 
 const $container = style({
