@@ -30,4 +30,6 @@ const $container = style(verticalSpaced('1rem'), {
   color: tv('base300'),
 });
 
-const $text = style(fontRegular);
+const $text = style(fontRegular, {
+  textAlign: 'center',
+});

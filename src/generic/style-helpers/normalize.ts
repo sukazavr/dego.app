@@ -67,11 +67,27 @@ export const getNormalizedElementCSSProperties = ({
 const setSize = (style: types.NestedCSSProperties, props: IElementCommonProps) => {
   const width = unitToString(props.width);
   const height = unitToString(props.height);
+  const minWidth = unitToString(props.minWidth);
+  const minHeight = unitToString(props.minHeight);
+  const maxWidth = unitToString(props.maxWidth);
+  const maxHeight = unitToString(props.maxHeight);
   if (width !== 'auto') {
     style.width = width;
   }
   if (height !== 'auto') {
     style.height = height;
+  }
+  if (minWidth !== 'auto') {
+    style.minWidth = minWidth;
+  }
+  if (minHeight !== 'auto') {
+    style.minHeight = minHeight;
+  }
+  if (maxWidth !== 'auto') {
+    style.maxWidth = maxWidth;
+  }
+  if (maxHeight !== 'auto') {
+    style.maxHeight = maxHeight;
   }
 };
 

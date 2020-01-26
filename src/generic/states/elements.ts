@@ -9,7 +9,7 @@ import {
 import { IUnit } from './unit';
 
 // TODO: auto gen from defaultElements and defaultGenericElement
-export const ELEMENTS_SCHEMA_VERSION = 2;
+export const ELEMENTS_SCHEMA_VERSION = 3;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -36,11 +36,19 @@ export interface IElements {
 export interface IElementCommonProps {
   width: IUnit;
   height: IUnit;
+  minWidth: IUnit;
+  minHeight: IUnit;
+  maxWidth: IUnit;
+  maxHeight: IUnit;
 }
 
 export const defaultElementCommonProps: IElementCommonProps = {
   width: unitOptions.auto.defaultUnit,
   height: unitOptions.auto.defaultUnit,
+  minWidth: unitOptions.auto.defaultUnit,
+  minHeight: unitOptions.auto.defaultUnit,
+  maxWidth: unitOptions.auto.defaultUnit,
+  maxHeight: unitOptions.auto.defaultUnit,
 };
 
 export interface IElementMockupProps {
