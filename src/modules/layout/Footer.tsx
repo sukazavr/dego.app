@@ -13,10 +13,11 @@ export const Footer = React.memo(() => {
   return (
     <Panel
       title={
-        <>
+        <span className={$appName}>
           Dego&nbsp;
           <span className={$ver}>βeta</span>
-        </>
+          <div id="updates" className={$updates} />
+        </span>
       }
     >
       {isUpdateAvailable ? (
@@ -31,3 +32,9 @@ export const Footer = React.memo(() => {
 const $ver = style({
   color: tv('base300'),
 });
+
+const $appName = style({
+  position: 'relative',
+});
+
+const $updates = style({ position: 'absolute', bottom: '-9px', right: '-30px' });
