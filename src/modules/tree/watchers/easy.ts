@@ -1,11 +1,13 @@
 import produce from 'immer';
 import nanoid from 'nanoid';
-import { merge, timer } from 'rxjs';
-import { debounceTime, delay, filter, map, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { animationFrameScheduler, merge, timer } from 'rxjs';
+import {
+    debounceTime, delay, filter, map, observeOn, skip, switchMap, takeUntil, tap,
+} from 'rxjs/operators';
 
 import { actionsTree } from '../../../generic/actions';
 import {
-    IElementGeneric, IElements, TElementGenericOrBody,
+    BODY_ID, IElementGeneric, IElements, TElementGenericOrBody,
 } from '../../../generic/states/elements';
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app';
 import { defaultTree, ITree } from '../../../generic/states/tree';
@@ -142,9 +144,33 @@ export const useTreeEasyWatcher = createUseWatcher(({ didUnmount$ }) => {
     ),
     actionsTree.focus.$.pipe(
       tap(({ id }) => {
+        stateApp$.modify((state) =>
+          produce(state, (draft) => {
+            // Recursively expend parents of the element
+            const element = state.elements[id];
+            if (isElementGeneric(element)) {
+              const expendParent = (parentID: string) => {
+                const parent = draft.elements[parentID];
+                if (isElementGenericOrBody(parent)) {
+                  if (!parent.isExpanded) {
+                    parent.isExpanded = true;
+                  }
+                  if (parentID !== BODY_ID) {
+                    expendParent(isElementGeneric(parent) ? parent.parent : BODY_ID);
+                  }
+                }
+              };
+              expendParent(element.parent);
+            }
+            // Set focusedID
+            draft.tree.focusedID = id;
+          })
+        );
+      }),
+      observeOn(animationFrameScheduler),
+      tap(({ id }) => {
         const el = elStore.get(id);
         if (isDefined(el)) {
-          stateTree$.lens('focusedID').set(id);
           const treeEl = el.parentElement?.parentElement as HTMLElement;
           const parentScrollTop = treeEl.scrollTop;
           const offsetDiff = el.offsetTop;
