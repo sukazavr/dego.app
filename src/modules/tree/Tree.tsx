@@ -6,7 +6,7 @@ import { Alert } from '../../generic/components/Alert';
 import { BODY_ID } from '../../generic/states/elements';
 import { stateTree$ } from '../../generic/states/state-app';
 import { useObservableFabric } from '../../generic/supply/react-helpers';
-import { isNull } from '../../generic/supply/type-guards';
+import { isNotNull, isNull } from '../../generic/supply/type-guards';
 import { scrollRegular } from '../../generic/theme';
 import { useContextMenu } from '../context-menu/hook';
 import { MenuItem } from '../context-menu/MenuItem';
@@ -29,11 +29,12 @@ export const Tree = React.memo(() => {
       ),
     []
   );
-  const ctxMenu = useContextMenu(() => (
+  const ctxMenu = useContextMenu<{ isExportMode: boolean }>(({ payload }) => (
     <>
       <MenuItem
         children="Create Element"
         onClick={actionsTree.addInside._({ parentID: BODY_ID })}
+        isDisabled={payload.isExportMode}
       />
     </>
   ));
@@ -44,11 +45,17 @@ export const Tree = React.memo(() => {
         .view((v) => (isNull(v) ? undefined : ({ overflowX: 'hidden' } as React.CSSProperties))),
     []
   );
+  const isExportMode = useObservableFabric(() => stateTree$.view('exportedID').view(isNotNull), []);
   return (
-    <div ref={ref} className={$container} style={style} onContextMenu={ctxMenu.open({})}>
+    <div
+      ref={ref}
+      className={$container}
+      style={style}
+      onContextMenu={ctxMenu.open({ isExportMode })}
+    >
       <div className={$wrapper}>
         {list}
-        {list.length === 2 && (
+        {!isExportMode && list.length === 2 && (
           <Alert icon="rightClick" text="Right click this area to create element" />
         )}
         <Highlighter />
