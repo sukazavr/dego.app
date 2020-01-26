@@ -14,16 +14,18 @@ import { useObservable } from '../../generic/supply/react-helpers';
 import { tv } from '../../generic/supply/style-helpers';
 import { isDefined, isElementGeneric } from '../../generic/supply/type-guards';
 import { createTreeElement } from '../tree/utils';
+import { refNode } from './node-elements-collection';
 
 interface IProps {
   elementID: string;
 }
 
 export const Node = React.memo<IProps>(({ elementID }) => {
-  const { className$, CSSProperties$, text$, tree$, instances$ } = React.useMemo(() => {
+  const { ref, className$, CSSProperties$, text$, tree$, instances$ } = React.useMemo(() => {
     const node$ = getNode(elementID);
     const element$ = node$.view('element');
     return {
+      ref: refNode(elementID),
       className$: element$.view(getElementClassName),
       CSSProperties$: node$.view(getNormalizedElementCSSProperties),
       text$: element$.view((element) => {
@@ -53,6 +55,7 @@ export const Node = React.memo<IProps>(({ elementID }) => {
   const tree = useObservable(tree$);
   const instances = useObservable(instances$);
   const node = React.createElement('div', {
+    ref,
     className: classes($container, style(CSSProperties, { $debugName: className })),
     children: isDefined(text) ? text : tree,
     onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

@@ -7,6 +7,7 @@ import { useObservable } from '../../generic/supply/react-helpers';
 import { ExportResult } from '../export/ExportResult';
 import { ExportSettings } from '../export/ExportSettings';
 import { Preview } from '../preview/Preview';
+import { PreviewHighlighter } from '../preview/PreviewHighlighter';
 import { Tree } from '../tree/Tree';
 import { AreaSecond } from './AreaSecond';
 import { Divider } from './Divider';
@@ -40,6 +41,7 @@ export const Layout = React.memo(() => {
       </div>
       <div className={$third}>
         <Preview />
+        <PreviewHighlighter />
       </div>
       <Divider ward$={wardTree$} gridArea={SECOND_AREA} zIndex={2} />
       <Divider ward$={wardNode$} gridArea={THIRD_AREA} />
