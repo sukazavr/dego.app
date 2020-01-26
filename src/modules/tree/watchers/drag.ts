@@ -5,7 +5,7 @@ import {
 
 import { Atom, ReadOnlyAtom } from '@grammarly/focal';
 
-import { BODY_ID, CANVAS_ID, IElements } from '../../../generic/states/elements';
+import { BODY_ID, CANVAS_ID, EElementType, IElements } from '../../../generic/states/elements';
 import { stateApp$, stateElements$, stateTree$ } from '../../../generic/states/state-app';
 import { defaultTree, ITree } from '../../../generic/states/tree';
 import { createUseWatcher } from '../../../generic/supply/react-helpers';
@@ -25,6 +25,7 @@ interface ITreeContext {
   treeIndex: string[];
   treePaths: Record<string, string[]>;
   treeMaxDeep: Record<string, string>;
+  treeMuted: Record<string, boolean>;
 }
 
 export const useTreeDragWatcher = createUseWatcher<
@@ -39,28 +40,41 @@ export const useTreeDragWatcher = createUseWatcher<
     stateElements$,
     exportedID$,
     (elements, exportedID) => {
-      const nextPaths: { [id: string]: string[] } = {};
+      let isForExport = false;
+      const nextPaths: Record<string, string[]> = {};
       const nextIndex: string[] = [];
-      const nextMaxDeep: { [id: string]: string } = {};
-      const grab = (id: string, parentPath: string[], putIndex: boolean) => {
+      const nextMaxDeep: Record<string, string> = {};
+      const nextMuted: Record<string, boolean> = {};
+      const grab = (
+        id: string,
+        parentPath: string[],
+        isVisible: boolean,
+        hasComponentAncestor: boolean
+      ) => {
         const prevPath = prevPaths[id];
         const nextPath = [...parentPath, id];
         const path = isArray(prevPath) && isArrayEqual(prevPath, nextPath) ? prevPath : nextPath;
-        if (putIndex) {
+        if ((isForExport ? !hasComponentAncestor : true) && isVisible) {
           nextPaths[id] = path;
           nextIndex.push(id);
         }
         const element = elements[id];
         if (isElementGenericOrBody(element)) {
-          const isExpanded = element.isExpanded;
-          element.children.forEach((childID) => grab(childID, path, putIndex && isExpanded));
+          const areChildrenVisible = isVisible && element.isExpanded;
+          const amIComponentDescendant =
+            hasComponentAncestor || element.type === EElementType.Component;
+          element.children.forEach((childID) =>
+            grab(childID, path, areChildrenVisible, amIComponentDescendant)
+          );
         }
+        nextMuted[id] = hasComponentAncestor;
       };
       if (isNotNull(exportedID)) {
-        grab(exportedID, [], true);
+        isForExport = true;
+        grab(exportedID, [], true, false);
       } else {
-        grab(CANVAS_ID, [], true);
-        grab(BODY_ID, [], true);
+        grab(CANVAS_ID, [], true, false);
+        grab(BODY_ID, [], true, false);
       }
       nextIndex.forEach((elementID) => {
         const path = nextPaths[elementID];
@@ -74,6 +88,7 @@ export const useTreeDragWatcher = createUseWatcher<
         treeIndex: nextIndex,
         treePaths: nextPaths,
         treeMaxDeep: nextMaxDeep,
+        treeMuted: nextMuted,
       };
     }
   );

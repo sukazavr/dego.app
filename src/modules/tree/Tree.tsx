@@ -21,8 +21,11 @@ export const Tree = React.memo(() => {
   const { tree$ } = useTreeDragWatcher([ref]);
   const list = useObservableFabric(
     () =>
-      tree$.view(({ treeIndex, treePaths }) =>
-        treeIndex.map((id) => <Element key={id} id={id} path={treePaths[id]} />)
+      tree$.view(({ treeIndex, treePaths, treeMuted }) =>
+        treeIndex.map((id) => {
+          const isMuted = treeMuted[id];
+          return <Element key={`${id}${isMuted}`} id={id} path={treePaths[id]} isMuted={isMuted} />;
+        })
       ),
     []
   );

@@ -18,9 +18,10 @@ import { ElementContextMenu } from './ElementContextMenu';
 interface IProps {
   id: string;
   path: string[];
+  isMuted: boolean;
 }
 
-export const Element = React.memo<IProps>(({ id, path }) => {
+export const Element = React.memo<IProps>(({ id, path, isMuted }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   useEnhancedEffect(() => {
     const el = ref.current as HTMLDivElement;
@@ -57,6 +58,7 @@ export const Element = React.memo<IProps>(({ id, path }) => {
           classNames.push(parentID === id ? $parented : path.includes(draggingID) && $dragging);
         } else {
           classNames.push(
+            isMuted && $muted,
             hoveredID === id && $hovered,
             focusedID === id && $focused,
             scopedID === id && $scoped,
@@ -98,6 +100,10 @@ const $dragging = style({
 
 const $hovered = style({
   boxShadow: `inset 0 0 0 1px ${tv('select500')}`,
+});
+
+const $muted = style({
+  color: tv('base300'),
 });
 
 const $focused = style({
