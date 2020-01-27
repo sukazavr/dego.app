@@ -61,6 +61,8 @@ export const getNormalizedElementCSSProperties = ({
     }
   }
   setSize(style, element.props.Common);
+  setSpacing(style, element.props.Common, 'padding');
+  setSpacing(style, element.props.Common, 'margin');
   return style;
 };
 
@@ -88,6 +90,50 @@ const setSize = (style: types.NestedCSSProperties, props: IElementCommonProps) =
   }
   if (maxHeight !== 'auto') {
     style.maxHeight = maxHeight;
+  }
+};
+
+const setSpacing = (
+  style: types.NestedCSSProperties,
+  props: IElementCommonProps,
+  scope: 'padding' | 'margin'
+) => {
+  const scopedProps = props[scope];
+  const left = unitToString(scopedProps.left);
+  const top = unitToString(scopedProps.top);
+  const right = unitToString(scopedProps.right);
+  const bottom = unitToString(scopedProps.bottom);
+  const hasLeft = left !== '0px';
+  const hasTop = top !== '0px';
+  const hasRight = right !== '0px';
+  const hasBottom = bottom !== '0px';
+  if (hasLeft && hasTop && hasRight && hasBottom) {
+    if (left === right) {
+      if (top === bottom) {
+        if (left === top) {
+          style[scope] = top;
+        } else {
+          style[scope] = `${top} ${left}`;
+        }
+      } else {
+        style[scope] = `${top} ${left} ${bottom}`;
+      }
+    } else {
+      style[scope] = `${top} ${right} ${bottom} ${left}`;
+    }
+  } else {
+    if (hasLeft) {
+      style[`${scope}Left` as 'paddingLeft'] = left;
+    }
+    if (hasTop) {
+      style[`${scope}Top` as 'paddingTop'] = top;
+    }
+    if (hasRight) {
+      style[`${scope}Right` as 'paddingRight'] = right;
+    }
+    if (hasBottom) {
+      style[`${scope}Bottom` as 'paddingBottom'] = bottom;
+    }
   }
 };
 

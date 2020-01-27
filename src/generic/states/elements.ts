@@ -9,7 +9,7 @@ import {
 import { IUnit } from './unit';
 
 // TODO: auto gen from defaultElements and defaultGenericElement
-export const ELEMENTS_SCHEMA_VERSION = 3;
+export const ELEMENTS_SCHEMA_VERSION = 4;
 export const CANVAS_ID = 'canvas';
 export const BODY_ID = 'body';
 
@@ -33,6 +33,15 @@ export interface IElements {
   [ID: string]: TElementAny;
 }
 
+export interface IGenericPropsSpacing {
+  top: IUnit;
+  left: IUnit;
+  right: IUnit;
+  bottom: IUnit;
+}
+
+type TGenericPropsOverflow = 'auto' | 'hidden' | 'scroll' | 'visible';
+
 export interface IElementCommonProps {
   width: IUnit;
   height: IUnit;
@@ -40,6 +49,10 @@ export interface IElementCommonProps {
   minHeight: IUnit;
   maxWidth: IUnit;
   maxHeight: IUnit;
+  padding: IGenericPropsSpacing;
+  margin: IGenericPropsSpacing;
+  overflowX: TGenericPropsOverflow;
+  overflowY: TGenericPropsOverflow;
 }
 
 export const defaultElementCommonProps: IElementCommonProps = {
@@ -49,6 +62,20 @@ export const defaultElementCommonProps: IElementCommonProps = {
   minHeight: unitOptions.auto.defaultUnit,
   maxWidth: unitOptions.auto.defaultUnit,
   maxHeight: unitOptions.auto.defaultUnit,
+  padding: {
+    top: unitOptions.px.defaultUnit,
+    left: unitOptions.px.defaultUnit,
+    right: unitOptions.px.defaultUnit,
+    bottom: unitOptions.px.defaultUnit,
+  },
+  margin: {
+    top: unitOptions.px.defaultUnit,
+    left: unitOptions.px.defaultUnit,
+    right: unitOptions.px.defaultUnit,
+    bottom: unitOptions.px.defaultUnit,
+  },
+  overflowX: 'visible',
+  overflowY: 'visible',
 };
 
 export interface IElementMockupProps {
