@@ -5,7 +5,6 @@ import { Button } from '../../../generic/components/Button';
 import { ButtonGroup } from '../../../generic/components/ButtonGroup';
 import { Label } from '../../../generic/components/Label';
 import { Panel } from '../../../generic/components/Panel';
-import { Stack } from '../../../generic/components/Stack';
 import { Switcher } from '../../../generic/components/Switcher';
 import { Tandem } from '../../../generic/components/Tandem';
 import { TandemGroup } from '../../../generic/components/TandemGroup';
@@ -74,16 +73,18 @@ export const SettingsCanvas = React.memo(() => {
         <TandemGroup>
           <Tandem
             left={
-              <Stack spacing={1} isInline isCentered>
-                <Label children="W" />
-                <UnitInput options={['px']} unit$={props.width$} />
-              </Stack>
+              <Tandem
+                left={<Label children="Width" />}
+                right={<UnitInput options={['px']} unit$={props.width$} />}
+                leftMax={46}
+              />
             }
             right={
-              <Stack spacing={1} isInline isCentered>
-                <Label children="H" />
-                <UnitInput options={['px']} unit$={props.height$} />
-              </Stack>
+              <Tandem
+                left={<Label children="Height" />}
+                right={<UnitInput options={['px']} unit$={props.height$} />}
+                leftMax={46}
+              />
             }
           />
         </TandemGroup>
